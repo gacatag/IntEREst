@@ -1,0 +1,174 @@
+\docType{methods}
+\name{plot-method}
+\alias{plot.interestResult}
+\alias{plot,interestResult,ANY-method}
+\alias{plot-method}
+
+\title{
+	plot - method
+}
+\description{
+	plot method for \code{interestResult} objects.
+}
+\usage{
+\S4method{plot}{interestResult,ANY}(x, summary="none", 
+	subsetRows=NULL, what="scaled", intronExon="intron", 
+	logScaleBase=NULL, logPseudoCnt=1, plotLoess=TRUE, 
+	loessCol="red", loessLwd=1, loessLty=1, cexText=1, 
+	marPlot=c(2,2,2,2), mgpPlot=c(1, 1, 0), cexAxis=1, 
+	writeCor=TRUE, corCex=1, corMethod="pearson", corCol="grey63", 
+	upperCorXY=c("topleft", NULL), lowerCorXY=c("topleft", NULL), 
+	na.rm=TRUE,	cex=1, sampleAnnoCol=c(), lowerPlot=FALSE, 
+	upperPlot=TRUE, ...)
+}
+\arguments{
+\item{x}{ 
+	Object of type \code{interestResult}.
+}
+\item{summary}{ 
+	Whether to plot the mean or median of the values over the sample with the same annotations, or plot the values for each individual sample separately. The available options are "mean", "median", or "none".
+}
+\item{subsetRows}{
+	Vector either constructed of TRUE/FALSE values or constructed of numeric values that could be used to choose rows from the intron/exon table (\code{@interestDf}) of the \code{interestResult} object to be plotted.
+}
+\item{what}{
+	Whether plot "scaled" (default) or read counts ("readFreq").
+}
+\item{intronExon}{
+	Whether plot intron retention, i.e. "intron" (default) or exon-junction "exon".
+}
+\item{logScaleBase}{
+	Base of the log transform of the values, if defined. By default the value is \code{NULL} meaning that the values would not be log transformed.
+}
+\item{logPseudoCnt}{
+	Pseudocount for the log transformation (default=1).
+}
+\item{plotLoess}{
+	Whether fit and plot LOESS curve line (default="red").
+}
+\item{loessCol}{
+	loess line colour (default="red").
+}
+\item{loessLwd}{
+	loess line width (default=1).
+}
+\item{loessLty}{
+	loess line type (default=1).
+}
+\item{cexText}{
+	Size of the text for sample names or annotations (default=1). 
+}
+\item{marPlot}{
+	Plot margins (default=c(2,2,2,2)). See \code{?par} for more information.
+}
+\item{mgpPlot}{
+	Plotting \code{mgp} parameter (default=c(1, 1, 0)). See \code{?par} for more information.
+}
+\item{cexAxis}{
+	Size of the text for the axis (default=1). 
+}
+\item{writeCor}{
+	Write correlation values (default=TRUE). 
+}
+\item{corCex}{
+	Text size of correlation values (default=1). 
+}
+\item{corMethod}{
+	Method used for correlation calculation. For more information see \code{\link{cor}} from \code{stats} package of R. 
+}
+\item{corCol}{
+	Color of the text of correlation (default="grey").
+}
+\item{upperCorXY}{
+	The coordinates of the correlation text in the upper panel plots ( default= c("topleft", NULL) ).
+}
+\item{lowerCorXY}{
+	The coordinates of the correlation text in the lower panel plots ( default= c("topleft", NULL) ).
+}
+\item{na.rm}{
+	whether remove the rows with missing values (default=TRUE). 
+}
+\item{cex}{
+	size of the plot text and symbols (default=1). 
+}
+\item{sampleAnnoCol}{
+	Which colummn of \code{@sampleAnnotation} of object \code{interestResult} to consider for plotting.
+}
+\item{lowerPlot}{
+	Whether plot the lower panel (default=FALSE).
+}
+\item{upperPlot}{
+	Whether plot the upper panel (default=TRUE).
+}
+\item{...}{
+	Other arguments to pass to the \code{plot()} function.
+}
+
+}
+\value{
+	Returns NULL.
+}
+\seealso{
+Class:
+	\code{\link{interestResult-class}}
+Method:
+	 \code{\link{show-method}}
+}
+\author{Ali Oghabian}
+
+\examples{
+
+
+geneId<- paste("gene", c(rep(1,5), rep(2,5), rep(3,5), rep(4,5)), 
+	sep="_")
+readCnt1<- sample(1:100, 20)
+readCnt2<- sample(1:100, 20)
+readCnt3<- sample(1:100, 20)
+readCnt4<- sample(1:100, 20)
+fpkm1<- readCnt1/(tapply(readCnt1, geneId, sum))[geneId]
+fpkm2<- readCnt2/(tapply(readCnt2, geneId, sum))[geneId]
+fpkm3<- readCnt3/(tapply(readCnt3, geneId, sum))[geneId]
+fpkm4<- readCnt4/(tapply(readCnt4, geneId, sum))[geneId]
+
+# Creating object using test data
+interestDat<- data.frame( 
+		int_ex=rep(c(rep(c("exon","intron"),2),"exon"),4),
+		int_ex_num= rep(c(1,1,2,2,3),4),         
+		gene_id= geneId,
+		sam1_readCnt=readCnt1,
+		sam2_readCnt=readCnt2,
+		sam3_readCnt=readCnt3,
+		sam4_readCnt=readCnt4,
+		sam1_fpkm=readCnt1,
+		sam2_fpkm=readCnt2,
+		sam3_fpkm=readCnt3,
+		sam4_fpkm=readCnt4
+)
+
+interestResultObj<- interestResult(
+	resultFiles=paste("file",1:4, sep="_"),
+	interestDf= interestDat,
+	readFreqColIndex=grep("_readCnt$",colnames(interestDat)),
+	scaledRetentionColIndex=grep("_fpkm$",colnames(interestDat)),
+	sampleNames=paste("sam",1:4, sep=""),
+	scaleLength=TRUE, 
+	scaleFragment=FALSE,
+	sampleAnnotation=data.frame(
+		sampleName=paste("sam",1:4, sep=""),
+		gender=c("M","M","F","F")
+	)
+)
+
+interestResultObj2<- addAnnotation(x=interestResultObj,
+	sampleAnnotationType="health",
+	sampleAnnotation=c("healthy","unhealthy","healthy","unhealthy")
+)
+
+#Plotting
+plot(interestResultObj)
+plot(interestResultObj, summary="mean")
+plot(interestResultObj2, sampleAnnoCol="gender", summary="mean")
+plot(interestResultObj2, sampleAnnoCol=3, summary="mean")
+plot(interestResultObj2, summary="none")
+}
+
