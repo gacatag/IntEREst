@@ -11,7 +11,7 @@ Description: This package performs Intron-Exon Retention analysis on RNA-seq dat
 Depends: R (>= 3.3), GenomicRanges, Rsamtools, edgeR, S4Vectors
 Imports: seqLogo, Biostrings, GenomicFeatures, IRanges, seqinr, limma,
         graphics, grDevices, stats, utils, grid, methods, DBI, RMySQL
-Suggests: clinfun, MDS.Chr22.U12Genes, knitr, Rmpi
+Suggests: clinfun, knitr, Rmpi
 VignetteBuilder: knitr
 LazyData: true
 biocViews: Software, AlternativeSplicing, Coverage,
