@@ -9,7 +9,7 @@
  Extracting values of useful attributes of \code{interestResult} objects
 }
 \description{
-	Several functions are provided that can extract various attribnutes from an object of class \code{interestResult}. It is possible to extract sample annotations using \code{getAnnotation} function. One can also extract the retention levels scaled to the length of the introns/exons, fragments mapped to the genes or both (dependant on user setting) using \code{scaledRetention} function. The \code{nread} function returns the read counts and \code{interestDf} extracts intron/exon annotations together with the read-count and the scaled retention values.
+	Several functions are provided that can extract various attribnutes from an object of class \code{interestResult}. It is possible to extract sample annotations using \code{getAnnotation} function. One can also extract the retention levels scaled to the length of the introns/exons, fragments mapped to the genes or both (dependant on user setting) using \code{scaledRetention} function. The \code{nread} function returns the read counts and \code{interestDf} extracts intron/exon annotations.
 }
 \usage{
 getAnnotation(x)

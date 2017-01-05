@@ -1,30 +1,20 @@
-\name{subInterestResult}
-\alias{subInterestResult}
+\name{mergeInterestResult}
+\alias{mergeInterestResult}
 \title{
-	Extract subset of object 
+	merge two interestResult objects into one 
 }
 \description{
-	Build a new object using subset of data in an \code{interestResult} object. 
+	Build a new object bu merging data of two \code{interestResult} objects. 
 }
 \usage{
-subInterestResult(x, interestDfRow=c(), interestDfSample=c(), 
-	sampleAnnoCol=c(), sampleAnnotation=c())
+mergeInterestResult(x, y)
 }
 \arguments{
 \item{x}{ 
 	Object of type \code{interestResult}.
 }
-\item{interestDfRow}{
-	Numeric or TRUE/FALSE Vector indicating what rows to extract.
-}
-\item{interestDfSample}{
-	A vector with Numeric values, character strings (sample names) or TRUE/FALSE Vector indicating what columns to extract.
-}
-\item{sampleAnnoCol}{
-	Which colummn of \code{@sampleAnnotation} of object \code{interestResult} to consider for subset data extraction.
-}
-\item{sampleAnnotation}{
-	which annotation to consider for subset data extraction. It should be included in the \code{sampleAnnoCol} column of the \code{@sampleAnnotation} attribute of object \code{interestResult}.
+\item{y}{ 
+	Object of type \code{interestResult}.
 }
 }
 \value{
@@ -67,27 +57,46 @@ interestDat<-data.frame(
 		sam3_fpkm=fpkm3,
 		sam4_fpkm=fpkm4
 )
-readFreqColIndex<- grep("_readCnt$",colnames(interestDat))
-scaledRetentionColIndex<- grep("_fpkm$",colnames(interestDat))
-interestResObj<-interestResult(
-	resultFiles=paste("file",1:4, sep="_"),
+readFreqColIndex<- grep("_readCnt",colnames(interestDat))
+scaledRetentionColIndex<- grep("_fpkm",colnames(interestDat))
+#Object including data for Males
+interestResObjM<-interestResult(
+	resultFiles=paste("file",1:2, sep="_"),
 	interestDf= interestDat[, -c(readFreqColIndex, 
 		scaledRetentionColIndex)],
-	readFreq= as.matrix(interestDat[, readFreqColIndex]),
+	readFreq= as.matrix(interestDat[, readFreqColIndex[1:2]]),
 	scaledRetention= as.matrix(interestDat[, 
-		scaledRetentionColIndex]),
-	sampleNames=paste("sam",1:4, sep=""),
+		scaledRetentionColIndex[1:2]]),
+	sampleNames=paste("sam",1:2, sep=""),
 	scaleLength=TRUE, 
 	scaleFragment=FALSE,
 	sampleAnnotation=data.frame(
-		sampleName=paste("sam",1:4, sep=""),
-		gender=c("M","M","F","F"),
-		health=c("healthy","unhealthy","healthy","unhealthy")
+		sampleName=paste("sam",1:2, sep=""),
+		gender=c("M","M"),
+		health=c("healthy","unhealthy")
+	)
+)
+
+#Object including data for Females
+interestResObjF<-interestResult(
+	resultFiles=paste("file",3:4, sep="_"),
+	interestDf= interestDat[, -c(readFreqColIndex, 
+		scaledRetentionColIndex)],
+	readFreq= as.matrix(interestDat[, readFreqColIndex[3:4]]),
+	scaledRetention= as.matrix(interestDat[, 
+		scaledRetentionColIndex[3:4]]),
+	sampleNames=paste("sam",3:4, sep=""),
+	scaleLength=TRUE, 
+	scaleFragment=FALSE,
+	sampleAnnotation=data.frame(
+		sampleName=paste("sam",3:4, sep=""),
+		gender=c("F","F"),
+		health=c("healthy","unhealthy")
 	)
 )
 
 #Build new object
-newObj<- subInterestResult(interestResObj, interestDfRow=1:20)
+newObj<- mergeInterestResult(interestResObjM, interestResObjF)
 
 #View newObj
 print(newObj)

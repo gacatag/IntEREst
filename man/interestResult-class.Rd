@@ -8,13 +8,13 @@ Class that contains results of the \code{interest()} and \code{interest.sequenti
 \section{Fields}{
 
 \describe{
-\item{resultFiles}{Character vector that include the path to the result files.}
+\item{resultFiles}{Character vector that includes the path to the result files.}
 
-\item{readFreqColIndex}{Columns of the data frame \code{@interestDf} that include the number of reads mapped to the studied introns and exons in the samples.}
+\item{readFreq}{Matrix that includes the number of reads mapped to the studied introns and exons in the samples.}
 
-\item{scaledRetentionColIndex}{Columns of the data frame \code{@interestDf} that include the scaled retention levels of the introns and exons in the samples.}
+\item{scaledRetention}{Matrix that includes the scaled retention levels of the introns and exons in the samples.}
 
-\item{sampleNames}{Character vector that include the name of the samples.}
+\item{sampleNames}{Character vector that includes the name of the samples.}
 
 \item{scaleLength}{
 	Logical value, indicating whether the intron/exon retention levels are scaled to the length of the introns/exons. 

@@ -12,7 +12,7 @@
 
 <meta name="author" content="Ali Oghabian" />
 
-<meta name="date" content="2016-12-15" />
+<meta name="date" content="2017-01-05" />
 
 <title>IntEREst</title>
 
@@ -52,7 +52,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 
 <h1 class="title toc-ignore">IntEREst</h1>
 <h4 class="author"><em>Ali Oghabian</em></h4>
-<h4 class="date"><em>2016-12-15</em></h4>
+<h4 class="date"><em>2017-01-05</em></h4>
 
 
 
@@ -180,7 +180,6 @@ mdsChr22Obj&lt;-<span class="st"> </span>mdsChr22ObjFil</code></pre>
 ##   @scaleFragment: TRUE
 ## 
 ##   @sampleAnnotation: 
-## 
 ## sampleNames type test_ctrl...
 ## SRR1691633_ZRSR2Mut ZRSR2_Mut test...
 ## SRR1691634_ZRSR2Mut ZRSR2_Mut test
@@ -189,18 +188,18 @@ mdsChr22Obj&lt;-<span class="st"> </span>mdsChr22ObjFil</code></pre>
 ## ...
 ## 16 rows and 3 columns.
 ## 
-##   @readFreqColIndex: 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, ... 16 indices.
-##   @scaledRetentionColIndex: 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, ... 16 indices.
 ## 
 ##   @interestDf: 
-## 
 ## id int_ex_id chr begin end strand int_ex...
 ## 1911 ENSG00000069998_exon_1 chr22 176184...
 ## 1912 ENSG00000069998_intron_1 chr22 1761
 ## 1913 ENSG00000069998_exon_2 chr22 176194
 ## 1914 ENSG00000069998_intron_2 chr22 1761
 ## ...
-## 618 rows and 48 columns.</code></pre>
+## 618 rows and 16 columns.
+## 
+## Use nread() to get the raw reteniton levels (Number fo mapped fragments) and 
+## scaledRetention() to get the scaled retention levels.</code></pre>
 <p><br> It is possible to <code>plot()</code> the object to check the distribution of the intron retention levels. The following scripts plot the average retention of all introns across the 3 sample types: ZRSR2 mutated MDS, ZRSR2 wild type MDS and healthy. The <code>lowerPlot=TRUE</code> and <code>upperPlot=TRUE</code> parameter settings ensures that both, the upper and lower triangle of the grid are plotted.</p>
 <p><br></p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Retention of all introns</span>

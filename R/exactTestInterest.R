@@ -17,7 +17,7 @@ exactTestInterest<- function(x, sampleAnnoCol=c(), sampleAnnotation=c(), geneIdC
 	} else {
 		stop('Either group or the sampleAnnotation and sampleAnnoCol parameters need to be set.')
 	}
-	y <- edgeR::DGEList(counts=x@interestDf[,x@readFreqColIndex[colInd]], group=group )
+	y <- edgeR::DGEList(counts=nread(x)[,colInd], group=group )
 	if(is.character(disp)){
 		if((is.na(match(disp, c("tagwise", "trended", "common", "genewise", "auto")))) & length(disp)==1){
 			stop('The disp parameter should be set "tagwise", "trended", "common", or "genewise"')
@@ -36,7 +36,7 @@ exactTestInterest<- function(x, sampleAnnoCol=c(), sampleAnnotation=c(), geneIdC
 		dispersion=dispTmp$common.dispersion
 	} else if(disp=="genewise"& length(disp)==1){
 		dispersionType="genewise"
-		dispTmp=edgeR::estimateExonGenewiseDisp(x@interestDf[,x@readFreqColIndex[colInd]], geneID=x@interestDf[,geneIdCol], 
+		dispTmp=edgeR::estimateExonGenewiseDisp(nread(x)[,colInd], geneID=x@interestDf[,geneIdCol], 
 			group=group)
 		dispersion=as.numeric(dispTmp[as.character(x@interestDf[,geneIdCol])])
 	} else if(is.numeric(disp)){

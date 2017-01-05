@@ -17,10 +17,10 @@ u12Boxplot<-function(x, sampleAnnoCol=NA, intExCol="int_ex", intTypeCol="int_typ
 		if(length(col)==1)
 			color=c(color, col, col, NA)
 		if(intronExon=="intron"){
-			plotList=c(plotList, list( as.vector(unlist(object@interestDf[object@interestDf[,intExCol]=="intron" & object@interestDf[,intTypeCol]=="U12",
-				object@scaledRetentionColIndex[groups==uniGroup[cnt]]])), 
-				as.vector(unlist(object@interestDf[object@interestDf[,intExCol]=="intron" & object@interestDf[,intTypeCol]=="U2",
-				object@scaledRetentionColIndex[groups==uniGroup[cnt]]])), NA))
+			plotList=c(plotList, list( as.vector(unlist(object@scaledRetention[object@interestDf[,intExCol]=="intron" & 
+				object@interestDf[,intTypeCol]=="U12", which(groups==uniGroup[cnt])])), 
+				as.vector(unlist(object@scaledRetention[object@interestDf[,intExCol]=="intron" & object@interestDf[,intTypeCol]=="U2",
+				which(groups==uniGroup[cnt])])), NA))
 		} else if (intronExon=="exon") {
 			indChooseIntU12=unique(which(object@interestDf[,intExCol]=="intron" & object@interestDf[,intTypeCol]=="U12"))
 			indChooseIntU2=unique(which(object@interestDf[,intExCol]=="intron" & (object@interestDf[,intTypeCol]!="U12") ))
@@ -28,10 +28,10 @@ u12Boxplot<-function(x, sampleAnnoCol=NA, intExCol="int_ex", intTypeCol="int_typ
 			indChooseExU12=unique(unlist(lapply(indChooseIntU12, function(tmp) return(c(tmp-1, tmp+1)))))
 			indChooseExU2=unique(unlist(lapply(indChooseIntU2, function(tmp) return(c(tmp-1, tmp+1)))))
 			indChooseExU2=indChooseExU2[which(is.na(match(indChooseExU2,indChooseExU12)))]
-			plotList=c(plotList, list( as.vector(unlist(object@interestDf[indChooseExU12,
-				object@scaledRetentionColIndex[groups==uniGroup[cnt]]])), 
+			plotList=c(plotList, list( as.vector(unlist(object@scaledRetention[indChooseExU12,
+				which(groups==uniGroup[cnt])])), 
 				as.vector(unlist(object@interestDf[indChooseExU2,
-				object@scaledRetentionColIndex[groups==uniGroup[cnt]]])), NA))				
+				which(groups==uniGroup[cnt])])), NA))				
 		}
 		if(length(boxplotNames)==0){
 			names(plotList)[(length(plotList)-2):length(plotList)]=c(paste("U12",uniGroup[cnt], sep=" "),paste("U2",uniGroup[cnt], sep=" "),"")

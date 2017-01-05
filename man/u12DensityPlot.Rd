@@ -131,17 +131,20 @@ interestDat<-data.frame(
 		sam2_readCnt=readCnt2,
 		sam3_readCnt=readCnt3,
 		sam4_readCnt=readCnt4,
-		sam1_fpkm=readCnt1,
-		sam2_fpkm=readCnt2,
-		sam3_fpkm=readCnt3,
-		sam4_fpkm=readCnt4
+		sam1_fpkm=fpkm1,
+		sam2_fpkm=fpkm2,
+		sam3_fpkm=fpkm3,
+		sam4_fpkm=fpkm4
 )
-
+readFreqColIndex<- grep("_readCnt$",colnames(interestDat))
+scaledRetentionColIndex<- grep("_fpkm$",colnames(interestDat))
 interestResObj<-interestResult(
 	resultFiles=paste("file",1:4, sep="_"),
-	interestDf= interestDat,
-	readFreqColIndex=grep("_readCnt$",colnames(interestDat)),
-	scaledRetentionColIndex=grep("_fpkm$",colnames(interestDat)),
+	interestDf= interestDat[, -c(readFreqColIndex,
+		scaledRetentionColIndex)],
+	readFreq= as.matrix(interestDat[, readFreqColIndex]),
+	scaledRetention=as.matrix(interestDat[, 
+		scaledRetentionColIndex]),
 	sampleNames=paste("sam",1:4, sep=""),
 	scaleLength=TRUE, 
 	scaleFragment=FALSE,

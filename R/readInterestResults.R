@@ -37,7 +37,8 @@ readInterestResults<-function(resultFiles, sampleNames, sampleAnnotation, common
 	if(is.vector(sampleAnnotation))
 		sampleAnnotation=data.frame(sampleGroup=sampleAnnotation)
 	sampleAnnotation=data.frame(sampleNames=sampleNames,sampleAnnotation)
-	resObj=interestResult(resultFiles=resultFiles, readFreqColIndex=readFreqColIndex, scaledRetentionColIndex=scaledRetentionColIndex, 
-		sampleNames=sampleNames, scaleLength=scaleLength, scaleFragment=scaleFragment, sampleAnnotation=sampleAnnotation, interestDf=res)
+	resObj=interestResult(resultFiles=resultFiles, readFreq=as.matrix(res[,readFreqColIndex]), 
+		scaledRetention=as.matrix(res[,scaledRetentionColIndex]), sampleNames=sampleNames, scaleLength=scaleLength, scaleFragment=scaleFragment, 
+		sampleAnnotation=sampleAnnotation, interestDf=ref)
 	return(resObj)
 }

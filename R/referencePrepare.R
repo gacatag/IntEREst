@@ -165,17 +165,19 @@ function( outFileTranscriptsAnnotation="",
 
 	} else {
 		introns <- GenomicFeatures::intronsByTranscript(human.txdb, use.names=TRUE)
-		strMat=as.character(unlist(sapply(exons, function(tmp) as.character(strand(tmp)))))
-		if(ignore.strand)
-			strMat="*"
+		
+		if(ignore.strand){
+			strMat=rep("*", length(as.character(GenomicRanges::seqnames(unlist(exons))))+ length(as.character(GenomicRanges::seqnames(unlist(introns)))))
+		} else {
+			strMat=as.vector(unlist(lapply(1:length(exons), function(tmp) return(c(as.character(GenomicRanges::strand(exons[[tmp]])),
+				as.character(GenomicRanges::strand(introns[[tmp]])))))))
+		}
 		matOutVec=c(as.vector(unlist(lapply(1:length(exons), function(tmp) return(c(as.character(GenomicRanges::seqnames(exons[[tmp]])),
 				as.character(GenomicRanges::seqnames(introns[[tmp]]))))))),
 			as.vector(unlist(lapply(1:length(exons), function(tmp) return(c(as.numeric(GenomicRanges::start(exons[[tmp]])),
 				as.numeric(GenomicRanges::start(introns[[tmp]]))))))),
-			as.vector(unlist(lapply(1:length(exons), function(tmp) return(c(as.numeric(GenomicRanges::start(exons[[tmp]])),
-				as.numeric(GenomicRanges::start(introns[[tmp]])))))))+
-				as.vector(unlist(lapply(1:length(exons), function(tmp) return(c(as.numeric(GenomicRanges::width(exons[[tmp]])),
-				as.numeric(GenomicRanges::width(introns[[tmp]])))))))-1,
+			as.vector(unlist(lapply(1:length(exons), function(tmp) return(c(as.numeric(GenomicRanges::end(exons[[tmp]])),
+				as.numeric(GenomicRanges::end(introns[[tmp]]))))))),
 			strMat,
 			as.vector(unlist(lapply(1:length(exons), function(tmp) return(c(seq(from=1, by=2, 
 				length.out=length(as.numeric(GenomicRanges::start(exons[[tmp]])))),seq(from=2, by=2, 
@@ -187,9 +189,8 @@ function( outFileTranscriptsAnnotation="",
 				length(as.numeric(GenomicRanges::start(introns[[tmp]])))))))))
 			)
 
-
 		matTmp=matrix(matOutVec, ncol=7, byrow=FALSE)
-		matInd=unlist(tapply(1:nrow(matTmp), as.character(matTmp[,6]), function(tmp)return( tmp[order(as.numeric(matTmp[tmp,4]), decreasing=FALSE)] )))
+		matInd=unlist(tapply(1:nrow(matTmp), as.character(matTmp[,7]), function(tmp)return( tmp[order(as.numeric(matTmp[tmp,5]), decreasing=FALSE)] )))
 		matOut=data.frame(chr=as.character(matTmp[,1]),begin=as.numeric(matTmp[,2]), end=as.numeric(matTmp[,3]), strand=as.character(matTmp[,4]),
 		int_ex_num=as.numeric(matTmp[,5]), int_ex=as.character(matTmp[,6]), transcript_id=as.character(matTmp[,7]), stringsAsFactors=FALSE)[matInd,]
 

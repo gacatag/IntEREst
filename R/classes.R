@@ -1,13 +1,16 @@
 # Class definition
+#scaledRetentionColIndex -> scaledRetention
+#readFreqColIndex -> readFreq
+#scaledRetentionColIndex -> scaledRetention
 methods::setClass("interestResult", 
-	methods::representation(resultFiles="character", readFreqColIndex="numeric", scaledRetentionColIndex="numeric", sampleNames="character",
+	methods::representation(resultFiles="character", readFreq="matrix", scaledRetention="matrix", sampleNames="character",
 		scaleLength="logical", scaleFragment="logical", sampleAnnotation="data.frame", interestDf="data.frame") 
 )
 
 #Constructor
-interestResult <- function(resultFiles=c(), readFreqColIndex, scaledRetentionColIndex, sampleNames, scaleLength, scaleFragment, 
+interestResult <- function(resultFiles=c(), readFreq, scaledRetention, sampleNames, scaleLength, scaleFragment, 
 	sampleAnnotation, interestDf){
-	methods::new("interestResult", resultFiles=resultFiles, readFreqColIndex=readFreqColIndex, scaledRetentionColIndex=scaledRetentionColIndex, 
+	methods::new("interestResult", resultFiles=resultFiles, readFreq=readFreq, scaledRetention=scaledRetention, 
 		sampleNames=sampleNames, scaleLength= scaleLength, scaleFragment= scaleFragment, sampleAnnotation=sampleAnnotation, interestDf=interestDf)
 }
 
@@ -32,23 +35,19 @@ cat("\n...\n")
 #show method
 methods::setMethod("show", "interestResult",
 	function(object){
-
 		cat("  @resultFiles: ", strtrim(paste(object@resultFiles, collapse=", "), 40), "... ",
 			length(object@resultFiles), " files", sep="" )
 		cat("\n", "  @sampleNames: ", strtrim(paste(object@sampleNames, collapse=", "), 40), "... ",
 			length(object@sampleNames), " samples", sep="" )
 		cat("\n", "  @scaleLength: ", object@scaleLength, sep="" )
 		cat("\n", "  @scaleFragment: ", object@scaleFragment, sep="" )
-		cat("\n\n", "  @sampleAnnotation: \n\n", sep="")
+		cat("\n\n", "  @sampleAnnotation: \n", sep="")
 		viewLargeDf(object@sampleAnnotation)
 		cat(nrow(object@sampleAnnotation), " rows and ", ncol(object@sampleAnnotation), " columns.\n", sep="")
-		cat("\n", "  @readFreqColIndex: ", strtrim(paste(object@readFreqColIndex, collapse=", "), 40), 
-			"... ", length(object@readFreqColIndex), " indices.", sep="") 
-		cat("\n", "  @scaledRetentionColIndex: ", strtrim(paste(object@scaledRetentionColIndex, collapse=", "), 40), 
-			"... ", length(object@scaledRetentionColIndex), " indices.", sep="")
-		cat("\n\n", "  @interestDf: \n\n", sep="")
+		cat("\n\n", "  @interestDf: \n", sep="")
 		viewLargeDf(object@interestDf)
-		cat(nrow(object@interestDf), " rows and ", ncol(object@interestDf), " columns.\n", sep="")}
+		cat(nrow(object@interestDf), " rows and ", ncol(object@interestDf), " columns.\n\n", sep="")
+		cat("Use nread() to get the raw reteniton levels (Number fo mapped fragments) and \nscaledRetention() to get the scaled retention levels.\n")}
 )
 
 # plot method
@@ -75,20 +74,20 @@ plot.interestResult<-function(x, summary="none", subsetRows=NULL, what="scaled",
 	}
 
 	if(summary=="none"&what=="scaled"){
-		plotDat=subDat[,object@scaledRetentionColIndex]
+		plotDat=object@scaledRetention[subsetRows,]
 	}
 	if(summary=="none"&what=="readFreq"){
-		plotDat=(subDat[,object@readFreqColIndex])
+		plotDat=object@readFreq[subsetRows,]
 	}
 	if(summary!="none"&what=="scaled"){
-		plotList=tapply(object@scaledRetentionColIndex, sampleGroups, function(x) apply(subDat[,x], 1, summaryFun) )
+		plotList=tapply(1:ncol(object@scaledRetention), sampleGroups, function(x) apply(object@scaledRetention[subsetRows,x], 1, summaryFun) )
 		plotList=plotList[match(unique(sampleGroups),names(plotList))]
 		plotDat=matrix(unlist(plotList), ncol=length(unique(sampleGroups)), byrow=FALSE)
 		colnames(plotDat)=names(plotList)
 		plotDat=as.data.frame(plotDat)
 	}
 	if(summary!="none"&what=="readFreq"){
-		plotList=tapply(object@readFreqColIndex, sampleGroups, function(x) apply(subDat[,x], 1, summaryFun) )
+		plotList=tapply(1:ncol(object@readFreq), sampleGroups, function(x) apply(object@readFreq[subsetRows,x], 1, summaryFun) )
 		plotList=plotList[match(unique(sampleGroups),names(plotList))]
 		plotDat=matrix(unlist(plotList), ncol=length(unique(sampleGroups)), byrow=FALSE)
 		colnames(plotDat)=names(plotList)
@@ -206,11 +205,11 @@ addAnnotation<-function(x, sampleAnnotationType, sampleAnnotation){
 
 
 scaledRetention<-function(x){
-	return(x@interestDf[,x@scaledRetentionColIndex])
+	return(x@scaledRetention)
 }
 
 nread<-function(x){
-	return(x@interestDf[,x@readFreqColIndex])
+	return(x@readFreq)
 }
 
 interestDf<-function(x){

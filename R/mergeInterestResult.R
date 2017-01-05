@@ -5,11 +5,12 @@ mergeInterestResult<-function(x, y){
 	res@resultFiles=c(res@resultFiles, y@resultFiles)
 	res@sampleNames=c(res@sampleNames, y@sampleNames)
 	res@sampleAnnotation=rbind(res@sampleAnnotation, y@sampleAnnotation)
-	res@readFreqColIndex=c( res@readFreqColIndex, 
-		max(c(x@readFreqColIndex, x@scaledRetentionColIndex))+y@readFreqColIndex-(min(c(y@readFreqColIndex, y@scaledRetentionColIndex))-1) )
-	res@scaledRetentionColIndex=c( res@scaledRetentionColIndex, 
-		max(c(x@readFreqColIndex, x@scaledRetentionColIndex))+y@scaledRetentionColIndex-(min(c(y@readFreqColIndex, y@scaledRetentionColIndex))-1) )
-	res@interestDf=cbind(res@interestDf, y@interestDf[,sort(c(y@readFreqColIndex, y@scaledRetentionColIndex), decreasing=FALSE)])
+	res@readFreq=cbind(x@readFreq, y@readFreq)
+	res@scaledRetention=cbind(x@scaledRetention, y@scaledRetention)
+	xyIntDf=match(colnames(x@interestDf), colnames(y@interestDf))
+	res@interestDf=y@interestDf
+	if(length(which(is.na(xyIntDf))))
+		res@interestDf=cbind(res@interestDf, x@interestDf[, which(is.na(xyIntDf))])
 	res@scaleLength=  x@scaleLength
 	res@scaleFragment= x@scaleFragment
 	return(res)

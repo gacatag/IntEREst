@@ -21,14 +21,14 @@ lfc<-function(x, fcType="edgeR", sampleAnnoCol=c(), sampleAnnotation=c(),
 				stop('The sampleAnnotation parameter should be a vector of size 2 which cotains values from x@sampleAnnotation; e.g. if x@sampleAnnotation[,sampleAnnoCol] = c("test", "test", "ctrl","ctrl", ...), and the goal is to compare "test" and "ctrl" samples, sampleAnnotation should either be c("test","ctrl") or c("ctrl","test").')
 			}
 			if(length(group)==0){
-				ind1= object@scaledRetentionColIndex[object@sampleAnnotation[,sampleAnnoCol]==sampleAnnotation[1]]
-				ind2= object@scaledRetentionColIndex[object@sampleAnnotation[,sampleAnnoCol]==sampleAnnotation[2]]
+				ind1= (1:ncol(object@scaledRetention))[object@sampleAnnotation[,sampleAnnoCol]==sampleAnnotation[1]]
+				ind2= (1:ncol(object@scaledRetention))[object@sampleAnnotation[,sampleAnnoCol]==sampleAnnotation[2]]
 			} else {
-				ind1= object@scaledRetentionColIndex[group==sampleAnnotation[1]]
-				ind2= object@scaledRetentionColIndex[group==sampleAnnotation[2]]
+				ind1= (1:ncol(object@scaledRetention))[group==sampleAnnotation[1]]
+				ind2= (1:ncol(object@scaledRetention))[group==sampleAnnotation[2]]
 			}
 
-			fcRes=(apply(object@interestDf[,ind2], 1,mean, na.rm=TRUE)+ pseudoCnt)/(apply(object@interestDf[,ind1], 1,mean, na.rm=TRUE)+ pseudoCnt)
+			fcRes=(apply(object@scaledRetention[,ind2], 1,mean, na.rm=TRUE)+ pseudoCnt)/ (apply(object@scaledRetention[,ind1], 1,mean, na.rm=TRUE)+ pseudoCnt)
 			if(log2)
 				fcRes=log(fcRes, base=2)
 		}
