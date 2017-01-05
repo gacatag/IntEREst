@@ -4,7 +4,7 @@
 	U12 boxplot
 }
 \description{
-	A boxplot method for U12 and U2-type introns of \code{interestResult} objects.
+	A boxplot method for U12 and U2-type introns of \code{InterestResult} objects.
 }
 \usage{
 u12Boxplot(x, sampleAnnoCol=NA, intExCol="int_ex",
@@ -13,16 +13,16 @@ u12Boxplot(x, sampleAnnoCol=NA, intExCol="int_ex",
 }
 \arguments{
 \item{x}{ 
-	Object of type \code{interestResult}.
+	Object of type \code{InterestResult}.
 }
 \item{sampleAnnoCol}{
-	Which colummn of \code{@sampleAnnotation} datat frame in \code{interestResult} object to consider for plotting.
+	Which colummn of \code{@sampleAnnotation} datat frame in \code{InterestResult} object to consider for plotting.
 }
 \item{intExCol}{
-	Column name (or number) that represents whether each row in \code{@sampleAnnotation} of object \code{interestResult} is "intron" or "exon" .
+	Column name (or number) that represents whether each row in \code{@sampleAnnotation} of object \code{InterestResult} is "intron" or "exon" .
 }
 \item{intTypeCol}{
-	Column name (or number) that represents what type of intron each row of \code{@sampleAnnotation} of object \code{interestResult} represents.
+	Column name (or number) that represents what type of intron each row of \code{@sampleAnnotation} of object \code{InterestResult} represents.
 }
 \item{intronExon}{
 	Whether plot intron retention (set \code{intronExon="intron"}) or exon-exon junction (set \code{intronExon="exon"}) levels. 
@@ -44,7 +44,7 @@ u12Boxplot(x, sampleAnnoCol=NA, intExCol="int_ex",
 }
 }
 \value{
-A code{interestResult} object.
+A code{InterestResult} object.
 }
 
 \seealso{
@@ -84,7 +84,7 @@ interestDat<- data.frame(
 )
 readFreqColIndex<- grep("_readCnt$",colnames(interestDat))
 scaledRetentionColIndex<- grep("_fpkm$",colnames(interestDat))
-interestResultObj<- interestResult(
+InterestResultObj<- InterestResult(
 	resultFiles=paste("file",1:4, sep="_"),
 	interestDf= interestDat[, -c(readFreqColIndex, 
 		scaledRetentionColIndex)],
@@ -102,12 +102,12 @@ interestResultObj<- interestResult(
 )
 
 # Box plot and group samples based on the annotations (column 2)
-u12Boxplot(interestResultObj, sampleAnnoCol=2, intExCol="int_ex",
+u12Boxplot(InterestResultObj, sampleAnnoCol=2, intExCol="int_ex",
 	intTypeCol="int_type", intronExon="intron", col="white", 
 	boxplotNames=c(), lasNames=3, outline=FALSE)
 
 # Box plot for Individual samples
-u12Boxplot(interestResultObj, sampleAnnoCol=NA, intExCol="int_ex",
+u12Boxplot(InterestResultObj, sampleAnnoCol=NA, intExCol="int_ex",
 	intTypeCol="int_type", intronExon="intron", col="white", 
 	boxplotNames=c(), lasNames=3, outline=FALSE)
 }

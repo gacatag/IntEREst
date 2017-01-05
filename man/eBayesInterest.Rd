@@ -12,13 +12,13 @@
 }
 \arguments{
 \item{x}{ 
-	Object of type \code{interestResult}.
+	Object of type \code{InterestResult}.
 }
 \item{sampleAnnoCol}{
-	Which colummn of \code{@sampleAnnotation} of object \code{interestResult} to consider for the analysis.
+	Which colummn of \code{@sampleAnnotation} of object \code{InterestResult} to consider for the analysis.
 }
 \item{sampleAnnotation}{
-	A vector of size 2 which cotains values from \code{@sampleAnnotation} of \code{interestResult} object; e.g. if \code{x@sampleAnnotation[,sampleAnnoCol] = c("test", "test", "ctrl","ctrl", ...)} , and the goal is to compare "test" and "ctrl" samples, \code{sampleAnnotation} should either be \code{c("test", "ctrl")} or \code{c("ctrl", "test")}.
+	A vector of size 2 which cotains values from \code{@sampleAnnotation} of \code{InterestResult} object; e.g. if \code{x@sampleAnnotation[,sampleAnnoCol] = c("test", "test", "ctrl","ctrl", ...)} , and the goal is to compare "test" and "ctrl" samples, \code{sampleAnnotation} should either be \code{c("test", "ctrl")} or \code{c("ctrl", "test")}.
 }
 \item{group}{
 	Vector to manually define the sample groups (or annotations). It is ignored if \code{sampleAnnopCol} is defined.

@@ -1,29 +1,29 @@
 \name{mergeInterestResult}
 \alias{mergeInterestResult}
 \title{
-	merge two interestResult objects into one 
+	merge two InterestResult objects into one 
 }
 \description{
-	Build a new object bu merging data of two \code{interestResult} objects. 
+	Build a new object bu merging data of two \code{InterestResult} objects. 
 }
 \usage{
 mergeInterestResult(x, y)
 }
 \arguments{
 \item{x}{ 
-	Object of type \code{interestResult}.
+	Object of type \code{InterestResult}.
 }
 \item{y}{ 
-	Object of type \code{interestResult}.
+	Object of type \code{InterestResult}.
 }
 }
 \value{
-An object of calss \code{interestResult}.
+An object of calss \code{InterestResult}.
 }
 
 \seealso{
 	\code{\link{interest}},
-	\code{\link{interestResult}}.
+	\code{\link{InterestResult}}.
 }
 
 \author{Ali Oghabian}
@@ -60,7 +60,7 @@ interestDat<-data.frame(
 readFreqColIndex<- grep("_readCnt",colnames(interestDat))
 scaledRetentionColIndex<- grep("_fpkm",colnames(interestDat))
 #Object including data for Males
-interestResObjM<-interestResult(
+interestResObjM<-InterestResult(
 	resultFiles=paste("file",1:2, sep="_"),
 	interestDf= interestDat[, -c(readFreqColIndex, 
 		scaledRetentionColIndex)],
@@ -78,7 +78,7 @@ interestResObjM<-interestResult(
 )
 
 #Object including data for Females
-interestResObjF<-interestResult(
+interestResObjF<-InterestResult(
 	resultFiles=paste("file",3:4, sep="_"),
 	interestDf= interestDat[, -c(readFreqColIndex, 
 		scaledRetentionColIndex)],

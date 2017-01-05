@@ -4,7 +4,7 @@
 	boxplot U12 introns retention levels (or flanking exons junction levels) and (up/down)stream U2 introns (or exons junction levels)
 }
 \description{
-	boxplot U12 introns and (Up/Down)stream U2 introns in \code{interestResult} objects.
+	boxplot U12 introns and (Up/Down)stream U2 introns in \code{InterestResult} objects.
 }
 \usage{
 u12BoxplotNb(x, sampleAnnoCol=2, intExCol="int_ex",
@@ -14,13 +14,13 @@ u12BoxplotNb(x, sampleAnnoCol=2, intExCol="int_ex",
 }
 \arguments{
 \item{x}{ 
-	Object of type \code{interestResult}.
+	Object of type \code{InterestResult}.
 }
 \item{sampleAnnoCol}{
-	Which colummn of \code{@sampleAnnotation} data frame in \code{x} (the input object of \code{interestResult} type) to consider for plotting.
+	Which colummn of \code{@sampleAnnotation} data frame in \code{x} (the input object of \code{InterestResult} type) to consider for plotting.
 }
 \item{intExCol}{
-	Column name (or number) that represents whether each row is "intron" or "exon" in \code{@interestDf} of the \code{interestResult} object.
+	Column name (or number) that represents whether each row is "intron" or "exon" in \code{@interestDf} of the \code{InterestResult} object.
 }
 \item{intTypeCol}{
 	Column name (or number) that represents what type of intron each row of \code{@interestDf} of \code{x} represents. The values in the column are either "U12", "U2" or \code{NA} (for the exons).
@@ -63,7 +63,7 @@ u12BoxplotNb(x, sampleAnnoCol=2, intExCol="int_ex",
 }
 }
 \value{
-A code{interestResult} object.
+A code{InterestResult} object.
 }
 
 \seealso{
@@ -104,7 +104,7 @@ interestDat<- data.frame(
 )
 readFreqColIndex<- grep("_readCnt$",colnames(interestDat))
 scaledRetentionColIndex<- grep("_fpkm$",colnames(interestDat))
-interestResultObj<- interestResult(
+InterestResultObj<- InterestResult(
 	resultFiles=paste("file",1:4, sep="_"),
 	interestDf= interestDat[, -c(readFreqColIndex, 
 		scaledRetentionColIndex)],
@@ -123,7 +123,7 @@ interestResultObj<- interestResult(
 
 interestDatPosStr<- interestDat
 interestDatPosStr[,"strand"]<- rep("+",28)
-interestResultPosStrObj<- interestResult(
+InterestResultPosStrObj<- InterestResult(
 	resultFiles=paste("file",1:4, sep="_"),
 	interestDf= interestDatPosStr[, -c(readFreqColIndex, 
 		scaledRetentionColIndex)],
@@ -140,13 +140,13 @@ interestResultPosStrObj<- interestResult(
 	)
 )
 # plot data where all introns/exons have unknown "*" strand
-u12BoxplotNb(interestResultObj, sampleAnnoCol=2, intExCol="int_ex",
+u12BoxplotNb(InterestResultObj, sampleAnnoCol=2, intExCol="int_ex",
 intTypeCol="int_type", intronExon="intron", boxplotNames=c(), 
 lasNames=1, outline=FALSE, plotLegend=TRUE, geneIdCol="gene_id",
 xLegend="topleft", col=c("pink", "lightblue"))
 
 # plot data with all introns/exons featuring "+" strand
-u12BoxplotNb(interestResultPosStrObj, sampleAnnoCol=2, 
+u12BoxplotNb(InterestResultPosStrObj, sampleAnnoCol=2, 
 intExCol="int_ex", intTypeCol="int_type",intronExon="intron",  
 boxplotNames=c(), lasNames=1, outline=FALSE, plotLegend=TRUE, 
 geneIdCol="gene_id", xLegend="topleft", 

@@ -26,7 +26,7 @@ interest.sequential( bamFileYieldSize=1000000, tmpDir, bamFile,
 \item{outFile}{ The name or path of the result file.}
 \item{logFile}{The log file path; if defined log information are written to the log file. }
 \item{delTmpFolder}{Whether delete temporary files and folder after running the analysis(\code{FALSE} by default).}
-\item{returnObj}{If set \code{TRUE} in addition to producing result text files, the results would also be returned as an object of class \code{interestResult}.}
+\item{returnObj}{If set \code{TRUE} in addition to producing result text files, the results would also be returned as an object of class \code{InterestResult}.}
 \item{method}{A vector describing the methods to use; i.e. whether estimate Intron retention (\code{IntRet}) or Exon-Exon junction (\code{ExEx}) levels or both. By default it returns both.}
 \item{appendLogFile}{Whether log information should be appended to the \code{logFile}. It is \code{FALSE} by default.}
 \item{sampleName}{The name of the sample being analyzed. It will be included in the returned object if \code{returnObj} is \code{TRUE}.}
@@ -34,7 +34,7 @@ interest.sequential( bamFileYieldSize=1000000, tmpDir, bamFile,
 \item{scaleFragment}{A vector constructed of TRUE/FALSE values, same size as the \code{method argument}. It indcates whether the retention levels of the intron/exons should be scaled to the sum of retention levels (i.e. mapped fragemnts) over the genes.}
 }
 \value{
-	If \code{returnObj} is set \code{TRUE} in addition to making results text files, dependant on whether a single or two \code{method} is defined, the results would be returned as a single object of class \code{interestResult} or as a list of size 2 which includes 2 objects of class \code{interestResult} one for IntRet and the other for ExEx. 
+	If \code{returnObj} is set \code{TRUE} in addition to making results text files, dependant on whether a single or two \code{method} is defined, the results would be returned as a single object of class \code{InterestResult} or as a list of size 2 which includes 2 objects of class \code{InterestResult} one for IntRet and the other for ExEx. 
 }
 \seealso{
   \code{\link{interest}}.

@@ -13,16 +13,16 @@ lfc(x, fcType="edgeR", sampleAnnoCol=c(), sampleAnnotation=c(),
 }
 \arguments{
 \item{x}{ 
-	Object of type \code{interestResult}.
+	Object of type \code{InterestResult}.
 }
 \item{fcType}{
 	Available as "scaledRetention" or "edgeR" (as default) corresponding to either log fold change of scaled retention values or degeR normalized log fold change values.
 }
 \item{sampleAnnoCol}{
-	Which column of \code{@sampleAnnotation} of object \code{interestResult} to consider for plotting.
+	Which column of \code{@sampleAnnotation} of object \code{InterestResult} to consider for plotting.
 }
 \item{sampleAnnotation}{
-	A vector of size 2 which cotains values from \code{@sampleAnnotation} of \code{interestResult} object; e.g. if x@sampleAnnotation[,sampleAnnoCol] = c("test", "test", "ctrl","ctrl", ...), and the goal is to compare "test" and "ctrl" samples, \code{sampleAnnotation} should either be c("test","ctrl") or c("ctrl","test").
+	A vector of size 2 which cotains values from \code{@sampleAnnotation} of \code{InterestResult} object; e.g. if x@sampleAnnotation[,sampleAnnoCol] = c("test", "test", "ctrl","ctrl", ...), and the goal is to compare "test" and "ctrl" samples, \code{sampleAnnotation} should either be c("test","ctrl") or c("ctrl","test").
 }
 \item{silent}{
 	Whether run \code{\link{exactTestInterest}} silently, without warnings.
@@ -86,7 +86,7 @@ interestDat<-data.frame(
 )
 readFreqColIndex<- grep("_readCnt$",colnames(interestDat))
 scaledRetentionColIndex<- grep("_fpkm$",colnames(interestDat))
-interestResObj<-interestResult(
+interestResObj<-InterestResult(
 	resultFiles=paste("file",1:4, sep="_"),
 	interestDf= interestDat[ , -c(readFreqColIndex, 
 		scaledRetentionColIndex)],

@@ -4,14 +4,14 @@
 	Extract index of U12 introns rows
 }
 \description{
-	Extract row numbers of U12 introns in \code{@interestDf} in an object of class \code{interestResult}.
+	Extract row numbers of U12 introns in \code{@interestDf} in an object of class \code{InterestResult}.
 }
 \usage{
 u12Index(x, intExCol="int_ex", intTypeCol="int_type")
 }
 \arguments{
 \item{x}{ 
-	Object of type \code{interestResult}.
+	Object of type \code{InterestResult}.
 }
 \item{intExCol}{
 	Column name (or number) that represents whether each row is "intron" or "exon" in \code{@sampleAnnotation} of \code{x}.

@@ -13,16 +13,16 @@ exactTestInterest(x, sampleAnnoCol=c(), sampleAnnotation=c(),
 }
 \arguments{
 \item{x}{ 
-	Object of type \code{interestResult}.
+	Object of type \code{InterestResult}.
 }
 \item{sampleAnnoCol}{
-	Which colummn of \code{@sampleAnnotation} of object \code{interestResult} to consider for the analysis.
+	Which colummn of \code{@sampleAnnotation} of object \code{InterestResult} to consider for the analysis.
 }
 \item{sampleAnnotation}{
-	A vector of size 2 which cotains values from \code{@sampleAnnotation} of \code{interestResult} object; e.g. if \code{x@sampleAnnotation [,sampleAnnoCol] = c("test", "test", "ctrl","ctrl", ...)}, and the goal is to compare "test" and "ctrl" samples, \code{sampleAnnotation} should either be \code{c("test","ctrl")} or \code{c("ctrl","test")}.
+	A vector of size 2 which cotains values from \code{@sampleAnnotation} of \code{InterestResult} object; e.g. if \code{x@sampleAnnotation [,sampleAnnoCol] = c("test", "test", "ctrl","ctrl", ...)}, and the goal is to compare "test" and "ctrl" samples, \code{sampleAnnotation} should either be \code{c("test","ctrl")} or \code{c("ctrl","test")}.
 }
 \item{geneIdCol}{
-	Column name (or number) that represents the gene ID of each row of \code{@sampleAnnotation} in object \code{interestResult}.
+	Column name (or number) that represents the gene ID of each row of \code{@sampleAnnotation} in object \code{InterestResult}.
 }
 \item{silent}{
 	Whether run silently, i.e. without printing the top differential expression tags.
@@ -96,7 +96,7 @@ interestDat<-data.frame(
 readFreqColIndex<- grep("_readCnt$",colnames(interestDat))
 scaledRetentionColIndex<- grep("_fpkm$",colnames(interestDat))
 
-interestResObj<- interestResult(
+interestResObj<- InterestResult(
 	resultFiles=paste("file",1:4, sep="_"),
 	interestDf= interestDat[, -c(readFreqColIndex, 
 		scaledRetentionColIndex)],

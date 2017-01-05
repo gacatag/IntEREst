@@ -80,15 +80,15 @@ function(
 	if(delTmpFolder) unlink(tmpDir, recursive = TRUE, force = TRUE)
 	tmpDat=read.table(outFile, header=TRUE, stringsAsFactors=FALSE)
 	if(returnObj & length(method)==1){
-		resObj=interestResult(resultFiles=outFile, readFreq=matrix(tmpDat[,(ncol(tmpDat)-1)], ncol=1), 
+		resObj=InterestResult(resultFiles=outFile, readFreq=matrix(tmpDat[,(ncol(tmpDat)-1)], ncol=1), 
 			scaledRetention=matrix(tmpDat[,ncol(tmpDat)], ncol=1), sampleNames=sampleName, 	
 			scaleLength=scaleLength, scaleFragment=scaleFragment, sampleAnnotation=data.frame(), interestDf=tmpDat[, 1:(ncol(tmpDat)-2)])
 		return(resObj)
 	} else if (returnObj & length(method)==2){
-		resObj= list(IntRet=interestResult(resultFiles=outFile, readFreq=matrix(tmpDat[,(ncol(reference)+1)], ncol=1), 
+		resObj= list(IntRet=InterestResult(resultFiles=outFile, readFreq=matrix(tmpDat[,(ncol(reference)+1)], ncol=1), 
 				scaledRetention=matrix(tmpDat[,(ncol(reference)+2)], ncol=1), sampleNames=sampleName, scaleLength=scaleLength[method="IntRet"], 
 				scaleFragment=scaleFragment[method="IntRet"], sampleAnnotation=data.frame(), interestDf=tmpDat[, 1:ncol(reference)]), 
-			ExEx=interestResult(resultFiles=outFile, readFreq=matrix(tmpDat[,(ncol(reference)+3)], ncol=1), 
+			ExEx=InterestResult(resultFiles=outFile, readFreq=matrix(tmpDat[,(ncol(reference)+3)], ncol=1), 
 				scaledRetention=matrix(tmpDat[,(ncol(reference)+4)], ncol=1), sampleNames=sampleName, 
 				scaleLength=scaleLength[method="ExEx"], scaleFragment=scaleFragment[method="ExEx"], 
 				sampleAnnotation=data.frame(), interestDf=tmpDat[, 1:ncol(reference)]) )

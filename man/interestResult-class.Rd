@@ -1,7 +1,7 @@
 \docType{class}
-\name{interestResult-class}
-\alias{interestResult-class}
-\title{interestResult Class}
+\name{InterestResult-class}
+\alias{InterestResult-class}
+\title{InterestResult Class}
 \description{
 Class that contains results of the \code{interest()} and \code{interest.sequential()} analysis.
 }
@@ -32,7 +32,7 @@ Class that contains results of the \code{interest()} and \code{interest.sequenti
 \seealso{
 Constructors:
 \code{\link{readInterestResults}},
-\code{\link{interestResult}}.
+\code{\link{InterestResult}}.
 
 Methods:
 \code{\link{plot-method}}.

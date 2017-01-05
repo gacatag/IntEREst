@@ -1,17 +1,17 @@
 \docType{methods}
 \name{plot-method}
-\alias{plot.interestResult}
-\alias{plot,interestResult,ANY-method}
+\alias{plot.InterestResult}
+\alias{plot,InterestResult,ANY-method}
 \alias{plot-method}
 
 \title{
 	plot - method
 }
 \description{
-	plot method for \code{interestResult} objects.
+	plot method for \code{InterestResult} objects.
 }
 \usage{
-\S4method{plot}{interestResult,ANY}(x, summary="none", 
+\S4method{plot}{InterestResult,ANY}(x, summary="none", 
 	subsetRows=NULL, what="scaled", intronExon="intron", 
 	logScaleBase=NULL, logPseudoCnt=1, plotLoess=TRUE, 
 	loessCol="red", loessLwd=1, loessLty=1, cexText=1, 
@@ -23,13 +23,13 @@
 }
 \arguments{
 \item{x}{ 
-	Object of type \code{interestResult}.
+	Object of type \code{InterestResult}.
 }
 \item{summary}{ 
 	Whether to plot the mean or median of the values over the sample with the same annotations, or plot the values for each individual sample separately. The available options are "mean", "median", or "none".
 }
 \item{subsetRows}{
-	Vector either constructed of TRUE/FALSE values or constructed of numeric values that could be used to choose rows from the intron/exon table (\code{@interestDf}) of the \code{interestResult} object to be plotted.
+	Vector either constructed of TRUE/FALSE values or constructed of numeric values that could be used to choose rows from the intron/exon table (\code{@interestDf}) of the \code{InterestResult} object to be plotted.
 }
 \item{what}{
 	Whether plot "scaled" (default) or read counts ("readFreq").
@@ -92,7 +92,7 @@
 	size of the plot text and symbols (default=1). 
 }
 \item{sampleAnnoCol}{
-	Which colummn of \code{@sampleAnnotation} of object \code{interestResult} to consider for plotting.
+	Which colummn of \code{@sampleAnnotation} of object \code{InterestResult} to consider for plotting.
 }
 \item{lowerPlot}{
 	Whether plot the lower panel (default=FALSE).
@@ -110,7 +110,7 @@
 }
 \seealso{
 Class:
-	\code{\link{interestResult-class}}
+	\code{\link{InterestResult-class}}
 Method:
 	 \code{\link{show-method}}
 }
@@ -147,7 +147,7 @@ interestDat<- data.frame(
 readFreqColIndex<- grep("_readCnt$",colnames(interestDat))
 scaledRetentionColIndex<- grep("_fpkm$",colnames(interestDat))
 
-interestResultObj<- interestResult(
+InterestResultObj<- InterestResult(
 	resultFiles=paste("file",1:4, sep="_"),
 	interestDf= interestDat[ , -c(readFreqColIndex, 
 		scaledRetentionColIndex)],
@@ -163,16 +163,16 @@ interestResultObj<- interestResult(
 	)
 )
 
-interestResultObj2<- addAnnotation(x=interestResultObj,
+InterestResultObj2<- addAnnotation(x=InterestResultObj,
 	sampleAnnotationType="health",
 	sampleAnnotation=c("healthy","unhealthy","healthy","unhealthy")
 )
 
 #Plotting
-plot(interestResultObj)
-plot(interestResultObj, summary="mean")
-plot(interestResultObj2, sampleAnnoCol="gender", summary="mean")
-plot(interestResultObj2, sampleAnnoCol=3, summary="mean")
-plot(interestResultObj2, summary="none")
+plot(InterestResultObj)
+plot(InterestResultObj, summary="mean")
+plot(InterestResultObj2, sampleAnnoCol="gender", summary="mean")
+plot(InterestResultObj2, sampleAnnoCol=3, summary="mean")
+plot(InterestResultObj2, summary="none")
 }
 

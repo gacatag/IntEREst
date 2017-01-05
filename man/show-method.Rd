@@ -1,20 +1,20 @@
 \docType{methods}
 \name{show-method}
-\alias{show,interestResult-method}
+\alias{show,InterestResult-method}
 \alias{show-method}
 
 \title{
 	show - method
 }
 \description{
-	Show \code{interestResult} objects.
+	Show \code{InterestResult} objects.
 }
 \usage{
-\S4method{show}{interestResult}(object)
+\S4method{show}{InterestResult}(object)
 }
 \arguments{
 \item{object}{ 
-	Object of type \code{interestResult}.
+	Object of type \code{InterestResult}.
 }
 }
 \value{
@@ -22,7 +22,7 @@
 }
 \seealso{
 Class:
-	\code{\link{interestResult-class}}.
+	\code{\link{InterestResult-class}}.
 
 
 Method:
@@ -31,10 +31,10 @@ Method:
 \author{Ali Oghabian}
 
 \examples{
-#Show contents of a interestResults object included in IntEREst 
+#Show contents of a InterestResults object included in IntEREst 
 mdsChr22Obj
 
-#Make a test interestResults object
+#Make a test InterestResults object
 geneId<- paste("gene", c(rep(1,5), rep(2,5), rep(3,5), rep(4,5)), 
 	sep="_")
 readCnt1<- sample(1:100, 20)
@@ -62,7 +62,7 @@ interestDat<- data.frame(
 )
 readFreqColIndex<- grep("_readCnt$",colnames(interestDat))
 scaledRetentionColIndex<- grep("_fpkm$",colnames(interestDat))
-interestResultObj<- interestResult(
+InterestResultObj<- InterestResult(
 	resultFiles=paste("file",1:4, sep="_"),
 	interestDf= interestDat[,-c(readFreqColIndex, 
 		scaledRetentionColIndex)],
@@ -79,6 +79,6 @@ interestResultObj<- interestResult(
 )
 
 #Show object
-interestResultObj
+InterestResultObj
 }
 

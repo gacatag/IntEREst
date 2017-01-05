@@ -4,7 +4,7 @@
 	Extract index of U2 introns (up/down)stream of U12 introns rows
 }
 \description{
-	Extract row numbers of U2-type introns (up/down)stream of U12-type introns (in the \code{@interestDf} attribute of an object of class \code{interestResult}).
+	Extract row numbers of U2-type introns (up/down)stream of U12-type introns (in the \code{@interestDf} attribute of an object of class \code{InterestResult}).
 }
 \usage{
 u12NbIndex(x, intExCol="int_ex", intTypeCol="int_type", 
@@ -13,7 +13,7 @@ u12NbIndex(x, intExCol="int_ex", intTypeCol="int_type",
 }
 \arguments{
 \item{x}{ 
-	Object of type \code{interestResult}.
+	Object of type \code{InterestResult}.
 }
 \item{intExCol}{
 	Column name (or number) that represents whether each row is "intron" or "exon" in \code{@interestDf} attribute of \code{x}.

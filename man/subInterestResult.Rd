@@ -4,7 +4,7 @@
 	Extract subset of object 
 }
 \description{
-	Build a new object using subset of data in an \code{interestResult} object. 
+	Build a new object using subset of data in an \code{InterestResult} object. 
 }
 \usage{
 subInterestResult(x, interestDfRow=c(), interestDfSample=c(), 
@@ -12,7 +12,7 @@ subInterestResult(x, interestDfRow=c(), interestDfSample=c(),
 }
 \arguments{
 \item{x}{ 
-	Object of type \code{interestResult}.
+	Object of type \code{InterestResult}.
 }
 \item{interestDfRow}{
 	Numeric or TRUE/FALSE Vector indicating what rows to extract.
@@ -21,19 +21,19 @@ subInterestResult(x, interestDfRow=c(), interestDfSample=c(),
 	A vector with Numeric values, character strings (sample names) or TRUE/FALSE Vector indicating what columns to extract.
 }
 \item{sampleAnnoCol}{
-	Which colummn of \code{@sampleAnnotation} of object \code{interestResult} to consider for subset data extraction.
+	Which colummn of \code{@sampleAnnotation} of object \code{InterestResult} to consider for subset data extraction.
 }
 \item{sampleAnnotation}{
-	which annotation to consider for subset data extraction. It should be included in the \code{sampleAnnoCol} column of the \code{@sampleAnnotation} attribute of object \code{interestResult}.
+	which annotation to consider for subset data extraction. It should be included in the \code{sampleAnnoCol} column of the \code{@sampleAnnotation} attribute of object \code{InterestResult}.
 }
 }
 \value{
-An object of calss \code{interestResult}.
+An object of calss \code{InterestResult}.
 }
 
 \seealso{
 	\code{\link{interest}},
-	\code{\link{interestResult}}.
+	\code{\link{InterestResult}}.
 }
 
 \author{Ali Oghabian}
@@ -69,7 +69,7 @@ interestDat<-data.frame(
 )
 readFreqColIndex<- grep("_readCnt$",colnames(interestDat))
 scaledRetentionColIndex<- grep("_fpkm$",colnames(interestDat))
-interestResObj<-interestResult(
+interestResObj<-InterestResult(
 	resultFiles=paste("file",1:4, sep="_"),
 	interestDf= interestDat[, -c(readFreqColIndex, 
 		scaledRetentionColIndex)],

@@ -13,7 +13,7 @@
 }
 \arguments{
 \item{x}{ 
-	Object of type \code{interestResult}.
+	Object of type \code{InterestResult}.
 }
 \item{design}{
 	Design matrix.

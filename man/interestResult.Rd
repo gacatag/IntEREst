@@ -1,13 +1,13 @@
-\name{interestResult}
-\alias{interestResult}
+\name{InterestResult}
+\alias{InterestResult}
 \title{
 	Results object for interest and interest.sequential functions.
 }
 \description{
-	Creates an \code{interestResult} object that includes information from result files created by \code{interest()} and \code{interest.sequential()} functions. 
+	Creates an \code{InterestResult} object that includes information from result files created by \code{interest()} and \code{interest.sequential()} functions. 
 }
 \usage{
-interestResult (resultFiles=c(), readFreq, 
+InterestResult (resultFiles=c(), readFreq, 
 	scaledRetention, sampleNames, scaleLength, 
 	scaleFragment, sampleAnnotation, interestDf)
 }
@@ -38,7 +38,7 @@ interestResult (resultFiles=c(), readFreq,
 }
 }
 \value{
-	Returns an object of class \code{interestResult}. 
+	Returns an object of class \code{InterestResult}. 
 }
 \seealso{
 	\code{\link{attributes}},
@@ -77,7 +77,7 @@ interestDat<- data.frame(
 )
 readFreqColIndex=grep("_readCnt$",colnames(interestDat))
 scaledRetentionColIndex=grep("_fpkm$",colnames(interestDat))
-interestResultObj<- interestResult(
+InterestResultObj<- InterestResult(
 	resultFiles=paste("file",1:4, sep="_"),
 	interestDf= interestDat[,-c(readFreqColIndex, 
 		scaledRetentionColIndex)],
@@ -94,7 +94,7 @@ interestResultObj<- interestResult(
 )
 
 # View object
-interestResultObj
+InterestResultObj
 
 }
 

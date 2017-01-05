@@ -2,15 +2,15 @@
 #scaledRetentionColIndex -> scaledRetention
 #readFreqColIndex -> readFreq
 #scaledRetentionColIndex -> scaledRetention
-methods::setClass("interestResult", 
+methods::setClass("InterestResult", 
 	methods::representation(resultFiles="character", readFreq="matrix", scaledRetention="matrix", sampleNames="character",
 		scaleLength="logical", scaleFragment="logical", sampleAnnotation="data.frame", interestDf="data.frame") 
 )
 
 #Constructor
-interestResult <- function(resultFiles=c(), readFreq, scaledRetention, sampleNames, scaleLength, scaleFragment, 
+InterestResult <- function(resultFiles=c(), readFreq, scaledRetention, sampleNames, scaleLength, scaleFragment, 
 	sampleAnnotation, interestDf){
-	methods::new("interestResult", resultFiles=resultFiles, readFreq=readFreq, scaledRetention=scaledRetention, 
+	methods::new("InterestResult", resultFiles=resultFiles, readFreq=readFreq, scaledRetention=scaledRetention, 
 		sampleNames=sampleNames, scaleLength= scaleLength, scaleFragment= scaleFragment, sampleAnnotation=sampleAnnotation, interestDf=interestDf)
 }
 
@@ -33,7 +33,7 @@ cat("\n...\n")
 }
 
 #show method
-methods::setMethod("show", "interestResult",
+methods::setMethod("show", "InterestResult",
 	function(object){
 		cat("  @resultFiles: ", strtrim(paste(object@resultFiles, collapse=", "), 40), "... ",
 			length(object@resultFiles), " files", sep="" )
@@ -51,7 +51,7 @@ methods::setMethod("show", "interestResult",
 )
 
 # plot method
-plot.interestResult<-function(x, summary="none", subsetRows=NULL, what="scaled", intronExon="intron", logScaleBase=NULL, logPseudoCnt=1, plotLoess=TRUE, 
+plot.InterestResult<-function(x, summary="none", subsetRows=NULL, what="scaled", intronExon="intron", logScaleBase=NULL, logPseudoCnt=1, plotLoess=TRUE, 
 	loessCol="red",	loessLwd=1, loessLty=1, cexText=1, marPlot=c(2,2,2,2), mgpPlot=c(1, 1, 0), cexAxis=1, writeCor=TRUE, corCex=1, corMethod="pearson", 	corCol="grey63", upperCorXY=c("topleft", NULL), lowerCorXY= c("topleft", NULL), na.rm=TRUE, cex=1, sampleAnnoCol=c(), lowerPlot=FALSE, 
 	upperPlot=TRUE, ...){
 	object=x
@@ -190,7 +190,7 @@ plot.interestResult<-function(x, summary="none", subsetRows=NULL, what="scaled",
 	
 }
 
-methods::setMethod("plot", "interestResult", plot.interestResult)
+methods::setMethod("plot", "InterestResult", plot.InterestResult)
 
 # Functions getting methods  
 getAnnotation<-function(x){
