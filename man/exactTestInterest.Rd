@@ -4,7 +4,8 @@
 	Exact test
 }
 \description{
-	Compute genewise exact test between two groups of read counts, using the \code{edgeR} package. 
+Compute genewise exact test between two groups of read counts, using the 
+\code{edgeR} package. 
 }
 \usage{
 exactTestInterest(x, sampleAnnoCol=c(), sampleAnnotation=c(), 
@@ -16,45 +17,63 @@ exactTestInterest(x, sampleAnnoCol=c(), sampleAnnotation=c(),
 	Object of type \code{InterestResult}.
 }
 \item{sampleAnnoCol}{
-	Which colummn of \code{@sampleAnnotation} of object \code{InterestResult} to consider for the analysis.
+Which colummn of \code{@sampleAnnotation} of object \code{InterestResult} to
+consider for the analysis.
 }
 \item{sampleAnnotation}{
-	A vector of size 2 which cotains values from \code{@sampleAnnotation} of \code{InterestResult} object; e.g. if \code{x@sampleAnnotation [,sampleAnnoCol] = c("test", "test", "ctrl","ctrl", ...)}, and the goal is to compare "test" and "ctrl" samples, \code{sampleAnnotation} should either be \code{c("test","ctrl")} or \code{c("ctrl","test")}.
+A vector of size 2 which cotains values from \code{@sampleAnnotation} of 
+\code{InterestResult} object; e.g. if \code{x@sampleAnnotation[,sampleAnnoCol]=
+c("test", "test", "ctrl","ctrl", ...)}, and the goal is to compare "test" and 
+"ctrl" samples, \code{sampleAnnotation} should either be \code{c("test",
+"ctrl")} or \code{c("ctrl","test")}.
 }
 \item{geneIdCol}{
-	Column name (or number) that represents the gene ID of each row of \code{@sampleAnnotation} in object \code{InterestResult}.
+Column name (or number) that represents the gene ID of each row of 
+\code{@sampleAnnotation} in object \code{InterestResult}.
 }
 \item{silent}{
-	Whether run silently, i.e. without printing the top differential expression tags.
+Whether run the function silently, i.e. without printing the top differential 
+expression tags.
 }
 \item{group}{
-	Vector to manually define the sample groups (or annotations). It is ignored if \code{sampleAnnopCol} is defined.
+Vector to manually define the sample groups (or annotations). It is ignored if 
+\code{sampleAnnopCol} is defined.
 }
 \item{rejection.region}{
-	The \code{rejection.region} parameter in \code{\link[edgeR]{exactTest}} from \code{edgeR} package.
+The \code{rejection.region} parameter in \code{\link[edgeR]{exactTest}} from 
+\code{edgeR} package.
 }
 \item{big.count}{
-	The \code{big.count} parameter in \code{\link[edgeR]{exactTest}} from \code{edgeR} package.
+The \code{big.count} parameter in \code{\link[edgeR]{exactTest}} from 
+\code{edgeR} package.
 }
 \item{prior.count}{
-	The \code{prior.count} parameter in \code{\link[edgeR]{exactTest}} from \code{edgeR} package.
+The \code{prior.count} parameter in \code{\link[edgeR]{exactTest}} from 
+\code{edgeR} package.
 }
 \item{disp}{
-	The type of estimating the dispersion in the data. Available options are: "tagwise", "trended", "common" and "genewise". It is also possible to assign a number for manually setting the \code{disp}.
+The type of estimating the dispersion in the data. Available options are: 
+"tagwise", "trended", "common" and "genewise". It is also possible to assign a 
+number for manually setting the \code{disp}.
 }
 \item{...}{
-	Other parameter settings for the \code{\link[edgeR]{estimateDisp}} function (e.g. the \code{design} parameter) in the \code{edgeR} package.
+Other parameter settings for the \code{\link[edgeR]{estimateDisp}} function 
+(e.g. the \code{design} parameter) in the \code{edgeR} package.
 }
 
 }
 \value{
-\item{table}{ Data  frame  containing  columns  for  the  log2 fold-change (logFC),  the  average of log2 counts-per-million (logCPM), and the two-sided p-value (PValue).  }
+\item{table}{ 
+Data frame containing columns for the log2 fold-change (logFC), the average of 
+log2 counts-per-million (logCPM), and the two-sided p-value (PValue).  
+}
 \item{comparison}{The name of the two compared groups.}
 \item{dispersionType}{The name of the type of dispersion used.}
 \item{dispersion}{The estimated dispersion values.}
 }
 \seealso{
-	\code{\link{lfc}}, \code{\link{glmInterest}}, \code{\link{qlfInterest}}, \code{\link{treatInterest}}
+\code{\link{lfc}}, \code{\link{glmInterest}}, \code{\link{qlfInterest}}, 
+\code{\link{treatInterest}}
 }
 
 \author{Ali Oghabian}

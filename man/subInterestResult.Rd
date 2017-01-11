@@ -1,10 +1,10 @@
 \name{subInterestResult}
 \alias{subInterestResult}
 \title{
-	Extract subset of object 
+Extract subset of object 
 }
 \description{
-	Build a new object using subset of data in an \code{InterestResult} object. 
+Build a new object using subset of data in an \code{InterestResult} object. 
 }
 \usage{
 subInterestResult(x, interestDfRow=c(), interestDfSample=c(), 
@@ -12,19 +12,23 @@ subInterestResult(x, interestDfRow=c(), interestDfSample=c(),
 }
 \arguments{
 \item{x}{ 
-	Object of type \code{InterestResult}.
+Object of type \code{InterestResult}.
 }
 \item{interestDfRow}{
-	Numeric or TRUE/FALSE Vector indicating what rows to extract.
+Numeric or TRUE/FALSE Vector indicating what rows to extract.
 }
 \item{interestDfSample}{
-	A vector with Numeric values, character strings (sample names) or TRUE/FALSE Vector indicating what columns to extract.
+A vector with Numeric values, character strings (sample names) or TRUE/FALSE 
+Vector indicating what columns to extract.
 }
 \item{sampleAnnoCol}{
-	Which colummn of \code{@sampleAnnotation} of object \code{InterestResult} to consider for subset data extraction.
+Which colummn of \code{@sampleAnnotation} of object \code{InterestResult} to 
+consider for subset data extraction.
 }
 \item{sampleAnnotation}{
-	which annotation to consider for subset data extraction. It should be included in the \code{sampleAnnoCol} column of the \code{@sampleAnnotation} attribute of object \code{InterestResult}.
+which annotation to consider for subset data extraction. It should be included 
+in the \code{sampleAnnoCol} column of the \code{@sampleAnnotation} attribute of
+object \code{InterestResult}.
 }
 }
 \value{

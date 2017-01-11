@@ -15,10 +15,13 @@ addAnnotation(x, sampleAnnotationType, sampleAnnotation)
 	Object of type \code{InterestResult}.
 }
 \item{sampleAnnotationType}{
-	The name of the new column to be added to the \code{@sampleAnnotation} table of \code{InterestResult} object.
+	The name of the new column to be added to the \code{@sampleAnnotation} table
+	of \code{InterestResult} object.
 }
 \item{sampleAnnotation}{
-	Vector with the same length as the row-size of the \code{@sampleAnnotation} attribute of the \code{InterestResult} object, which includes the sample annotations.
+	Vector with the same length as the row-size of the \code{@sampleAnnotation} 
+	attribute of the \code{InterestResult} object, which includes the sample 
+	annotations.
 }
 
 }

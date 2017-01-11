@@ -4,7 +4,8 @@
 	Results object for interest and interest.sequential functions.
 }
 \description{
-	Creates an \code{InterestResult} object that includes information from result files created by \code{interest()} and \code{interest.sequential()} functions. 
+Creates an \code{InterestResult} object that includes information from result 
+files created by \code{interest()} and \code{interest.sequential()} functions. 
 }
 \usage{
 InterestResult (resultFiles=c(), readFreq, 
@@ -13,32 +14,38 @@ InterestResult (resultFiles=c(), readFreq,
 }
 \arguments{
 \item{resultFiles}{
-	Vector of link to the result files of \code{interest}.
+Vector of link to the result files of \code{interest}.
 }
 \item{readFreq}{
-	Numeric Matrix that includes the read counts.
+Numeric Matrix that includes the read counts.
 }
 \item{scaledRetention}{
-	Matrix that includes the scaled retention values.
+Matrix that includes the scaled retention values.
 }
 \item{sampleNames}{
-	Vector with same size as \code{resultFiles}  which contains the names of the samples.
+Vector with same size as \code{resultFiles} which contains the names of the 
+samples.
 }
 \item{scaleLength}{
-	Logical value, indicating whether the intron/exon retention levels are scaled to the length of the introns/exons. 
+Logical value, indicating whether the intron/exon retention levels are scaled 
+to the length of the introns/exons. 
 }
 \item{scaleFragment}{
-	Logical value, indicating whether the intron/exon retention levels are scaled to the fragments mapped to the genes. 
+Logical value, indicating whether the intron/exon retention levels are scaled 
+to the fragments mapped to the genes. 
 }
 \item{sampleAnnotation}{
-	Data frame with the row-size equal to the size of \code{resultFiles} and \code{sampleAnnotation}. Each column of the matrix represents annotations for the samples. Column name represents annotation name.
+Data frame with the row-size equal to the size of \code{resultFiles} and 
+\code{sampleAnnotation}. Each column of the matrix represents annotations for 
+the samples. Column name represents annotation name.
 }
 \item{interestDf}{ 
-	Data frame with Intron/Exon annotations and read count  and scaled retention values for each sample.
+Data frame with Intron/Exon annotations and read count  and scaled retention 
+values for each sample.
 }
 }
 \value{
-	Returns an object of class \code{InterestResult}. 
+Returns an object of class \code{InterestResult}. 
 }
 \seealso{
 	\code{\link{attributes}},

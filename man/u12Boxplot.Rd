@@ -4,7 +4,7 @@
 	U12 boxplot
 }
 \description{
-	A boxplot method for U12 and U2-type introns of \code{InterestResult} objects.
+A boxplot method for U12 and U2-type introns of \code{InterestResult} objects.
 }
 \usage{
 u12Boxplot(x, sampleAnnoCol=NA, intExCol="int_ex",
@@ -13,34 +13,40 @@ u12Boxplot(x, sampleAnnoCol=NA, intExCol="int_ex",
 }
 \arguments{
 \item{x}{ 
-	Object of type \code{InterestResult}.
+Object of type \code{InterestResult}.
 }
 \item{sampleAnnoCol}{
-	Which colummn of \code{@sampleAnnotation} datat frame in \code{InterestResult} object to consider for plotting.
+Which colummn of \code{@sampleAnnotation} datat frame in \code{InterestResult} 
+object to consider for plotting.
 }
 \item{intExCol}{
-	Column name (or number) that represents whether each row in \code{@sampleAnnotation} of object \code{InterestResult} is "intron" or "exon" .
+Column name (or number) that represents whether each row in 
+\code{@sampleAnnotation} of object \code{InterestResult} is "intron" or "exon".
 }
 \item{intTypeCol}{
-	Column name (or number) that represents what type of intron each row of \code{@sampleAnnotation} of object \code{InterestResult} represents.
+Column name (or number) that represents what type of intron each row of 
+\code{@sampleAnnotation} of object \code{InterestResult} represents.
 }
 \item{intronExon}{
-	Whether plot intron retention (set \code{intronExon="intron"}) or exon-exon junction (set \code{intronExon="exon"}) levels. 
+Whether plot intron retention (set \code{intronExon="intron"}) or exon-exon 
+junction (set \code{intronExon="exon"}) levels. 
 }
 \item{col}{
-	Vector showing box colours. It is either of size 1 or the same size as the number of groups to be plotted.
+Vector showing box colours. It is either of size 1 or the same size as the 
+number of groups to be plotted.
 }
 \item{boxplotNames}{
-	Names to write under boxes.
+Names to write under boxes.
 }
 \item{lasNames}{
-	Orientation of the box names.
+Orientation of the box names.
 }
 \item{outline}{
-	If outline is TRUE the outlier points are drawn otherwise if FALSE (default) they are not.
+If outline is TRUE the outlier points are drawn otherwise if FALSE (default) 
+they are not.
 }
 \item{...}{
-	Other arguments to pass to the \code{boxplot()} function.
+Other arguments to pass to the \code{boxplot()} function.
 }
 }
 \value{

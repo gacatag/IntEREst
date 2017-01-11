@@ -4,7 +4,9 @@
 	quasi-likelihood F-test
 }
 \description{
-	Compute quasi-likelihood F-test using \code{edgeR} package. For more information see \code{glmQLFit} and \code{\link[edgeR]{glmQLFTest}} functions in \code{edgeR} package.
+Compute quasi-likelihood F-test using \code{edgeR} package. For more 
+information see \code{glmQLFit} and \code{\link[edgeR]{glmQLFTest}} functions 
+in \code{edgeR} package.
 }
 \usage{
 	qlfInterest(x, design=c(), silent=TRUE, disp="common", 
@@ -19,22 +21,31 @@
 	Design matrix.
 }
 \item{silent}{
-	Whether run silently, i.e. without printing the top differential expression tags. The default is TRUE.
+Whether run silently, i.e. without printing the top differential expression
+ tags. The default is TRUE.
 }
 \item{disp}{
-	The method of estimating the dispersion in the data. Available options are: "common", "trended", "tagwiseInitCommon" and "tagwiseInitTrended". It is also possible to assign a number.
+The method of estimating the dispersion in the data. Available options are: 
+"common", "trended", "tagwiseInitCommon" and "tagwiseInitTrended". It is also 
+possible to assign a number.
 }
 \item{coef}{
-	Integer or character vector indicating which coefficients of the linear model are to be tested equal to zero. See \code{\link[edgeR]{glmQLFTest}} for more information.
+Integer or character vector indicating which coefficients of the linear model 
+are to be tested equal to zero. See \code{\link[edgeR]{glmQLFTest}} for more 
+information.
 }
 \item{contrast}{
-	Numeric vector or matrix specifying contrasts of the linear model coefficients to be tested equal to zero. See \code{\link[edgeR]{glmQLFTest}} for more information.
+Numeric vector or matrix specifying contrasts of the linear model coefficients 
+to be tested equal to zero. See \code{\link[edgeR]{glmQLFTest}} for more 
+information.
 }
 \item{poisson.bound}{
-	Logical value, if TRUE (i.e. default) the pvalue would be higher than when obtained fom likelihood ratio test while Negative Binomial dispersion is zero. 
+Logical value, if TRUE (i.e. default) the pvalue would be higher than when 
+obtained fom likelihood ratio test while Negative Binomial dispersion is zero.
 }
 \item{...}{
-	Other parameter settings for the \code{\link[edgeR]{glmQLFTest}} function in the \code{edgeR} package.
+Other parameter settings for the \code{\link[edgeR]{glmQLFTest}} function in 
+the \code{edgeR} package.
 }
 
 }
@@ -44,7 +55,8 @@ All values produced by \code{\link[edgeR]{glmQLFTest}} plus the following :
 \item{dispersion}{The estimated dispersion values.}
 }
 \seealso{
-	\code{\link{exactTestInterest}}, \code{\link{glmInterest}}, \code{\link{treatInterest}}
+\code{\link{exactTestInterest}}, \code{\link{glmInterest}}, 
+\code{\link{treatInterest}}
 }
 
 \author{Ali Oghabian}

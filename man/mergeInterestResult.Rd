@@ -4,7 +4,7 @@
 	merge two InterestResult objects into one 
 }
 \description{
-	Build a new object bu merging data of two \code{InterestResult} objects. 
+	Build a new object bu merging data of two \code{InterestResult} objects.
 }
 \usage{
 mergeInterestResult(x, y)
@@ -30,7 +30,7 @@ An object of calss \code{InterestResult}.
 
 \examples{
 
-geneId<- paste("gene", c(rep(1,7), rep(2,7), rep(3,7), rep(4,7)), 
+geneId<- paste("gene", c(rep(1,7), rep(2,7), rep(3,7), rep(4,7)),
 	sep="_")
 readCnt1<- sample(1:100, 28)
 readCnt2<- sample(1:100, 28)

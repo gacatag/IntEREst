@@ -4,7 +4,8 @@
 	Log fold change
 }
 \description{
-	Log fold change estimation and normalized log fold change using the \code{edgeR} package. 
+Log fold change estimation and normalized log fold change using \code{edgeR}
+ package. 
 }
 \usage{
 lfc(x, fcType="edgeR", sampleAnnoCol=c(), sampleAnnotation=c(), 
@@ -16,31 +17,41 @@ lfc(x, fcType="edgeR", sampleAnnoCol=c(), sampleAnnotation=c(),
 	Object of type \code{InterestResult}.
 }
 \item{fcType}{
-	Available as "scaledRetention" or "edgeR" (as default) corresponding to either log fold change of scaled retention values or degeR normalized log fold change values.
+Available as "scaledRetention" or "edgeR" (as default) corresponding to either
+log fold change of scaled retention values or degeR normalized log fold change
+values.
 }
 \item{sampleAnnoCol}{
-	Which column of \code{@sampleAnnotation} of object \code{InterestResult} to consider for plotting.
+Which column of \code{@sampleAnnotation} of object \code{InterestResult} to
+ consider for plotting.
 }
 \item{sampleAnnotation}{
-	A vector of size 2 which cotains values from \code{@sampleAnnotation} of \code{InterestResult} object; e.g. if x@sampleAnnotation[,sampleAnnoCol] = c("test", "test", "ctrl","ctrl", ...), and the goal is to compare "test" and "ctrl" samples, \code{sampleAnnotation} should either be c("test","ctrl") or c("ctrl","test").
+A vector of size 2 which cotains values from \code{@sampleAnnotation} of
+ \code{InterestResult} object; e.g. if x@sampleAnnotation[,sampleAnnoCol] =
+ c("test", "test", "ctrl","ctrl", ...), and the goal is to compare "test" and
+ "ctrl" samples, \code{sampleAnnotation} should either be c("test","ctrl") or
+ c("ctrl","test").
 }
 \item{silent}{
-	Whether run \code{\link{exactTestInterest}} silently, without warnings.
+Whether run \code{\link{exactTestInterest}} silently, without warnings.
 }
 \item{group}{
-	Vector to manually define the sample groups (or annotations). It is ignored if \code{sampleAnnoCol} is defined.
+Vector to manually define the sample groups (or annotations). It is ignored if
+ \code{sampleAnnoCol} is defined.
 }
 \item{rejection.region}{
-	The rejection.region parameter in \code{\link[edgeR]{exactTest}}, considered only if \code{fcType} is "edgeR".
+The rejection.region parameter in \code{\link[edgeR]{exactTest}}, considered
+ only if \code{fcType} is "edgeR".
 }
 \item{pseudoCnt}{
 	Pseudo count for log transformation (default=1).
 }
 \item{log2}{
-	Logical value either TRUE (default) or FALSE indicating whether the foldchanges should be log 2 transformed.
+Logical value either TRUE (default) or FALSE indicating whether the foldchanges
+should be log 2 transformed.
 }
 \item{...}{
-	Other parameter settings from the \code{\link{exactTestInterest}} function.
+Other parameter settings from the \code{\link{exactTestInterest}} function.
 }
 
 }

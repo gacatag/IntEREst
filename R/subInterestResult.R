@@ -1,4 +1,5 @@
-subInterestResult<-function(x, interestDfRow=c(), interestDfSample=c(), sampleAnnoCol=c(), sampleAnnotation=c()){
+subInterestResult<-function(x, interestDfRow=c(), interestDfSample=c(), 
+	sampleAnnoCol=c(), sampleAnnotation=c()){
 	object=x
 	res=object
 	if(length(interestDfRow)>0){
@@ -9,13 +10,14 @@ subInterestResult<-function(x, interestDfRow=c(), interestDfSample=c(), sampleAn
 	if(length(sampleAnnoCol)>0 | length(interestDfSample)>0){
 		ind=rep(TRUE, length(object@sampleNames))
 		if(length(sampleAnnoCol)>0)
-			ind=!is.na(match(object@sampleAnnotation[,sampleAnnoCol],sampleAnnotation))
+			ind=!is.na(match(object@sampleAnnotation[,sampleAnnoCol],
+				sampleAnnotation))
 		if(length(interestDfSample)>0){
 			ind2= rep(TRUE, length(object@sampleNames))
 			if(is.numeric(interestDfSample)){
 				ind2[-interestDfSample]=FALSE	
 			} else if(is.character(interestDfSample)){
-				ind2[is.na(match(object@sampleNames, interestDfSample))]=FALSE	
+				ind2[is.na(match(object@sampleNames, interestDfSample))]=FALSE
 			} else if(is.logical(interestDfSample)){
 				ind2=interestDfSample
 			}

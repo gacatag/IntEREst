@@ -6,7 +6,8 @@
 IntEREst
 }
 \description{
-Intron/Exon retention estimator quantifies and normalizes Intron retention and Exon junction read levels by analyzing mapped reads (.bam) files.
+Intron/Exon retention estimator quantifies and normalizes Intron retention and 
+Exon junction read levels by analyzing mapped reads (.bam) files.
 }
 \details{
 \tabular{ll}{
@@ -16,7 +17,9 @@ Version: \tab 1.0\cr
 Date: \tab 2015-11-18\cr
 License: GPL-2
 }
-To run the pipeline use functions \code{interest()} or \code{interest.sequential()}, i.e. wrapper functions that run all the necessary functions.
+To run the pipeline use functions \code{interest()} or 
+\code{interest.sequential()}, i.e. wrapper functions that run all the necessary
+functions.
 }
 \author{
 Ali Oghabian <Ali.Oghabian@Helsinki.Fi>, 

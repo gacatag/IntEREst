@@ -1,4 +1,6 @@
-u12NbIndex<-function(x, intExCol="int_ex", intTypeCol="int_type", strandCol="strand", geneIdCol="collapsed_transcripts", naUnstrand=FALSE) {
+u12NbIndex<- function(
+	x, intExCol="int_ex", intTypeCol="int_type", strandCol="strand", 
+	geneIdCol="collapsed_transcripts", naUnstrand=FALSE) {
 	object=x
 	dat=interestDf(object)
 	minInd=tapply(1:nrow(dat), dat[,geneIdCol], min)
@@ -18,7 +20,8 @@ u12NbIndex<-function(x, intExCol="int_ex", intTypeCol="int_type", strandCol="str
 	#Correcting for minus strand
 	upInt[u12Str=="-"]=dnInt[u12Str=="-"]
 	upEx[u12Str=="-"]=dnEx[u12Str=="-"]
-	# if naUnstrand is FALSE, NA is returned for Unstranded (strand=='*'); it would be analyzed like '+' strand otherwise
+	# if naUnstrand is FALSE, NA is returned for Unstranded (strand=='*'); 
+	#it would be analyzed like '+' strand otherwise
 	if(naUnstrand){
 			upInt[u12Str=="*"]=NA
 			upEx[u12Str=="*"]=NA

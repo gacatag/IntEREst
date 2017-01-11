@@ -9,39 +9,58 @@ correctLengthRepeat<-function(ref, repeatsTableToFilter){
 
 	lenRef=ref[,"end"]-ref[,"begin"]+1
 	if(length(repeatsTableToFilter)!=0){
-		repeatGRanges= GRanges( seqnames=repeatsTableToFilter[,"chr"], IRanges::IRanges(start=repeatsTableToFilter[,"begin"],
-			end=repeatsTableToFilter[,"end"], width=repeatsTableToFilter[,"end"]-repeatsTableToFilter[,"begin"]+1))
+		repeatGRanges= GRanges( seqnames=repeatsTableToFilter[,"chr"],
+			IRanges::IRanges(start=repeatsTableToFilter[,"begin"],
+			end=repeatsTableToFilter[,"end"], 
+			width=repeatsTableToFilter[,"end"]-
+				repeatsTableToFilter[,"begin"]+1))
 		reduceRepeatGr=reduce(repeatGRanges)
 		reduceRepeatBegin=as.numeric(GenomicRanges::start(reduceRepeatGr))
-		reduceRepeatBeginGr=GRanges(seqnames=as.character(GenomicRanges::seqnames(reduceRepeatGr)), 
-			 IRanges::IRanges(start=reduceRepeatBegin,end=reduceRepeatBegin))
+		reduceRepeatBeginGr= GRanges(
+			seqnames=as.character(GenomicRanges::seqnames(reduceRepeatGr)),
+				IRanges::IRanges(start=reduceRepeatBegin,
+					end=reduceRepeatBegin))
 
 		reduceRepeatEnd=as.numeric(GenomicRanges::end(reduceRepeatGr))
-		reduceRepeatEndGr=GRanges(seqnames=as.character(GenomicRanges::seqnames(reduceRepeatGr)), 
-			 IRanges::IRanges(start=reduceRepeatEnd,
-			end=reduceRepeatEnd))
+		reduceRepeatEndGr= GRanges(
+			seqnames=as.character(GenomicRanges::seqnames(reduceRepeatGr)), 
+			 	IRanges::IRanges(start=reduceRepeatEnd, end=reduceRepeatEnd))
 
-		refGr=GRanges( seqnames=ref[,"chr"],  IRanges::IRanges(start=ref[,"begin"],
-			end=ref[,"end"], width=ref[,"end"]-ref[,"begin"]+1))
+		refGr=GRanges( seqnames=ref[,"chr"],
+			IRanges::IRanges(start=ref[,"begin"], end=ref[,"end"],
+				width=ref[,"end"]-ref[,"begin"]+1))
 		#Repeat elements that are fully located in the reference (Intron/Exon)
 		hitsRepeat= findOverlaps(reduceRepeatGr, refGr, type= "within")
-		#Repeat elements which their 'end' coordinates are only located in the reference
+		#Repeat elements which their 'end' coordinates are only located in the
+		#reference
 		hitsEndRepeat= findOverlaps(reduceRepeatEndGr, refGr, type= "within")
-		hitsEndRepeatFilQuery=queryHits(hitsEndRepeat)[is.na(match(queryHits(hitsEndRepeat), queryHits(hitsRepeat) ))]
-		hitsEndRepeatFilSubject=subjectHits(hitsEndRepeat)[is.na(match(queryHits(hitsEndRepeat), queryHits(hitsRepeat) ))]
-		#Repeat elements which their 'begin' coordinate are only located in the reference
-		hitsBeginRepeat= findOverlaps(reduceRepeatBeginGr, refGr, type= "within")
-		hitsBeginRepeatFilQuery=queryHits(hitsBeginRepeat)[is.na(match(queryHits(hitsBeginRepeat), queryHits(hitsRepeat) ))]
-		hitsBeginRepeatFilSubject=subjectHits(hitsBeginRepeat)[is.na(match(queryHits(hitsBeginRepeat), queryHits(hitsRepeat) ))]
+		hitsEndRepeatFilQuery= queryHits(hitsEndRepeat)[
+			is.na(match(queryHits(hitsEndRepeat), queryHits(hitsRepeat) ))]
+		hitsEndRepeatFilSubject=subjectHits(hitsEndRepeat)[
+			is.na(match(queryHits(hitsEndRepeat), queryHits(hitsRepeat) ))]
+		#Repeat elements which their 'begin' coordinate are only located in the
+		#reference
+		hitsBeginRepeat= findOverlaps(reduceRepeatBeginGr, refGr, 
+			type= "within")
+		hitsBeginRepeatFilQuery= queryHits(hitsBeginRepeat)[
+			is.na(match(queryHits(hitsBeginRepeat), queryHits(hitsRepeat) ))]
+		hitsBeginRepeatFilSubject= subjectHits(hitsBeginRepeat)[
+			is.na(match(queryHits(hitsBeginRepeat), queryHits(hitsRepeat) ))]
 
-		lenRef[subjectHits(hitsRepeat)]=lenRef[subjectHits(hitsRepeat)]-as.numeric(GenomicRanges::width(reduceRepeatGr)[queryHits(hitsRepeat)])
+		lenRef[subjectHits(hitsRepeat)]= 
+			lenRef[subjectHits(hitsRepeat)]- 
+				as.numeric(GenomicRanges::width(reduceRepeatGr)
+					[queryHits(hitsRepeat)])
 		if(length(hitsEndRepeatFilQuery)>0){
-			lenRef[hitsEndRepeatFilSubject]=lenRef[hitsEndRepeatFilSubject]-(reduceRepeatEnd[hitsEndRepeatFilQuery]-
-				ref[hitsEndRepeatFilSubject,"begin"]+1)
+			lenRef[hitsEndRepeatFilSubject]=
+				lenRef[hitsEndRepeatFilSubject]-
+					(reduceRepeatEnd[hitsEndRepeatFilQuery]-
+						ref[hitsEndRepeatFilSubject,"begin"]+1)
 		}
 		if(length(hitsBeginRepeatFilQuery)>0){
-			lenRef[hitsBeginRepeatFilSubject]=lenRef[hitsBeginRepeatFilSubject]-(ref[hitsBeginRepeatFilSubject,"end"]-
-				reduceRepeatBegin[hitsBeginRepeatFilQuery]+1)
+			lenRef[hitsBeginRepeatFilSubject]=lenRef[hitsBeginRepeatFilSubject]-
+				(ref[hitsBeginRepeatFilSubject,"end"]-
+					reduceRepeatBegin[hitsBeginRepeatFilQuery]+1)
 		}
 
 	}
@@ -63,17 +82,24 @@ repeatsTableToFilter=c(),
 scaleLength= c(TRUE,TRUE), 
 scaleFragment= c(TRUE,TRUE)){
 	if(logFile!="")
-		cat( "IntERESt:interestSummarise: Begins ...\n", file=logFile, append=appendLogFile)
+		cat( "IntERESt:interestSummarise: Begins ...\n", file=logFile, 
+			append=appendLogFile)
 	cat( "IntERESt:interestSummarise: Begins ...\n")
 
 	if(as.character(class(reference))=="GRanges"){
 		if(length(names(reference))>0){
-			tmpReference=data.frame(chr=as.character(GenomicRanges::seqnames(reference)), begin=as.numeric(GenomicRanges::start(reference)),
-				end=as.numeric(GenomicRanges::end(reference)), strand=as.character(GenomicRanges::strand(reference)), 
+			tmpReference=data.frame(
+				chr=as.character(GenomicRanges::seqnames(reference)), 
+				begin=as.numeric(GenomicRanges::start(reference)),
+				end=as.numeric(GenomicRanges::end(reference)), 
+				strand=as.character(GenomicRanges::strand(reference)), 
 				names=as.character(names(reference)))
 		} else{
-			tmpReference=data.frame(chr=as.character(GenomicRanges::seqnames(reference)), begin=as.numeric(GenomicRanges::start(reference)),
-				end=as.numeric(GenomicRanges::end(reference)), strand=as.character(GenomicRanges::strand(reference)))
+			tmpReference=data.frame(
+				chr=as.character(GenomicRanges::seqnames(reference)), 
+				begin=as.numeric(GenomicRanges::start(reference)),
+				end=as.numeric(GenomicRanges::end(reference)), 
+				strand=as.character(GenomicRanges::strand(reference)))
 		}
 		reference=tmpReference
 	}
@@ -88,9 +114,12 @@ scaleFragment= c(TRUE,TRUE)){
 		ref=reference[referenceIntronExon=="intron",]
 		frqFil=dir(pattern="\\.frq$",path=inLoc[intExInd], full.names=TRUE)
 		frq=rep(0,nrow(ref))
+		msg <-
+"IntERESt:interestSummarise: Reading read frequency files for intron retention
+analysis.\n"
 		if(logFile!="")
-			cat( "IntERESt:interestSummarise: Reading read frequency files for intron retention analysis.\n", file=logFile, append=TRUE)
-		cat( "IntERESt:interestSummarise: Reading read frequency files for intron retention analysis.\n")
+			cat( msg, file=logFile, append=TRUE)
+		cat( msg)
 		for(i in 1:length(frqFil)){
 	
 			frqTmp=scan(frqFil[i], quiet=TRUE)
@@ -106,10 +135,13 @@ scaleFragment= c(TRUE,TRUE)){
 		resTmp[referenceIntronExon=="intron"]=frq
 		res=cbind(res,resTmp)
 		colnames(res)[ncol(res)]="IntRet_frequency"
+		msg<-
+"IntERESt:interestSummarise: Normalizing intron retention read levels.\n"
 		if(logFile!="")
-			cat( "IntERESt:interestSummarise: Normalizing intron retention read levels.\n", file=logFile, append=TRUE)
-		cat( "IntERESt:interestSummarise: Normalizing intron retention read levels.\n")
-		referenceGeneNamesTmp=as.character(referenceGeneNames[referenceIntronExon=="intron"])
+			cat( msg, file=logFile, append=TRUE)
+		cat( msg)
+		referenceGeneNamesTmp= as.character(referenceGeneNames[
+			referenceIntronExon=="intron"])
 		geneCnt=tapply(frq,referenceGeneNamesTmp,sum)
 		FPKM=frq
 		if(scaleFragment[intExInd])
@@ -126,9 +158,12 @@ scaleFragment= c(TRUE,TRUE)){
 		ref=reference[referenceIntronExon=="exon",]
 		frqFil=dir(pattern="\\.frq$",path=inLoc[exExInd], full.names=TRUE)
 		frq=rep(0,nrow(ref))
+		msg <-
+"IntERESt:interestSummarise: Reading read frequency files for exon-exon 
+junction analysis.\n"
 		if(logFile!="")
-			cat( "IntERESt:interestSummarise: Reading read frequency files for exon-exon junction analysis.\n", file=logFile, append=TRUE)
-		cat( "IntERESt:interestSummarise: Reading read frequency files for exon-exon junction analysis.\n")
+			cat( msg, file=logFile, append=TRUE)
+		cat( msg)
 		for(i in 1:length(frqFil)){
 
 			frqTmp=scan(frqFil[i], quiet=TRUE)
@@ -144,10 +179,13 @@ scaleFragment= c(TRUE,TRUE)){
 		resTmp[referenceIntronExon=="exon"]=frq
 		res=cbind(res,resTmp)
 		colnames(res)[ncol(res)]="ExEx_frequency"
+		msg<-
+"IntERESt:interestSummarise: Normalizing exon-exon junction read levels.\n"
 		if(logFile!="")
-			cat( "IntERESt:interestSummarise: Normalizing exon-exon junction read levels.\n", file=logFile, append=TRUE)
-		cat( "IntERESt:interestSummarise: Normalizing exon-exon junction read levels.\n")
-		referenceGeneNamesTmp=as.character(referenceGeneNames[referenceIntronExon=="exon"])
+			cat( msg, file=logFile, append=TRUE)
+		cat( msg)
+		referenceGeneNamesTmp=as.character(referenceGeneNames[
+			referenceIntronExon=="exon"])
 		geneCnt=tapply(frq,referenceGeneNamesTmp,sum)
 		FPKM=frq
 		if(scaleFragment[exExInd])
@@ -164,8 +202,10 @@ scaleFragment= c(TRUE,TRUE)){
 
 
 	if(writeResults){
-		write.table(res, outFile, col.names=TRUE, row.names=FALSE, sep='\t', quote=FALSE)
+		write.table(res, outFile, col.names=TRUE, row.names=FALSE, sep='\t', 
+			quote=FALSE)
 	} else {
-		stop('wrong method setting. The correct values are "IntRet" and "ExEx".')
+		stop('wrong method setting. The correct values are "IntRet" and "ExEx".'
+			)
 	}
 }

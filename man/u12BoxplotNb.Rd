@@ -1,10 +1,12 @@
 \name{u12BoxplotNb}
 \alias{u12BoxplotNb}
 \title{
-	boxplot U12 introns retention levels (or flanking exons junction levels) and (up/down)stream U2 introns (or exons junction levels)
+boxplot U12 introns retention levels (or flanking exons junction levels) and 
+(up/down)stream U2 introns (or exons junction levels)
 }
 \description{
-	boxplot U12 introns and (Up/Down)stream U2 introns in \code{InterestResult} objects.
+boxplot U12 introns and (Up/Down)stream U2 introns in \code{InterestResult} 
+objects.
 }
 \usage{
 u12BoxplotNb(x, sampleAnnoCol=2, intExCol="int_ex",
@@ -14,49 +16,61 @@ u12BoxplotNb(x, sampleAnnoCol=2, intExCol="int_ex",
 }
 \arguments{
 \item{x}{ 
-	Object of type \code{InterestResult}.
+Object of type \code{InterestResult}.
 }
 \item{sampleAnnoCol}{
-	Which colummn of \code{@sampleAnnotation} data frame in \code{x} (the input object of \code{InterestResult} type) to consider for plotting.
+Which colummn of \code{@sampleAnnotation} data frame in \code{x} (the input 
+object of \code{InterestResult} type) to consider for plotting.
 }
 \item{intExCol}{
-	Column name (or number) that represents whether each row is "intron" or "exon" in \code{@interestDf} of the \code{InterestResult} object.
+Column name (or number) that represents whether each row is "intron" or "exon" 
+in \code{@interestDf} of the \code{InterestResult} object.
 }
 \item{intTypeCol}{
-	Column name (or number) that represents what type of intron each row of \code{@interestDf} of \code{x} represents. The values in the column are either "U12", "U2" or \code{NA} (for the exons).
+Column name (or number) that represents what type of intron each row of 
+\code{@interestDf} of \code{x} represents. The values in the column are either 
+"U12", "U2" or \code{NA} (for the exons).
 }
 \item{intronExon}{
-	Whether plot intron retention (set \code{intronExon="intron"}) or exon-exon junction (set \code{intronExon="exon"}) levels. 
+Whether plot intron retention (set \code{intronExon="intron"}) or exon-exon 
+junction (set \code{intronExon="exon"}) levels. 
 }
 \item{strandCol}{
-	Column name (or number) that represents the strand of each row of \code{@interestDf} in \code{x}. The values in the column are either "+", "-" or "*".
+Column name (or number) that represents the strand of each row of 
+\code{@interestDf} in \code{x}. The values in the column are either "+", "-" or
+"*".
 }
 \item{geneIdCol}{
-	Column name (or number) that represents the gene ID of each row of \code{@interestDf} in \code{x}.
+Column name (or number) that represents the gene ID of each row of 
+\code{@interestDf} in \code{x}.
 }
 \item{col}{
-	Vector containing box colours. It is either of size 1 or the same size as the number of boxes resulted based on the grouping of the samples defined by \code{sampleAnnoCol}.
+Vector containing box colours. It is either of size 1 or the same size as the 
+number of boxes resulted based on the grouping of the samples defined by 
+\code{sampleAnnoCol}.
 }
 \item{names}{
-	Names to write under group of boxes.
+Names to write under group of boxes.
 }
 \item{lasNames}{
-	Orientation of the box names.
+Orientation of the box names.
 }
 \item{outline}{
-	If outline is TRUE the outlier points are drawn otherwise if FALSE (default) they are not.
+If outline is TRUE the outlier points are drawn otherwise if FALSE (default) 
+they are not.
 }
 \item{plotLegend}{
-	Whether show legend (TRUE by default).
+Whether show legend (TRUE by default).
 }
 \item{cexLegend}{
-	Size of the text in legend .
+Size of the text in legend .
 }
 \item{xLegend, yLegend}{
-	Position of legend in the plot. For more info see \code{x} and \code{y} parameters in \code{\link{legend}}.
+Position of legend in the plot. For more info see \code{x} and \code{y} 
+parameters in \code{\link{legend}}.
 }
 \item{legend}{ 
-	The replacement texts to be used in legend.
+The replacement texts to be used in legend.
 }
 \item{...}{
 	Other arguments to pass to the \code{boxplot()} function.

@@ -1,6 +1,9 @@
 mergeInterestResult<-function(x, y){
+	msg<-
+"The retention levels should be similarly scaled. The @scaleLength and 
+@scaleFragment of the two input objects should be equal."
 	if(x@scaleLength!=y@scaleLength | x@scaleFragment!=y@scaleFragment)
-		stop("The retention levels should be similarly scaled. The @scaleLength and @scaleFragment of the two input objects should be equal.")
+		stop(msg)
 	res=x
 	res@resultFiles=c(res@resultFiles, y@resultFiles)
 	res@sampleNames=c(res@sampleNames, y@sampleNames)
@@ -10,7 +13,8 @@ mergeInterestResult<-function(x, y){
 	xyIntDf=match(colnames(x@interestDf), colnames(y@interestDf))
 	res@interestDf=y@interestDf
 	if(length(which(is.na(xyIntDf))))
-		res@interestDf=cbind(res@interestDf, x@interestDf[, which(is.na(xyIntDf))])
+		res@interestDf=cbind(res@interestDf, 
+			x@interestDf[, which(is.na(xyIntDf))])
 	res@scaleLength=  x@scaleLength
 	res@scaleFragment= x@scaleFragment
 	return(res)

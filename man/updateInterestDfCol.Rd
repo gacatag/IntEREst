@@ -5,7 +5,8 @@
  Updating contents of \code{@interestDf} of \code{InterestResult} objects
 }
 \description{
-	Updates the values in a single column of the \code{@interestDf} dataframe of \code{InterestResult} objects.
+Updates the values in a single column of the \code{@interestDf} dataframe of 
+\code{InterestResult} objects.
 }
 \usage{
 updateInterestDfCol(x,  updateCol, value)
@@ -15,7 +16,11 @@ updateInterestDfCol(x,  updateCol, value)
 	Object of type \code{InterestResult}.
 }
 \item{updateCol}{ 
-	Name or the number of the column in the \code{@interestDf} dataframe attribute of \code{x} to be updated with the new values. if the column name does not match to any column names of the \code{@interestDf} data frame the new values will be added as a new column before the first column with the read counts (the column name would also be the defined \code{updateCol}).
+Name or the number of the column in the \code{@interestDf} dataframe attribute 
+of \code{x} to be updated with the new values. if the column name does not 
+match to any column names of the \code{@interestDf} data frame the new values 
+will be added as a new column before the first column with the read counts (the
+column name would also be the defined \code{updateCol}).
 }
 \item{value}{ 
 	The new Replacing values.

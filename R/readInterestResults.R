@@ -1,11 +1,14 @@
-readInterestResults<-function(resultFiles, sampleNames, sampleAnnotation, commonColumns, freqCol, scaledRetentionCol, scaleLength, 
-	scaleFragment, reScale=FALSE, geneIdCol, repeatsTableToFilter=c()){	
+readInterestResults<-function(resultFiles, sampleNames, sampleAnnotation, 
+	commonColumns, freqCol, scaledRetentionCol, scaleLength, scaleFragment, 
+	reScale=FALSE, geneIdCol, repeatsTableToFilter=c()){	
 	readFreqColIndex=c()
 	scaledRetentionColIndex=c()
 
 	for(i in 1:length(resultFiles)){
-		cat("\nReading file", i, "/", length(resultFiles), ":",  resultFiles[i], "\n", sep=" ")
-		tmpDat=read.table(resultFiles[i], header=TRUE, stringsAsFactors=FALSE, sep='\t')
+		cat("\nReading file", i, "/", length(resultFiles), ":",  
+			resultFiles[i], "\n", sep=" ")
+		tmpDat=read.table(resultFiles[i], header=TRUE, stringsAsFactors=FALSE,
+			sep='\t')
 		if(i==1){
 			ref=tmpDat[,commonColumns]
 			res=ref
@@ -16,14 +19,16 @@ readInterestResults<-function(resultFiles, sampleNames, sampleAnnotation, common
 			res=cbind(res, as.numeric(tmpDat[,scaledRetentionCol]))
 		readFreqColIndex=c(readFreqColIndex, (ncol(res)-1))
 		scaledRetentionColIndex=c(scaledRetentionColIndex, ncol(res))
-		colnames(res)[(ncol(res)-1):ncol(res)]=paste(sampleNames[i], c("frequency", "scaledRetention"), sep="_")
+		colnames(res)[(ncol(res)-1):ncol(res)]=paste(sampleNames[i], 
+			c("frequency", "scaledRetention"), sep="_")
 		if(reScale){
 			FPKM=res[,ncol(res)-1]
 
 			if(scaleFragment){
 				referenceGeneNamesTmp=as.character(ref[ , geneIdCol])
 				geneCnt=tapply(FPKM, referenceGeneNamesTmp, sum)
-				FPKM=((10^6)*FPKM)/(as.numeric(geneCnt[referenceGeneNamesTmp])+1)
+				FPKM=((10^6)*FPKM)/
+					(as.numeric(geneCnt[referenceGeneNamesTmp])+1)
 			}
 			if(scaleLength){
 				if(i==1)
@@ -37,8 +42,11 @@ readInterestResults<-function(resultFiles, sampleNames, sampleAnnotation, common
 	if(is.vector(sampleAnnotation))
 		sampleAnnotation=data.frame(sampleGroup=sampleAnnotation)
 	sampleAnnotation=data.frame(sampleNames=sampleNames,sampleAnnotation)
-	resObj=InterestResult(resultFiles=resultFiles, readFreq=as.matrix(res[,readFreqColIndex]), 
-		scaledRetention=as.matrix(res[,scaledRetentionColIndex]), sampleNames=sampleNames, scaleLength=scaleLength, scaleFragment=scaleFragment, 
-		sampleAnnotation=sampleAnnotation, interestDf=ref)
+	resObj=InterestResult(resultFiles=resultFiles, 
+		readFreq=as.matrix(res[,readFreqColIndex]), 
+		scaledRetention=as.matrix(res[,scaledRetentionColIndex]), 
+		sampleNames=sampleNames, scaleLength=scaleLength, 
+		scaleFragment=scaleFragment, sampleAnnotation=sampleAnnotation, 
+		interestDf=ref)
 	return(resObj)
 }

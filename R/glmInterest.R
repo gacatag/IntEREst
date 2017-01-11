@@ -1,4 +1,5 @@
-glmInterest<-function(x, design=c(), silent=TRUE, disp="common", coef=c(), contrast=NULL, ...){
+glmInterest<-function(x, design=c(), silent=TRUE, disp="common", coef=c(), 
+	contrast=NULL, ...){
 	y=nread(x)
 	if(length(design)==0){
 		stop('Please provide a suitable design.')
@@ -21,7 +22,9 @@ glmInterest<-function(x, design=c(), silent=TRUE, disp="common", coef=c(), contr
 	} else if(is.numeric(disp)){
 		dispersionType="manualSet"
 	}  else{
-		stop('Argument disp should be either "common", "trended", "tagwiseInitCommon", "tagwiseInitTrended" or a number.')
+		stop(
+'Argument disp should be either "common", "trended", "tagwiseInitCommon", 
+"tagwiseInitTrended" or a number.')
 	}
 
 	fit <- edgeR::glmFit(y, design, dispersion=yDisp, ...)

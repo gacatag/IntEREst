@@ -4,20 +4,25 @@
 	Extract index of intron or exon rows
 }
 \description{
-	Extract row numbers of introns or exons in \code{@sampleAnnotation} of an object of type \code{InterestResult}.
+Extract row numbers where introns (or exons dependant on user's request) 
+are located in \code{@sampleAnnotation} of an object of type 
+\code{InterestResult}.
 }
 \usage{
 intexIndex(x, intExCol="int_ex", what="intron")
 }
 \arguments{
 \item{x}{ 
-	Object of type \code{InterestResult}.
+Object of type \code{InterestResult}.
 }
 \item{intExCol}{
-	Column name (or number) that represents whether each row is "intron" or "exon" in \code{@sampleAnnotation} of \code{x}.
+Column name (or number) that represents whether each row is "intron" or "exon"
+ in \code{@sampleAnnotation} of \code{x}.
 }
 \item{what}{
-	A character string that defines whether the function should return the index for the introns or exons. Accepts either \code{"exon"} or \code{"intron"} (default) as values.
+A character string that defines whether the index for the introns or exons 
+should be returned. Accepts either \code{"exon"} or \code{"intron"} (default)
+as values.
 }
 
 }

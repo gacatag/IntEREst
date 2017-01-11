@@ -26,82 +26,92 @@
 	Object of type \code{InterestResult}.
 }
 \item{summary}{ 
-	Whether to plot the mean or median of the values over the sample with the same annotations, or plot the values for each individual sample separately. The available options are "mean", "median", or "none".
+Whether to plot the mean or median of the values over the sample with the same 
+annotations, or plot the values for each individual sample separately. The 
+available options are "mean", "median", or "none".
 }
 \item{subsetRows}{
-	Vector either constructed of TRUE/FALSE values or constructed of numeric values that could be used to choose rows from the intron/exon table (\code{@interestDf}) of the \code{InterestResult} object to be plotted.
+Vector either constructed of TRUE/FALSE values or constructed of numeric values
+that could be used to choose rows from the intron/exon table 
+(\code{@interestDf}) of the \code{InterestResult} object to be plotted.
 }
 \item{what}{
-	Whether plot "scaled" (default) or read counts ("readFreq").
+Whether plot "scaled" (default) or read counts ("readFreq").
 }
 \item{intronExon}{
-	Whether plot intron retention, i.e. "intron" (default) or exon-junction "exon".
+Whether plot intron retention, i.e. "intron" (default) or exon-junction "exon".
 }
 \item{logScaleBase}{
-	Base of the log transform of the values, if defined. By default the value is \code{NULL} meaning that the values would not be log transformed.
+Base of the log transform of the values, if defined. By default the value is 
+\code{NULL} meaning that the values would not be log transformed.
 }
 \item{logPseudoCnt}{
-	Pseudocount for the log transformation (default=1).
+Pseudocount for the log transformation (default=1).
 }
 \item{plotLoess}{
-	Whether fit and plot LOESS curve line (default="red").
+Whether fit and plot LOESS curve line (default="red").
 }
 \item{loessCol}{
-	loess line colour (default="red").
+loess line colour (default="red").
 }
 \item{loessLwd}{
-	loess line width (default=1).
+loess line width (default=1).
 }
 \item{loessLty}{
-	loess line type (default=1).
+loess line type (default=1).
 }
 \item{cexText}{
-	Size of the text for sample names or annotations (default=1). 
+Size of the text for sample names or annotations (default=1). 
 }
 \item{marPlot}{
-	Plot margins (default=c(2,2,2,2)). See \code{?par} for more information.
+Plot margins (default=c(2,2,2,2)). See \code{?par} for more information.
 }
 \item{mgpPlot}{
-	Plotting \code{mgp} parameter (default=c(1, 1, 0)). See \code{?par} for more information.
+Plotting \code{mgp} parameter (default=c(1, 1, 0)). See \code{?par} for more 
+information.
 }
 \item{cexAxis}{
-	Size of the text for the axis (default=1). 
+Size of the text for the axis (default=1). 
 }
 \item{writeCor}{
-	Write correlation values (default=TRUE). 
+Write correlation values (default=TRUE). 
 }
 \item{corCex}{
-	Text size of correlation values (default=1). 
+Text size of correlation values (default=1). 
 }
 \item{corMethod}{
-	Method used for correlation calculation. For more information see \code{\link{cor}} from \code{stats} package of R. 
+Method used for correlation calculation. For more information see 
+\code{\link{cor}} from \code{stats} package of R. 
 }
 \item{corCol}{
 	Color of the text of correlation (default="grey").
 }
 \item{upperCorXY}{
-	The coordinates of the correlation text in the upper panel plots ( default= c("topleft", NULL) ).
+The coordinates of the correlation text in the upper panel plots 
+( default= c("topleft", NULL) ).
 }
 \item{lowerCorXY}{
-	The coordinates of the correlation text in the lower panel plots ( default= c("topleft", NULL) ).
+The coordinates of the correlation text in the lower panel plots 
+( default= c("topleft", NULL) ).
 }
 \item{na.rm}{
-	whether remove the rows with missing values (default=TRUE). 
+whether remove the rows with missing values (default=TRUE). 
 }
 \item{cex}{
-	size of the plot text and symbols (default=1). 
+size of the plot text and symbols (default=1). 
 }
 \item{sampleAnnoCol}{
-	Which colummn of \code{@sampleAnnotation} of object \code{InterestResult} to consider for plotting.
+Which colummn of \code{@sampleAnnotation} of object \code{InterestResult} to 
+consider for plotting.
 }
 \item{lowerPlot}{
-	Whether plot the lower panel (default=FALSE).
+Whether plot the lower panel (default=FALSE).
 }
 \item{upperPlot}{
-	Whether plot the upper panel (default=TRUE).
+Whether plot the upper panel (default=TRUE).
 }
 \item{...}{
-	Other arguments to pass to the \code{plot()} function.
+Other arguments to pass to the \code{plot()} function.
 }
 
 }

@@ -5,7 +5,9 @@
 U12 data
 }
 \description{
-Intron/exon annotations of genes featuring U12 introns. It is based on HG19/GRCh37 (converted from hg17/NCBI35). Moreover the u12 genes are based on the U12DB database.
+Intron/exon annotations of genes featuring U12 introns. It is based on 
+HG19/GRCh37 (converted from hg17/NCBI35). Moreover the u12 genes are based on 
+the U12DB database.
 }
 \usage{data("u12")}
 \format{
@@ -30,9 +32,11 @@ Intron/exon annotations of genes featuring U12 introns. It is based on HG19/GRCh
   }
 }
 \value{
-	Data frame that includes the coordinates and annotations of the introns and exons of the transcripts, i.e. the reference.
+Data frame that includes the coordinates and annotations of the introns and 
+exons of the transcripts, i.e. the reference.
 }
 \source{
-Alioto, T.S. U12DB: a database of orthologous U12-type spliceosomal introns. Nucleic Acids Research 2006, doi: 10.1093/nar/gkl796
+Alioto, T.S. U12DB: a database of orthologous U12-type spliceosomal introns. 
+Nucleic Acids Research 2006, doi: 10.1093/nar/gkl796
 }
 \keyword{datasets}
