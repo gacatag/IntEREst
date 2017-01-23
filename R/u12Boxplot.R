@@ -44,7 +44,7 @@ u12Boxplot<-function(x, sampleAnnoCol=NA, intExCol="int_ex",
 			plotList=c(plotList, 
 				list( as.vector(unlist(object@scaledRetention[indChooseExU12,
 					which(groups==uniGroup[cnt])])), 
-					as.vector(unlist(object@interestDf[indChooseExU2,
+					as.vector(unlist(object@scaledRetention[indChooseExU2,
 					which(groups==uniGroup[cnt])])), NA))				
 		}
 		if(length(boxplotNames)==0){
