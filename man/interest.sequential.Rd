@@ -5,12 +5,12 @@
 A wrapper function that runs all necessary functions for the intron/exon 
 retention analysis. }
 \usage{
-interest.sequential( bamFileYieldSize=1000000, tmpDir, bamFile, 
+interest.sequential( bamFileYieldSize=1000000, bamFile, 
 	filterPairedDuplicate=TRUE, filterSingleReadDuplicate=FALSE, 
 	reference, referenceGeneNames, 
 	referenceIntronExon, repeatsTableToFilter=c(), 
 	junctionReadsOnly=FALSE, outFile, logFile="", 
-	delTmpFolder=FALSE, returnObj= FALSE, method=c("IntRet","ExEx"), 
+	returnObj= FALSE, method=c("IntRet","ExEx"), 
 	appendLogFile=FALSE, sampleName="",
 	scaleLength= c(TRUE,FALSE), scaleFragment= c(TRUE,TRUE))
 }
@@ -18,7 +18,6 @@ interest.sequential( bamFileYieldSize=1000000, tmpDir, bamFile,
 \item{bamFileYieldSize}{ 
 Maximum number of paired Reads in the temprorary files created as the result of
 dividing the input .bam file. }
-\item{tmpDir}{The path of directory to write temporary files.}
 \item{bamFile}{ Path of the input bam file.}
 \item{filterPairedDuplicate}{ 
 Whether filter paired mapped reads for PCR dupplicates.}
@@ -50,9 +49,6 @@ as FALSE.}
 \item{outFile}{ The name or path of the result file.}
 \item{logFile}{
 The log file path; if defined log information are written to the log file. }
-\item{delTmpFolder}{
-Whether delete temporary files and folder after running the analysis 
-(\code{FALSE} by default).}
 \item{returnObj}{
 If set \code{TRUE} in addition to producing result text files, the results 
 would also be returned as an object of class \code{InterestResult}.}
@@ -118,7 +114,6 @@ interest.sequential(
 		"interestRes.tsv", sep="/"),
 	logFile=paste(outDir, names(MDS_Chr22_BAMFILES)[i], 
 		"log.txt", sep="/"),
-	delTmpFolder=TRUE,
 	method=c("IntRet","ExEx"),
 	scaleLength= c(TRUE,FALSE), 
 	scaleFragment= c(TRUE,TRUE)

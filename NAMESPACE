@@ -23,6 +23,10 @@ importFrom(GenomicFeatures, DEFAULT_CIRC_SEQS, makeTxDbFromUCSC,
 	intronsByTranscript)
 importFrom(GenomicRanges, seqnames, start, end, width, strand, ranges, GRanges, 
 	findOverlaps, reduce, gaps)
-importFrom(Rsamtools, BamFile, ScanBamParam, scanBam, scanBamFlag, scanBamWhat)
+importFrom(Rsamtools, BamFile, ScanBamParam, scanBamFlag, scanBamWhat)
 importFrom(DBI, dbConnect, dbSendQuery, dbGetQuery, dbDisconnect)
 importFrom(RMySQL, MySQL)
+importFrom(foreach, foreach,"%dopar%", "%do%")
+importFrom(parallel, stopCluster)
+importFrom(doParallel, registerDoParallel)
+importFrom(GenomicAlignments, readGAlignmentPairs, readGAlignmentsList)

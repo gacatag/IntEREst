@@ -5,20 +5,18 @@
 A wrapper function that runs all necessary functions for the intron/exon 
 retention analysis. }
 \usage{
-interest( bamFileYieldSize=1000000, tmpDir, bamFile, 
-	filterPairedDuplicate=TRUE, filterSingleReadDuplicate= FALSE, 
-	reference, referenceGeneNames, 
+interest( bamFileYieldSize=1000000, bamFile, filterPairedDuplicate=TRUE, 
+	filterSingleReadDuplicate= FALSE, reference, referenceGeneNames, 
 	referenceIntronExon, repeatsTableToFilter=c(),
 	junctionReadsOnly=FALSE, outFile, logFile="", 
-	delTmpFolder= FALSE, returnObj= FALSE, method=c("IntRet","ExEx"), 
-	clusterNo="", appendLogFile=FALSE, sampleName="",
+	returnObj= FALSE, method=c("IntRet","ExEx"), 
+	clusterNo=NULL, cl, appendLogFile=FALSE, sampleName="",
 	scaleLength= c(TRUE,FALSE), scaleFragment= c(TRUE,TRUE))
 }
 \arguments{
 \item{bamFileYieldSize}{
 Maximum number of pair reads in the temprorary files created as the result of 
 dividing the input .bam file. }
-\item{tmpDir}{The path of directory to write temporary files. }
 \item{bamFile}{Path of the input bam file. }
 \item{filterPairedDuplicate}{
 Whether filter paired mapped reads for PCR dupplicates. It uses the FLAG field 
@@ -54,8 +52,6 @@ as FALSE.}
 \item{outFile}{The name or path of the result file. }
 \item{logFile}{
 The log file path; if defined log information are written to the log file. }
-\item{delTmpFolder}{
-Whether delete temporary files and folder (\code{FALSE} by default). }
 \item{returnObj}{
 If set \code{TRUE} in addition to making result text files, the results would 
 also be returned as an object of class \code{InterestResult}.}
@@ -64,8 +60,10 @@ A vector describing the methods to use; i.e. whether estimate Intron retention
 (\code{"IntRet"}) or Exon-Exon junction (\code{"ExEx"}) levels or both. By 
 default it returns both.}
 \item{clusterNo}{
-Number of parallel cluster nodes. As default (clusterNo="") the total number of
-CPUs that are available in the cluster would be used.}
+Number of parallel cluster nodes. As default (clusterNo=NULL) the total number 
+of CPUs that are available in the cluster would be used.}
+\item{cl}{An object of class \code{cluster} if defined it will be taken into 
+consideration when building parallel clusters.}
 \item{appendLogFile}{
 Whether log information should be appended to the \code{logFile}. It is set 
 \code{FALSE} by default.}
@@ -124,7 +122,6 @@ interest(
 		"interestRes.tsv", sep="/"),
 	logFile=paste(outDir, names(MDS_Chr22_BAMFILES)[i], 
 		"log.txt", sep="/"),
-	delTmpFolder=TRUE,
 	method=c("IntRet","ExEx"),
 	clusterNo="",
 	scaleLength= c(TRUE,FALSE), 

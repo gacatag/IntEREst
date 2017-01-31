@@ -76,9 +76,7 @@ lapply(1:length(MDS_Chr22_BAMFILES), function(i){
 	dir.create(paste(outDir, names(MDS_Chr22_BAMFILES)[i], 
 		sep="/"))
 	interest(
-		bamFileYieldSize=1000000,
-		tmpDir=paste(outDir, names(MDS_Chr22_BAMFILES)[i], "tmp", 
-			sep="/"),
+		bamFileYieldSize=10000,
 		bamFile=MDS_Chr22_BAMFILES[i],
 		filterPairedDuplicate=TRUE,
 		filterSingleReadDuplicate=FALSE,
@@ -90,7 +88,6 @@ lapply(1:length(MDS_Chr22_BAMFILES), function(i){
 			"interestRes.tsv", sep="/"),
 		logFile=paste(outDir, names(MDS_Chr22_BAMFILES)[i], 
 			"log.txt", sep="/"),
-		delTmpFolder=TRUE,
 		method=c("IntRet","ExEx"),
 		clusterNo=3,
 		returnObj=FALSE, 
@@ -132,9 +129,7 @@ lapply(1:length(MDS_Chr22_BAMFILES), function(i){
 	dir.create(paste(outDir, names(MDS_Chr22_BAMFILES)[i], 
 		sep="/"))
 	interest.sequential(
-		bamFileYieldSize=1000000,
-		tmpDir=paste(outDir, names(MDS_Chr22_BAMFILES)[i], 
-			"tmp", sep="/"),
+		bamFileYieldSize=10000,
 		bamFile=MDS_Chr22_BAMFILES[i],
 		filterPairedDuplicate=TRUE,
 		filterSingleReadDuplicate=FALSE,
@@ -146,7 +141,6 @@ lapply(1:length(MDS_Chr22_BAMFILES), function(i){
 			"interestRes.tsv", sep="/"),
 		logFile=paste(outDir, names(MDS_Chr22_BAMFILES)[i], 
 			"log.txt", sep="/"),
-		delTmpFolder=TRUE,
 		method=c("IntRet","ExEx"),
 		returnObj=FALSE,
 		scaleLength= c(TRUE,FALSE), 
@@ -387,13 +381,13 @@ u12DensityPlotIntron(mdsChr22Obj,
 <br>
 As shown in *figure 6* (and computed in the following), when comparing the 
 ZRSR2 mutated samples vs the other samples, for all U2-type introns the most 
-frequent log fold-change (median) is zero whereas this value for the U12-type 
-introns is noticeably higher (~0.69). It is also possible to run a statistical 
-test to see if the log fold-changes of U12-type introns (ZRSR2 mutated samples 
-vs other samples) are significantly higher than the log fold-changes of U2-type 
-introns. For this purpose we use the `jonckheere.test()` function, i.e. 
-Jonckheere-Terpstra ordered alternative hypothesis test, from the  *Clinfun* 
-package.
+frequent log fold-change (median) is almost zero whereas this value for the 
+U12-type introns is noticeably higher (~0.69). It is also possible to run a 
+statistical test to see if the log fold-changes of U12-type introns (ZRSR2 
+mutated samples vs other samples) are significantly higher than the log 
+fold-changes of U2-type introns. For this purpose we use the 
+`jonckheere.test()` function, i.e. Jonckheere-Terpstra ordered alternative 
+hypothesis test, from the  *Clinfun* package.
 
 <br>
 ```{r lfc-sig, echo = TRUE, eval=TRUE, message = FALSE, fig.width=6, fig.height=4, fig.align="center"}

@@ -68,19 +68,19 @@ correctLengthRepeat<-function(ref, repeatsTableToFilter){
 }
 
 # Function for summarizing the results
-interestSummarise <-
-function(
-reference=u12,
-referenceIntronExon=u12[,"int_ex"],
-inLoc,
-method=c("IntRet","ExEx"),
-referenceGeneNames=u12[,"ens_gene_id"],
-outFile,
-logFile="",
-appendLogFile=TRUE,
-repeatsTableToFilter=c(),
-scaleLength= c(TRUE,TRUE), 
-scaleFragment= c(TRUE,TRUE)){
+interestSummarise <-function(
+	reference=u12,
+	referenceIntronExon=u12[,"int_ex"],
+	inAnRes,
+	method=c("IntRet","ExEx"),
+	referenceGeneNames=u12[,"ens_gene_id"],
+	outFile,
+	logFile="",
+	appendLogFile=TRUE,
+	repeatsTableToFilter=c(),
+	scaleLength= c(TRUE,TRUE), 
+	scaleFragment= c(TRUE,TRUE))
+{
 	if(logFile!="")
 		cat( "IntERESt:interestSummarise: Begins ...\n", file=logFile, 
 			append=appendLogFile)
@@ -109,40 +109,44 @@ scaleFragment= c(TRUE,TRUE)){
 	intExInd=which(method=="IntRet")
 	exExInd=which(method=="ExEx")
 
+	inAnMat<- matrix(inAnRes, 
+		ncol=length(which(c(length(intExInd)>0, length(exExInd)>0))), 
+			byrow=FALSE)
 
 	if(length(intExInd)>0){
-		ref=reference[referenceIntronExon=="intron",]
-		frqFil=dir(pattern="\\.frq$",path=inLoc[intExInd], full.names=TRUE)
-		frq=rep(0,nrow(ref))
-		msg <-
-"IntERESt:interestSummarise: Reading read frequency files for intron retention
-analysis.\n"
-		if(logFile!="")
-			cat( msg, file=logFile, append=TRUE)
-		cat( msg)
-		for(i in 1:length(frqFil)){
+		ref=reference[which(referenceIntronExon=="intron"),]
+#		frqFil=dir(pattern="\\.frq$",path=inLoc[intExInd], full.names=TRUE)
+#		frq=rep(0,nrow(ref))
+#		msg <-
+#"IntERESt:interestSummarise: Reading read frequency files for intron retention
+#analysis.\n"
+#		if(logFile!="")
+#			cat( msg, file=logFile, append=TRUE)
+#		cat( msg)
+#		for(i in 1:length(frqFil)){
 	
-			frqTmp=scan(frqFil[i], quiet=TRUE)
-			frq=frq+frqTmp
+#			frqTmp=scan(frqFil[i], quiet=TRUE)
+#			frq=frq+frqTmp
 	
-		}
+#		}
 
 		# Calculate the corrected length
+		
 		lenRef=correctLengthRepeat(ref, repeatsTableToFilter)
-
 		writeResults=TRUE
-		resTmp=rep(0,nrow(reference))
-		resTmp[referenceIntronExon=="intron"]=frq
-		res=cbind(res,resTmp)
+#		resTmp=rep(0,nrow(reference))
+#		resTmp[referenceIntronExon=="intron"]=frq
+		res<- cbind(res, inAnMat[ , intExInd])
 		colnames(res)[ncol(res)]="IntRet_frequency"
 		msg<-
 "IntERESt:interestSummarise: Normalizing intron retention read levels.\n"
 		if(logFile!="")
 			cat( msg, file=logFile, append=TRUE)
-		cat( msg)
-		referenceGeneNamesTmp= as.character(referenceGeneNames[
+		cat(msg)
+		frq<- inAnMat[ which(referenceIntronExon=="intron"), intExInd]
+		referenceGeneNamesTmp<- as.character(referenceGeneNames[
 			referenceIntronExon=="intron"])
-		geneCnt=tapply(frq,referenceGeneNamesTmp,sum)
+		geneCnt<- tapply(frq,referenceGeneNamesTmp,sum)
 		FPKM=frq
 		if(scaleFragment[intExInd])
 			FPKM=((10^6)*frq)/(as.numeric(geneCnt[referenceGeneNamesTmp])+1)
@@ -156,36 +160,37 @@ analysis.\n"
 	} 
 	if(length(exExInd)>0) {
 		ref=reference[referenceIntronExon=="exon",]
-		frqFil=dir(pattern="\\.frq$",path=inLoc[exExInd], full.names=TRUE)
-		frq=rep(0,nrow(ref))
-		msg <-
-"IntERESt:interestSummarise: Reading read frequency files for exon-exon 
-junction analysis.\n"
-		if(logFile!="")
-			cat( msg, file=logFile, append=TRUE)
-		cat( msg)
-		for(i in 1:length(frqFil)){
+#		frqFil=dir(pattern="\\.frq$",path=inLoc[exExInd], full.names=TRUE)
+#		frq=rep(0,nrow(ref))
+#		msg <-
+#"IntERESt:interestSummarise: Reading read frequency files for exon-exon 
+#junction analysis.\n"
+#		if(logFile!="")
+#			cat( msg, file=logFile, append=TRUE)
+#		cat( msg)
+#		for(i in 1:length(frqFil)){
 
-			frqTmp=scan(frqFil[i], quiet=TRUE)
-			frq=frq+frqTmp
+#			frqTmp=scan(frqFil[i], quiet=TRUE)
+#			frq=frq+frqTmp
 
-		}
+#		}
 
 		# Calculate the corrected length
 		lenRef=correctLengthRepeat(ref, repeatsTableToFilter)
 
 		writeResults=TRUE
-		resTmp=rep(0,nrow(reference))
-		resTmp[referenceIntronExon=="exon"]=frq
-		res=cbind(res,resTmp)
+#		resTmp=rep(0,nrow(reference))
+#		resTmp[referenceIntronExon=="exon"]=frq
+		res<- cbind(res, inAnMat[ , exExInd])
 		colnames(res)[ncol(res)]="ExEx_frequency"
 		msg<-
 "IntERESt:interestSummarise: Normalizing exon-exon junction read levels.\n"
 		if(logFile!="")
 			cat( msg, file=logFile, append=TRUE)
 		cat( msg)
+		frq<- inAnMat[ which(referenceIntronExon=="exon"), exExInd]
 		referenceGeneNamesTmp=as.character(referenceGeneNames[
-			referenceIntronExon=="exon"])
+			which(referenceIntronExon=="exon")])
 		geneCnt=tapply(frq,referenceGeneNamesTmp,sum)
 		FPKM=frq
 		if(scaleFragment[exExInd])

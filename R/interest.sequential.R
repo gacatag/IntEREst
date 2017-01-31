@@ -1,7 +1,6 @@
 interest.sequential <-
 function(
 	bamFileYieldSize=1000000,
-	tmpDir,
 	bamFile,
 	filterPairedDuplicate=TRUE,
 	filterSingleReadDuplicate=FALSE,
@@ -12,26 +11,23 @@ function(
 	junctionReadsOnly=FALSE,
 	outFile,
 	logFile="",
-	delTmpFolder=FALSE,
 	returnObj=FALSE,
 	method=c("IntRet","ExEx"),
 	appendLogFile=FALSE,
 	sampleName=c(), 
 	scaleLength= c(TRUE,FALSE), 
-	scaleFragment= c(TRUE,TRUE)
-	){
+	scaleFragment= c(TRUE,TRUE)){
 
 	time1=Sys.time()
-	suppressWarnings(dir.create(tmpDir))
-	suppressWarnings(dir.create(paste(tmpDir,"preprocessResult", sep="/")))
+
 	if(logFile!=""){
 		cat( "Log info: Running interest in sequential mode.\n", file=logFile, 
 			append=appendLogFile)
-		cat( "InERESt: Running bamPreprocess.\n", file=logFile, append=TRUE)
-		cat("InERESt: Running bamPreprocess. Detailed log info are written in: "
-			, logFile ,"\n", file=logFile, append=TRUE)
+		cat(
+"InERESt: Running bamPreprocess. Detailed log info are written in: ",
+			logFile ,"\n")
 	}
-		
+	cat( "Log info: Running interest in sequential mode.\n")		
 	if(as.character(class(reference))=="GRanges"){
 		if(length(names(reference))>0){
 			tmpReference=data.frame(
@@ -51,92 +47,87 @@ function(
 	}
 
 
-	cat( "Log info: Running interest in sequential mode.\n")
-	cat( "InERESt: Running bamPreprocess.\n")
-	bamPreprocess(
+	if(logFile!="")
+		cat( "InERESt: Preparing bam files\n", file=logFile, append=TRUE)
+	cat("InERESt: Preparing bam files\n", append=TRUE)
+	bpRes<- bamPreprocess(
 		yieldSize=bamFileYieldSize,
-		outFolder=paste(tmpDir,"preprocessResult/", sep="/"),
 		bamFile=bamFile,
 		logFile=logFile,
 		filterPairedDuplicate=filterPairedDuplicate, 
-		filterSingleReadDuplicate=filterSingleReadDuplicate
-	)
+		filterSingleReadDuplicate=filterSingleReadDuplicate,
+		appendLogFile=appendLogFile)
 
-	suppressWarnings(dir.create(paste(tmpDir,"interestAnalyseResult", 
-		sep="/")))
+
 	if(logFile!="")
 		cat( "InERESt: Running interestAnalyse.sequential.\n", file=logFile, 
 			append=TRUE)
 	cat( "InERESt: Running interestAnalyse.sequential.\n", append=TRUE)
-	interestAnalyse.sequential(
-		reference=reference,
-		outDir=paste(tmpDir,"interestAnalyseResult", sep="/"),
-		logFile=logFile,
-		pairFiles=dir(paste(tmpDir,"preprocessResult","read1", sep="/"), 
-			full.names=FALSE),
-		singleFiles=dir(paste(tmpDir,"preprocessResult", "single", sep="/"), 
-			full.names=FALSE),
-		inLoc=paste(tmpDir,"preprocessResult", sep="/"),
-		method=method,
-		referenceIntronExon=referenceIntronExon,
-		repeatsTableToFilter=repeatsTableToFilter,
-		junctionReadsOnly=junctionReadsOnly
-	)
+
+		inAnRes<- interestAnalyse.sequential(
+			reference=reference,
+			bamPrerocessRes=bpRes,
+			bamFile=bamFile,
+			yieldSize=bamFileYieldSize,
+			maxNoMappedReads=1,
+			appendLogFile=TRUE,
+			logFile=logFile,
+			method=method,
+			repeatsTableToFilter=repeatsTableToFilter,
+			referenceIntronExon=referenceIntronExon,
+			junctionReadsOnly=junctionReadsOnly,
+			filterPairedDuplicate=filterPairedDuplicate, 
+			filterSingleReadDuplicate=filterSingleReadDuplicate)
+
+
+
+
 	if(logFile!="")
-		cat( "InERESt: Running interestSummarise.\n", file=logFile, append=TRUE)
-	cat( "InERESt: Running interestSummarise.\n", append=TRUE)	
+		cat( "InERESt: Running interestSummarise.\n", file=logFile, 
+			append=TRUE)
+	cat("InERESt: Running interestSummarise.\n", append=TRUE)
+
 	interestSummarise(
-		reference=u12,
+		reference=reference,
 		referenceIntronExon=referenceIntronExon,
-		inLoc=paste(tmpDir,"interestAnalyseResult", method, sep="/"),
+		inAnRes=inAnRes,
 		method=method,
 		referenceGeneNames=referenceGeneNames,
-		outFile=outFile,
-		logFile=logFile,
-		appendLogFile=TRUE,
 		repeatsTableToFilter=repeatsTableToFilter,
+		outFile=outFile,
 		scaleLength= scaleLength, 
 		scaleFragment= scaleFragment
 	)
 
-	if(delTmpFolder) unlink(tmpDir, recursive = TRUE, force = TRUE)
-	tmpDat=read.table(outFile, header=TRUE, stringsAsFactors=FALSE)
+
 	if(returnObj & length(method)==1){
+		tmpDat<- read.table(outFile, header=TRUE, stringsAsFactors=FALSE)
 		resObj=InterestResult(resultFiles=outFile, 
 			readFreq=matrix(tmpDat[,(ncol(tmpDat)-1)], ncol=1), 
 			scaledRetention=matrix(tmpDat[,ncol(tmpDat)], ncol=1), 
-			sampleNames=sampleName, scaleLength=scaleLength, 
-			scaleFragment=scaleFragment, sampleAnnotation=data.frame(), 
-			interestDf=tmpDat[,1:(ncol(tmpDat)-2)])
-		return(resObj)
+				sampleNames=sampleName, 	
+			scaleLength=scaleLength, scaleFragment=scaleFragment, 
+				sampleAnnotation=data.frame(), 
+				interestDf=tmpDat[, 1:(ncol(tmpDat)-2)])
 	} else if (returnObj & length(method)==2){
+		tmpDat<- read.table(outFile, header=TRUE, stringsAsFactors=FALSE)
 		resObj= list(
 			IntRet=InterestResult(resultFiles=outFile, 
 				readFreq=matrix(tmpDat[,(ncol(reference)+1)], ncol=1), 
 				scaledRetention=matrix(tmpDat[,(ncol(reference)+2)], ncol=1), 
 				sampleNames=sampleName, 
-				scaleLength=scaleLength[method="IntRet"],
+				scaleLength=scaleLength[method="IntRet"], 
 				scaleFragment=scaleFragment[method="IntRet"], 
 				sampleAnnotation=data.frame(), 
 				interestDf=tmpDat[, 1:ncol(reference)]), 
 			ExEx=InterestResult(resultFiles=outFile, 
 				readFreq=matrix(tmpDat[,(ncol(reference)+3)], ncol=1), 
 				scaledRetention=matrix(tmpDat[,(ncol(reference)+4)], ncol=1), 
-				sampleNames=sampleName,	scaleLength=scaleLength[method="ExEx"],
+				sampleNames=sampleName, 
+				scaleLength=scaleLength[method="ExEx"], 
 				scaleFragment=scaleFragment[method="ExEx"], 
 				sampleAnnotation=data.frame(), 
 				interestDf=tmpDat[, 1:ncol(reference)]) )
-	}
-
-	if(returnObj){
-		tmpDat=read.table(outFile, header=TRUE, stringsAsFactors=FALSE)
-			resObj=InterestResult(resultFiles=outFile, 
-				readFreq=matrix(tmpDat[,(ncol(tmpDat)-1)], ncol=1), 
-				scaledRetention=matrix(tmpDat[,ncol(tmpDat)], ncol=1), 
-				sampleNames=sampleName, 	
-				sampleAnnotation=data.frame(), 
-				interestDf=tmpDat[, 1:(ncol(tmpDat)-2)])
-		return(resObj)
 	}
 	time2=Sys.time()
 	runTime=difftime(time2,time1, units="secs")
@@ -145,4 +136,6 @@ function(
 			file=logFile, append=TRUE)
 	cat( "InERESt: run ends. Full running time: ",runTime," secs\n", 
 		append=TRUE)
+	if(returnObj)
+		return(resObj)
 }
