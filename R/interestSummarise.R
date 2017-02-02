@@ -69,11 +69,11 @@ correctLengthRepeat<-function(ref, repeatsTableToFilter){
 
 # Function for summarizing the results
 interestSummarise <-function(
-	reference=u12,
-	referenceIntronExon=u12[,"int_ex"],
+	reference,
+	referenceIntronExon,
 	inAnRes,
 	method=c("IntRet","ExEx"),
-	referenceGeneNames=u12[,"ens_gene_id"],
+	referenceGeneNames,
 	outFile,
 	logFile="",
 	appendLogFile=TRUE,
@@ -115,27 +115,11 @@ interestSummarise <-function(
 
 	if(length(intExInd)>0){
 		ref=reference[which(referenceIntronExon=="intron"),]
-#		frqFil=dir(pattern="\\.frq$",path=inLoc[intExInd], full.names=TRUE)
-#		frq=rep(0,nrow(ref))
-#		msg <-
-#"IntERESt:interestSummarise: Reading read frequency files for intron retention
-#analysis.\n"
-#		if(logFile!="")
-#			cat( msg, file=logFile, append=TRUE)
-#		cat( msg)
-#		for(i in 1:length(frqFil)){
-	
-#			frqTmp=scan(frqFil[i], quiet=TRUE)
-#			frq=frq+frqTmp
-	
-#		}
 
 		# Calculate the corrected length
 		
 		lenRef=correctLengthRepeat(ref, repeatsTableToFilter)
 		writeResults=TRUE
-#		resTmp=rep(0,nrow(reference))
-#		resTmp[referenceIntronExon=="intron"]=frq
 		res<- cbind(res, inAnMat[ , intExInd])
 		colnames(res)[ncol(res)]="IntRet_frequency"
 		msg<-
@@ -160,27 +144,10 @@ interestSummarise <-function(
 	} 
 	if(length(exExInd)>0) {
 		ref=reference[referenceIntronExon=="exon",]
-#		frqFil=dir(pattern="\\.frq$",path=inLoc[exExInd], full.names=TRUE)
-#		frq=rep(0,nrow(ref))
-#		msg <-
-#"IntERESt:interestSummarise: Reading read frequency files for exon-exon 
-#junction analysis.\n"
-#		if(logFile!="")
-#			cat( msg, file=logFile, append=TRUE)
-#		cat( msg)
-#		for(i in 1:length(frqFil)){
-
-#			frqTmp=scan(frqFil[i], quiet=TRUE)
-#			frq=frq+frqTmp
-
-#		}
-
 		# Calculate the corrected length
 		lenRef=correctLengthRepeat(ref, repeatsTableToFilter)
 
 		writeResults=TRUE
-#		resTmp=rep(0,nrow(reference))
-#		resTmp[referenceIntronExon=="exon"]=frq
 		res<- cbind(res, inAnMat[ , exExInd])
 		colnames(res)[ncol(res)]="ExEx_frequency"
 		msg<-

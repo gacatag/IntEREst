@@ -5,12 +5,12 @@
 A wrapper function that runs all necessary functions for the intron/exon 
 retention analysis. }
 \usage{
-interest( bamFileYieldSize=1000000, bamFile, filterPairedDuplicate=TRUE, 
-	filterSingleReadDuplicate= FALSE, reference, referenceGeneNames, 
+interest( bamFileYieldSize=1000000, bamFile, isPairedDuplicate=FALSE, 
+	isSingleReadDuplicate= NA, reference, referenceGeneNames, 
 	referenceIntronExon, repeatsTableToFilter=c(),
 	junctionReadsOnly=FALSE, outFile, logFile="", 
 	returnObj= FALSE, method=c("IntRet","ExEx"), 
-	clusterNo=NULL, cl, appendLogFile=FALSE, sampleName="",
+	clusterNo=NULL, bpparam, appendLogFile=FALSE, sampleName="",
 	scaleLength= c(TRUE,FALSE), scaleFragment= c(TRUE,TRUE))
 }
 \arguments{
@@ -18,14 +18,15 @@ interest( bamFileYieldSize=1000000, bamFile, filterPairedDuplicate=TRUE,
 Maximum number of pair reads in the temprorary files created as the result of 
 dividing the input .bam file. }
 \item{bamFile}{Path of the input bam file. }
-\item{filterPairedDuplicate}{
-Whether filter paired mapped reads for PCR dupplicates. It uses the FLAG field 
-in the bam file to filter the duplicate read. If the mapping software does not 
-support detection and flaging the duplicate reads \code{dedup} tool of 
-\code{BamUtil} or \code{MarkDuplicates} of \code{Picard} tools could be used.}
-\item{filterSingleReadDuplicate}{
-Judging based on the FLAG field in the input bam file, whether filter single 
-mapped reads for PCR dupplicates. }
+\item{isPairedDuplicate}{
+Whether extract only (if set TRUE), filter (FALSE) or include (if set NA) PCR 
+dupplicates for paired mapped reads. It uses the FLAG field in the bam file to 
+filter the duplicate read. If the mapping software does not support detection 
+and flaging the duplicate reads \code{dedup} tool of \code{BamUtil} or 
+\code{MarkDuplicates} of \code{Picard} tools could be used.}
+\item{isSingleReadDuplicate}{
+Whether extract only (if set TRUE), filter (FALSE) or include (if set NA) PCR 
+dupplicates for single mapped reads. }
 \item{reference}{
 Dataframe to be used as reference; It should at least contain three same-size 
 vectors with the tag names \code{chr}, \code{begin}, and \code{end} which 
@@ -62,8 +63,8 @@ default it returns both.}
 \item{clusterNo}{
 Number of parallel cluster nodes. As default (clusterNo=NULL) the total number 
 of CPUs that are available in the cluster would be used.}
-\item{cl}{An object of class \code{cluster} if defined it will be taken into 
-consideration when building parallel clusters.}
+\item{bpparam}{An optional \code{BiocParallelParam} instance defining the 
+parallel back-end to be used.}
 \item{appendLogFile}{
 Whether log information should be appended to the \code{logFile}. It is set 
 \code{FALSE} by default.}
@@ -113,8 +114,8 @@ interest(
 	tmpDir=paste(outDir, names(MDS_Chr22_BAMFILES)[i], "tmp", 
 		sep="/"),
 	bamFile=MDS_Chr22_BAMFILES[i],
-	filterPairedDuplicate=TRUE,
-	filterSingleReadDuplicate=FALSE,
+	isPairedDuplicate=TRUE,
+	isSingleReadDuplicate=FALSE,
 	reference=u12,
 	referenceGeneNames=u12[,"ens_gene_id"],
 	referenceIntronExon=u12[,"int_ex"],

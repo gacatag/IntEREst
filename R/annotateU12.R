@@ -7,7 +7,8 @@ annotateU12<-function(
 	setNaAs="U2", annotateU12Subtype=TRUE)
 {
 	if(length(pwmU12U2)==0){
-		data(pwmU12db, packages="IntEREst")
+		pwmU12db<-0
+		data("pwmU12db")
 		pwmU12U2= 
 			list(pwmU12db[[1]][,11:17],
 			pwmU12db[[2]],pwmU12db[[3]][,38:40],pwmU12db[[4]][,11:17],

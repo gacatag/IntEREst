@@ -1,7 +1,7 @@
+#BiocParallel::MulticoreParam
 interestAnalyse <-
 function(
 	reference,
-	bamPrerocessRes,
 	bamFile,
 	yieldSize,
 	maxNoMappedReads,
@@ -12,19 +12,10 @@ function(
 	referenceIntronExon,
 	clusterNo,
 	junctionReadsOnly,
-	filterPairedDuplicate,
-	filterSingleReadDuplicate,
-	cl)
+	isPairedDuplicate,
+	isSingleReadDuplicate,
+	bpparam)
 {
-
-
-#Defining function that runs on all parallel cores 
-	includePairedDuplicate=NA
-	includeSingleReadDuplicate=NA
-	if(filterPairedDuplicate & !is.na(filterPairedDuplicate)) 
-		includePairedDuplicate=!filterPairedDuplicate
-	if(filterSingleReadDuplicate & !is.na(filterSingleReadDuplicate)) 
-		includeSingleReadDuplicate=!filterSingleReadDuplicate
 
 #Paralle running impelementation
 	if(logFile!=""){
@@ -53,33 +44,39 @@ function(
 
 	time1=Sys.time()
 
-	# Set parallel environment
-	if(missing(cl)){
-		doParallel::registerDoParallel(cores=clusterNo)
-	} else {
-		doParallel::registerDoParallel(cl, cores=clusterNo)
-	}
+	bf<- Rsamtools::BamFile(bamFile, yieldSize=yieldSize, 
+			asMates=TRUE )
 
-	i<- 0
-	res<- foreach::"%dopar%" (foreach::foreach( i=1:nrow(bamPrerocessRes), 
-		.combine='+'), 
-		interestIntExAnalyse(no=i, 
-			reference=reference,
-			bamPrerocessRes=bamPrerocessRes,
-			bamFile=bamFile,
-			yieldSize=yieldSize,
-			maxNoMappedReads=maxNoMappedReads,
-			logFile=logFile,
-			method=method,
-			appendLogFile=appendLogFile,
-			repeatsTableToFilter=repeatsTableToFilter,
-			referenceIntronExon=referenceIntronExon,
-			junctionReadsOnly=junctionReadsOnly,
-			includePairedDuplicate=includePairedDuplicate,
-			includeSingleReadDuplicate=includeSingleReadDuplicate))
-	
-	if(!missing(cl))
-		on.exit(parallel::stopCluster(cl))
+	# Set parallel environment	
+	if(missing(bpparam))
+		bpparam <- BiocParallel::MulticoreParam(workers = clusterNo)
+
+# Initialize the iterator and combine with REDUCE:
+	ITER <- bamIterPair(bf, isPairedDuplicate=isPairedDuplicate)
+	resTmpPair<- BiocParallel::bpiterate(ITER, interestIntExAnalysePair, 
+		reference=reference,
+		maxNoMappedReads=maxNoMappedReads,
+		logFile=logFile,
+		method=method,
+		appendLogFile=appendLogFile,
+		repeatsTableToFilter=repeatsTableToFilter,
+		referenceIntronExon=referenceIntronExon,
+		junctionReadsOnly=junctionReadsOnly,
+		BPPARAM=bpparam)
+
+	ITER <- bamIterSingle(bf, isSingleReadDuplicate=isSingleReadDuplicate)
+	resTmpSingle<- BiocParallel::bpiterate(ITER, interestIntExAnalyseSingle, 
+		reference=reference,
+		maxNoMappedReads=maxNoMappedReads,
+		logFile=logFile,
+		method=method,
+		appendLogFile=appendLogFile,
+		repeatsTableToFilter=repeatsTableToFilter,
+		referenceIntronExon=referenceIntronExon,
+		junctionReadsOnly=junctionReadsOnly,
+		BPPARAM=bpparam)
+
+	res<- Reduce("+", resTmpPair)+Reduce("+", resTmpSingle)
 
 	time2=Sys.time()
 	runTime=difftime(time2,time1, units="secs")

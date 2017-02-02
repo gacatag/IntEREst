@@ -6,7 +6,7 @@ A wrapper function that runs all necessary functions for the intron/exon
 retention analysis. }
 \usage{
 interest.sequential( bamFileYieldSize=1000000, bamFile, 
-	filterPairedDuplicate=TRUE, filterSingleReadDuplicate=FALSE, 
+	isPairedDuplicate=FALSE, isSingleReadDuplicate=NA, 
 	reference, referenceGeneNames, 
 	referenceIntronExon, repeatsTableToFilter=c(), 
 	junctionReadsOnly=FALSE, outFile, logFile="", 
@@ -19,10 +19,15 @@ interest.sequential( bamFileYieldSize=1000000, bamFile,
 Maximum number of paired Reads in the temprorary files created as the result of
 dividing the input .bam file. }
 \item{bamFile}{ Path of the input bam file.}
-\item{filterPairedDuplicate}{ 
-Whether filter paired mapped reads for PCR dupplicates.}
-\item{filterSingleReadDuplicate}{ 
-Whether filter single mapped reads for PCR dupplicates.}
+\item{isPairedDuplicate}{
+Whether extract only (if set TRUE), filter (FALSE) or include (if set NA) PCR 
+dupplicates for paired mapped reads. It uses the FLAG field in the bam file to 
+filter the duplicate read. If the mapping software does not support detection 
+and flaging the duplicate reads \code{dedup} tool of \code{BamUtil} or 
+\code{MarkDuplicates} of \code{Picard} tools could be used.}
+\item{isSingleReadDuplicate}{
+Whether extract only (if set TRUE), filter (FALSE) or include (if set NA) PCR 
+dupplicates for single mapped reads. }
 \item{reference}{
 Dataframe to be used as reference; It should at least contain three same-size 
 vectors with the tag names \code{chr}, \code{begin}, and \code{end} which 

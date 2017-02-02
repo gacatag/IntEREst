@@ -56,10 +56,9 @@ All functions that are required for estimating the normalized intron retention
 levels and exon junction levels are  included in two functions, `interest()` 
 and `interest.sequential()`. The `interest()` function improves the performance 
 of the most time-consuming part of the analysis (i.e. estimating the number of 
-fragments mapped to each intron or exon) by dividing the .bam file to smaller 
-temporary text files, distributing the files on multiple computing cores and 
-analyzing them simultaneously. The *Rmpi* R package must be installed to be 
-able to run the `interest()` function in parallel.
+fragments mapped to each intron or exon) by distributing the reads in the .bam 
+file over several computing coresto be analyzed simultaneously. The 
+*BiocParallel* package must be installed.
 
 <br>
 ```{r parallel_pipeline, out.width = 500, echo=TRUE, eval=FALSE }
@@ -78,8 +77,8 @@ lapply(1:length(MDS_Chr22_BAMFILES), function(i){
 	interest(
 		bamFileYieldSize=10000,
 		bamFile=MDS_Chr22_BAMFILES[i],
-		filterPairedDuplicate=TRUE,
-		filterSingleReadDuplicate=FALSE,
+		isPairedDuplicate=FALSE,
+		isSingleReadDuplicate=NA,
 		reference=u12,
 		referenceGeneNames=u12[,"ens_gene_id"],
 		referenceIntronExon=u12[,"int_ex"],
@@ -101,17 +100,15 @@ lapply(1:length(MDS_Chr22_BAMFILES), function(i){
 
 <br>
 The following codes run the same process sequentially, i.e. on a single 
-computing core. The *Rmpi* R package is **NOT** required if the 
-`interest.sequential()` function is used. Note that regions in the genome with 
-repetitive sequence elements may bias the mapping of the read sequences and the 
-retention analysis. If you wish to exclude these regions from the analysis you 
-can use the `getRepeatTable()` function. We did not find repetitive DNA 
-elements in particular biasing our results. Therefore we do not routinely use 
-this function; however if you wish to exclude, for example,  the Alu elements 
-from your analysis, you can run these functions with the `repeatsTableToFilter= 
-getRepeatTable(repFamilyFil= "Alu")` parameter setting. Also note, that to only 
-consider the reads that map to intron-exon or exon-exon junction set 
-`junctionReadsOnly= FALSE`.
+computing core. Note that regions in the genome with repetitive sequence 
+elements may bias the mapping of the read sequences and the retention analysis. 
+If you wish to exclude these regions from the analysis you can use the 
+`getRepeatTable()` function. We did not find repetitive DNA elements in 
+particular biasing our results therefore we do not routinely use this function. 
+If you wish to exclude, for example,  the Alu elements from your analysis, you 
+can run these functions with the `repeatsTableToFilter= getRepeatTable(
+repFamilyFil= "Alu")` parameter setting. Also note, to only consider the reads 
+that map to intron-exon or exon-exon junction set `junctionReadsOnly= TRUE`.
 
 <br>
 ```{r sequential_pipeline, out.width = 500, echo=TRUE, eval=FALSE }
@@ -131,8 +128,8 @@ lapply(1:length(MDS_Chr22_BAMFILES), function(i){
 	interest.sequential(
 		bamFileYieldSize=10000,
 		bamFile=MDS_Chr22_BAMFILES[i],
-		filterPairedDuplicate=TRUE,
-		filterSingleReadDuplicate=FALSE,
+		isPairedDuplicate=FALSE,
+		isSingleReadDuplicate=NA,
 		reference=u12,
 		referenceGeneNames=u12[,"ens_gene_id"],
 		referenceIntronExon=u12[,"int_ex"],

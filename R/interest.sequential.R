@@ -2,8 +2,8 @@ interest.sequential <-
 function(
 	bamFileYieldSize=1000000,
 	bamFile,
-	filterPairedDuplicate=TRUE,
-	filterSingleReadDuplicate=FALSE,
+	isPairedDuplicate=FALSE,
+	isSingleReadDuplicate=NA,
 	reference,
 	referenceGeneNames,
 	referenceIntronExon,
@@ -48,25 +48,12 @@ function(
 
 
 	if(logFile!="")
-		cat( "InERESt: Preparing bam files\n", file=logFile, append=TRUE)
-	cat("InERESt: Preparing bam files\n", append=TRUE)
-	bpRes<- bamPreprocess(
-		yieldSize=bamFileYieldSize,
-		bamFile=bamFile,
-		logFile=logFile,
-		filterPairedDuplicate=filterPairedDuplicate, 
-		filterSingleReadDuplicate=filterSingleReadDuplicate,
-		appendLogFile=appendLogFile)
-
-
-	if(logFile!="")
 		cat( "InERESt: Running interestAnalyse.sequential.\n", file=logFile, 
 			append=TRUE)
 	cat( "InERESt: Running interestAnalyse.sequential.\n", append=TRUE)
 
 		inAnRes<- interestAnalyse.sequential(
 			reference=reference,
-			bamPrerocessRes=bpRes,
 			bamFile=bamFile,
 			yieldSize=bamFileYieldSize,
 			maxNoMappedReads=1,
@@ -76,8 +63,8 @@ function(
 			repeatsTableToFilter=repeatsTableToFilter,
 			referenceIntronExon=referenceIntronExon,
 			junctionReadsOnly=junctionReadsOnly,
-			filterPairedDuplicate=filterPairedDuplicate, 
-			filterSingleReadDuplicate=filterSingleReadDuplicate)
+			isPairedDuplicate=isPairedDuplicate, 
+			isSingleReadDuplicate=isSingleReadDuplicate)
 
 
 

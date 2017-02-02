@@ -1,33 +1,26 @@
+#BiocParallel::SerialParam
 interestAnalyse.sequential <-
 function(
-	reference=reference,
-	bamPrerocessRes,
-	bamFile=bamFile,
+	reference,
+	bamFile,
 	yieldSize,
 	maxNoMappedReads,
+	logFile,
+	method,
 	appendLogFile=TRUE,
-	logFile=logFile,
-	method=method,
 	repeatsTableToFilter,
 	referenceIntronExon,
 	junctionReadsOnly,
-	filterPairedDuplicate, 
-	filterSingleReadDuplicate)
+	isPairedDuplicate,
+	isSingleReadDuplicate)
 {
 
-	includePairedDuplicate=NA
-	includeSingleReadDuplicate=NA
-	if(filterPairedDuplicate & !is.na(filterPairedDuplicate)) 
-		includePairedDuplicate=!filterPairedDuplicate
-	if(filterSingleReadDuplicate & !is.na(filterSingleReadDuplicate)) 
-		includeSingleReadDuplicate=!filterSingleReadDuplicate
-
-#Sequential running impelementation
+#Paralle running impelementation
 	if(logFile!=""){
-		cat( "InERESt:interestAnalyse.sequential: Begins ...\n", file=logFile, 
+		cat( "InERESt:interestAnalyse: Begins ...\n", file=logFile, 
 			append=appendLogFile)
 	}
-	cat( "InERESt:interestAnalyse.sequential: Begins ...\n")
+	cat( "InERESt:interestAnalyse: Begins ...\n")
 
 	if(as.character(class(reference))=="GRanges"){
 		if(length(names(reference))>0){
@@ -47,36 +40,49 @@ function(
 		reference=tmpReference
 	}
 
-
 	time1=Sys.time()
 
-	# Run sequential command
-	i<- 0
-	res<- foreach::"%do%" (foreach::foreach( i=1:nrow(bamPrerocessRes), 
-		.combine='+'), 
-		interestIntExAnalyse(no=i, 
-			reference=reference,
-			bamPrerocessRes=bamPrerocessRes,
-			bamFile=bamFile,
-			yieldSize=yieldSize,
-			maxNoMappedReads=maxNoMappedReads,
-			logFile=logFile,
-			method=method,
-			appendLogFile=appendLogFile,
-			repeatsTableToFilter=repeatsTableToFilter,
-			referenceIntronExon=referenceIntronExon,
-			junctionReadsOnly=junctionReadsOnly,
-			includePairedDuplicate=includePairedDuplicate,
-			includeSingleReadDuplicate=includeSingleReadDuplicate))
+	bf<- Rsamtools::BamFile(bamFile, yieldSize=yieldSize, 
+			asMates=TRUE )
+
+
+	# Set parallel environment	
+	bpparam <- BiocParallel::SerialParam()
+
+# Initialize the iterator and combine with REDUCE:
+	ITER <- bamIterPair(bf, isPairedDuplicate=isPairedDuplicate)
+
+	resTmpPair<- BiocParallel::bpiterate(ITER, interestIntExAnalysePair, 
+		reference=reference,
+		maxNoMappedReads=maxNoMappedReads,
+		logFile=logFile,
+		method=method,
+		appendLogFile=appendLogFile,
+		repeatsTableToFilter=repeatsTableToFilter,
+		referenceIntronExon=referenceIntronExon,
+		junctionReadsOnly=junctionReadsOnly,
+		BPPARAM=bpparam)
+
+	ITER <- bamIterSingle(bf, isSingleReadDuplicate=isSingleReadDuplicate)
+	resTmpSingle<- BiocParallel::bpiterate(ITER, interestIntExAnalyseSingle, 
+		reference=reference,
+		maxNoMappedReads=maxNoMappedReads,
+		logFile=logFile,
+		method=method,
+		appendLogFile=appendLogFile,
+		repeatsTableToFilter=repeatsTableToFilter,
+		referenceIntronExon=referenceIntronExon,
+		junctionReadsOnly=junctionReadsOnly,
+		BPPARAM=bpparam)
+
+	res<- Reduce("+", resTmpPair)+Reduce("+", resTmpSingle)
 
 	time2=Sys.time()
 	runTime=difftime(time2,time1, units="secs")
 	if(logFile!="")
-		cat( 
-"InERESt:interestAnalyse.sequential: Read counting ends. Running time: ",
+		cat( "InERESt:interestAnalyse: Read counting ends. Running time: ",
 			runTime," secs\n", file=logFile, append=TRUE)
-	cat( 
-"InERESt:interestAnalyse.sequential: Read counting ends. Running time: ",
+	cat( "InERESt:interestAnalyse: Read counting ends. Running time: ",
 		runTime," secs\n")
 
 	return(res)	

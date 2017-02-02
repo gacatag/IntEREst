@@ -1,6 +1,6 @@
-matchPwmToReference<-function(pwm=pwmU12db$pwmDonU12, pwmSsIndex=11, 
-	referenceChr, referencePos, referenceIntronExon, intronExon="intron", 
-	matchWindowRelativePos=c(NA,NA), minMatchScore="80%", refGenome=""){
+matchPwmToReference<-function(pwm, pwmSsIndex=11, referenceChr, referencePos, 
+	referenceIntronExon, intronExon="intron", matchWindowRelativePos=c(NA,NA), 
+	minMatchScore="80%", refGenome=""){
 
 	# Check if reference genome sequence is of BSgenome type
 	if (as.character(class(refGenome)) == "BSgenome"){

@@ -1,12 +1,16 @@
+#isPairedDuplicate=FALSE
+#isSingleReadDuplicate=NA
+#bpparam
+
 interest <-
 function(
 	bamFileYieldSize=1000000, bamFile,
-	filterPairedDuplicate=TRUE,
-	filterSingleReadDuplicate=FALSE,
+	isPairedDuplicate=FALSE,
+	isSingleReadDuplicate=NA,
 	reference, referenceGeneNames,
 	referenceIntronExon, repeatsTableToFilter=c(),
 	junctionReadsOnly=FALSE, outFile, logFile="",
-	returnObj=FALSE, method=c("IntRet","ExEx"),	clusterNo=NULL, cl,
+	returnObj=FALSE, method=c("IntRet","ExEx"),	clusterNo=NULL, bpparam,
 	appendLogFile=FALSE, sampleName="", 
 	scaleLength= c(TRUE,FALSE), scaleFragment= c(TRUE,TRUE))
 {
@@ -38,26 +42,13 @@ function(
 		}
 		reference=tmpReference
 	}
-	if(logFile!="")
-		cat( "InERESt: Preparing bam files\n", file=logFile, append=TRUE)
-	cat("InERESt: Preparing bam files\n", append=TRUE)
-	
-	bpRes<- bamPreprocess(
-		yieldSize=bamFileYieldSize,
-		bamFile=bamFile,
-		logFile=logFile,
-		filterPairedDuplicate=filterPairedDuplicate, 
-		filterSingleReadDuplicate=filterSingleReadDuplicate,
-		appendLogFile=appendLogFile)
-
 
 	if(logFile!="")
 		cat( "InERESt: Running interestAnalyse.\n", file=logFile, append=TRUE)
 	cat("InERESt: Running interestAnalyse.\n", append=TRUE)
-	if(!missing(cl)){
+	if(!missing(bpparam)){
 		inAnRes<- interestAnalyse(
 			reference=reference,
-			bamPrerocessRes=bpRes,
 			bamFile=bamFile,
 			yieldSize=bamFileYieldSize,
 			maxNoMappedReads=1,
@@ -68,13 +59,12 @@ function(
 			referenceIntronExon=referenceIntronExon,
 			clusterNo=clusterNo,
 			junctionReadsOnly=junctionReadsOnly,
-			filterPairedDuplicate=filterPairedDuplicate, 
-			filterSingleReadDuplicate=filterSingleReadDuplicate,
-			cl<-cl)
+			isPairedDuplicate=isPairedDuplicate, 
+			isSingleReadDuplicate=isSingleReadDuplicate,
+			bpparam<-bpparam)
 	} else {
 		inAnRes<- interestAnalyse(
 			reference=reference,
-			bamPrerocessRes=bpRes,
 			bamFile=bamFile,
 			yieldSize=bamFileYieldSize,
 			maxNoMappedReads=1,
@@ -85,8 +75,8 @@ function(
 			referenceIntronExon=referenceIntronExon,
 			clusterNo=clusterNo,
 			junctionReadsOnly=junctionReadsOnly,
-			filterPairedDuplicate=filterPairedDuplicate, 
-			filterSingleReadDuplicate=filterSingleReadDuplicate)
+			isPairedDuplicate=isPairedDuplicate, 
+			isSingleReadDuplicate=isSingleReadDuplicate)
 
 	} 
 
