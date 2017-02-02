@@ -1,4 +1,3 @@
-#BiocParallel::MulticoreParam
 interestAnalyse <-
 function(
 	reference,

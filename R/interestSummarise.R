@@ -1,56 +1,57 @@
 # Function to correct length  based on possible removal of repeat elements
 correctLengthRepeat<-function(ref, repeatsTableToFilter){	
 
-	subjectHits<-  S4Vectors::subjectHits
-	queryHits<- S4Vectors::queryHits
-	GRanges<- GenomicRanges::GRanges
-	findOverlaps<- GenomicRanges::findOverlaps
-	reduce<- GenomicRanges::reduce
-
 	lenRef=ref[,"end"]-ref[,"begin"]+1
 	if(length(repeatsTableToFilter)!=0){
-		repeatGRanges= GRanges( seqnames=repeatsTableToFilter[,"chr"],
+		repeatGRanges= GenomicRanges::GRanges( seqnames=
+			repeatsTableToFilter[,"chr"],
 			IRanges::IRanges(start=repeatsTableToFilter[,"begin"],
 			end=repeatsTableToFilter[,"end"], 
 			width=repeatsTableToFilter[,"end"]-
 				repeatsTableToFilter[,"begin"]+1))
-		reduceRepeatGr=reduce(repeatGRanges)
+		reduceRepeatGr=GenomicRanges::reduce(repeatGRanges)
 		reduceRepeatBegin=as.numeric(GenomicRanges::start(reduceRepeatGr))
-		reduceRepeatBeginGr= GRanges(
+		reduceRepeatBeginGr= GenomicRanges::GRanges(
 			seqnames=as.character(GenomicRanges::seqnames(reduceRepeatGr)),
 				IRanges::IRanges(start=reduceRepeatBegin,
 					end=reduceRepeatBegin))
 
 		reduceRepeatEnd=as.numeric(GenomicRanges::end(reduceRepeatGr))
-		reduceRepeatEndGr= GRanges(
+		reduceRepeatEndGr= GenomicRanges::GRanges(
 			seqnames=as.character(GenomicRanges::seqnames(reduceRepeatGr)), 
 			 	IRanges::IRanges(start=reduceRepeatEnd, end=reduceRepeatEnd))
 
-		refGr=GRanges( seqnames=ref[,"chr"],
+		refGr=GenomicRanges::GRanges( seqnames=ref[,"chr"],
 			IRanges::IRanges(start=ref[,"begin"], end=ref[,"end"],
 				width=ref[,"end"]-ref[,"begin"]+1))
 		#Repeat elements that are fully located in the reference (Intron/Exon)
-		hitsRepeat= findOverlaps(reduceRepeatGr, refGr, type= "within")
+		hitsRepeat= GenomicRanges::findOverlaps(reduceRepeatGr, refGr, 
+			type= "within")
 		#Repeat elements which their 'end' coordinates are only located in the
 		#reference
-		hitsEndRepeat= findOverlaps(reduceRepeatEndGr, refGr, type= "within")
-		hitsEndRepeatFilQuery= queryHits(hitsEndRepeat)[
-			is.na(match(queryHits(hitsEndRepeat), queryHits(hitsRepeat) ))]
-		hitsEndRepeatFilSubject=subjectHits(hitsEndRepeat)[
-			is.na(match(queryHits(hitsEndRepeat), queryHits(hitsRepeat) ))]
+		hitsEndRepeat= GenomicRanges::findOverlaps(reduceRepeatEndGr, refGr, 
+			type= "within")
+		hitsEndRepeatFilQuery= S4Vectors::queryHits(hitsEndRepeat)[
+			is.na(match(S4Vectors::queryHits(hitsEndRepeat), 
+				S4Vectors::queryHits(hitsRepeat) ))]
+		hitsEndRepeatFilSubject=S4Vectors::subjectHits(hitsEndRepeat)[
+			is.na(match(S4Vectors::queryHits(hitsEndRepeat), 
+				S4Vectors::queryHits(hitsRepeat) ))]
 		#Repeat elements which their 'begin' coordinate are only located in the
 		#reference
-		hitsBeginRepeat= findOverlaps(reduceRepeatBeginGr, refGr, 
-			type= "within")
-		hitsBeginRepeatFilQuery= queryHits(hitsBeginRepeat)[
-			is.na(match(queryHits(hitsBeginRepeat), queryHits(hitsRepeat) ))]
-		hitsBeginRepeatFilSubject= subjectHits(hitsBeginRepeat)[
-			is.na(match(queryHits(hitsBeginRepeat), queryHits(hitsRepeat) ))]
+		hitsBeginRepeat= GenomicRanges::findOverlaps(reduceRepeatBeginGr, 
+			refGr, type= "within")
+		hitsBeginRepeatFilQuery= S4Vectors::queryHits(hitsBeginRepeat)[
+			is.na(match(S4Vectors::queryHits(hitsBeginRepeat), 
+				S4Vectors::queryHits(hitsRepeat) ))]
+		hitsBeginRepeatFilSubject= S4Vectors::subjectHits(hitsBeginRepeat)[
+			is.na(match(S4Vectors::queryHits(hitsBeginRepeat), 
+				S4Vectors::queryHits(hitsRepeat) ))]
 
-		lenRef[subjectHits(hitsRepeat)]= 
-			lenRef[subjectHits(hitsRepeat)]- 
+		lenRef[S4Vectors::subjectHits(hitsRepeat)]= 
+			lenRef[S4Vectors::subjectHits(hitsRepeat)]- 
 				as.numeric(GenomicRanges::width(reduceRepeatGr)
-					[queryHits(hitsRepeat)])
+					[S4Vectors::queryHits(hitsRepeat)])
 		if(length(hitsEndRepeatFilQuery)>0){
 			lenRef[hitsEndRepeatFilSubject]=
 				lenRef[hitsEndRepeatFilSubject]-

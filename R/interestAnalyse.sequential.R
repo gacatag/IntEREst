@@ -1,4 +1,3 @@
-#BiocParallel::SerialParam
 interestAnalyse.sequential <-
 function(
 	reference,

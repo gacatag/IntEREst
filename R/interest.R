@@ -1,7 +1,3 @@
-#isPairedDuplicate=FALSE
-#isSingleReadDuplicate=NA
-#bpparam
-
 interest <-
 function(
 	bamFileYieldSize=1000000, bamFile,

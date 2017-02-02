@@ -10,14 +10,6 @@ interestIntExAnalysePair <- function(
 	junctionReadsOnly)
 {
 
-	#Define functions
-	subjectHits<-  S4Vectors::subjectHits
-	queryHits<- S4Vectors::queryHits
-	GRanges<- GenomicRanges::GRanges
-	findOverlaps<- GenomicRanges::findOverlaps
-	IRanges<- IRanges::IRanges
-
-
 		sam1<- as.data.frame(GenomicAlignments::first(readTmp))[,
 			c("qname", "rname", "strand", "pos", "qual", "cigar")]
 		sam2<- as.data.frame(GenomicAlignments::second(readTmp))[,
@@ -123,33 +115,36 @@ interestIntExAnalysePair <- function(
 	methodNo=which(method=="ExEx")
 	if(length(methodNo)>0){
 		ref=reference[which(referenceIntronExon=="exon"),]
-		readGRanges=GRanges( seqnames=chrVec, IRanges(start=begVec, 
-			end=endVec))
-		refGRanges= GRanges( seqnames=ref[,"chr"], 
-			IRanges(start=ref[,"begin"], end=ref[,"end"], 
+		readGRanges=GenomicRanges::GRanges( seqnames=chrVec, 
+			IRanges::IRanges(start=begVec, end=endVec))
+		refGRanges= GenomicRanges::GRanges( seqnames=ref[,"chr"], 
+			IRanges::IRanges(start=ref[,"begin"], end=ref[,"end"], 
 				width=ref[,"end"]-ref[,"begin"]+1))
-		hits1 <- findOverlaps(readGRanges, refGRanges, type= "start")
-		hits2 <- findOverlaps(readGRanges, refGRanges, type= "end")
-		hits3 <- findOverlaps(readGRanges, refGRanges, type= "equal")
+		hits1 <- GenomicRanges::findOverlaps(readGRanges, refGRanges, 
+			type= "start")
+		hits2 <- GenomicRanges::findOverlaps(readGRanges, refGRanges, 
+			type= "end")
+		hits3 <- GenomicRanges::findOverlaps(readGRanges, refGRanges, 
+			type= "equal")
 		hitsSubject<- c()
 		hitsQuery<- c()
 		# Filter reads mapped to repeats regions if requested
 		if(length(repeatsTableToFilter)!=0){
-			repeatGRanges= GRanges( 
+			repeatGRanges= GenomicRanges::GRanges( 
 				seqnames=repeatsTableToFilter[,"chr"], 
-				IRanges(start=repeatsTableToFilter[,"begin"], 
+				IRanges::IRanges(start=repeatsTableToFilter[,"begin"], 
 					end=repeatsTableToFilter[,"end"], 
 					width=repeatsTableToFilter[,"end"]-
 						repeatsTableToFilter[,"begin"]+1))
-			hitsFilter= findOverlaps(readGRanges, repeatGRanges, 
-				type= "any")
+			hitsFilter= GenomicRanges::findOverlaps(readGRanges, 
+				repeatGRanges, type= "any")
 
-			filtInd1= which(is.na(match(queryHits(hits1), 
-				queryHits(hitsFilter))))
-			filtInd2= which(is.na(match(queryHits(hits2),  
-				queryHits(hitsFilter))))
-			filtInd3= which(is.na(match(queryHits(hits3),  
-				queryHits(hitsFilter))))
+			filtInd1= which(is.na(match(S4Vectors::queryHits(hits1), 
+				S4Vectors::queryHits(hitsFilter))))
+			filtInd2= which(is.na(match(S4Vectors::queryHits(hits2),  
+				S4Vectors::queryHits(hitsFilter))))
+			filtInd3= which(is.na(match(S4Vectors::queryHits(hits3),  
+				S4Vectors::queryHits(hitsFilter))))
 			hits1= hits1[filtInd1,]
 			hits2= hits2[filtInd2,]
 			hits3= hits3[filtInd3,]
@@ -158,14 +153,14 @@ interestIntExAnalysePair <- function(
 		if(!junctionReadsOnly){
 			hitsExtra= GenomicRanges::findOverlaps(readGRanges, 
 				refGRanges, type= "within")
-			hitsSubject=subjectHits(hitsExtra)
-			hitsQuery=queryHits(hitsExtra)
+			hitsSubject=S4Vectors::subjectHits(hitsExtra)
+			hitsQuery=S4Vectors::queryHits(hitsExtra)
 		}
 	
-		hitsSubject=c(hitsSubject, subjectHits(hits1),
-			subjectHits(hits2),subjectHits(hits3))
-		hitsQuery=c(hitsQuery, queryHits(hits1), queryHits(hits2),
-			queryHits(hits3))
+		hitsSubject=c(hitsSubject, S4Vectors::subjectHits(hits1),
+			S4Vectors::subjectHits(hits2),S4Vectors::subjectHits(hits3))
+		hitsQuery=c(hitsQuery, S4Vectors::queryHits(hits1), 
+			S4Vectors::queryHits(hits2), S4Vectors::queryHits(hits3))
 		refRes= rep(0,nrow(ref))
 		hitsApply= tapply(noVec[hitsQuery], hitsSubject, function(tmp) 
 			return(length(unique(tmp))) )
@@ -178,36 +173,38 @@ interestIntExAnalysePair <- function(
 	if(length(methodNo)>0){
 
 		ref=reference[which(referenceIntronExon=="intron"),]
-		readGRanges=GRanges( seqnames=chrVec, IRanges(start=begVec, 
-			end=endVec))
-		refGRanges= GRanges( seqnames=ref[,"chr"], 
-			IRanges(start=ref[,"begin"], end=ref[,"end"], 
+		readGRanges=GenomicRanges::GRanges( seqnames=chrVec, 
+			IRanges::IRanges(start=begVec, end=endVec))
+		refGRanges= GenomicRanges::GRanges( seqnames=ref[,"chr"], 
+			IRanges::IRanges(start=ref[,"begin"], end=ref[,"end"], 
 				width=ref[,"end"]-ref[,"begin"]+1))
-		hits <- findOverlaps(readGRanges, refGRanges, type= "any")
+		hits <- GenomicRanges::findOverlaps(readGRanges, refGRanges, 
+			type= "any")
 		# Filter reads mapped to repeats regions if requested
 		if(length(repeatsTableToFilter)!=0){
-			repeatGRanges= GRanges( 
+			repeatGRanges= GenomicRanges::GRanges( 
 				seqnames=repeatsTableToFilter[,"chr"], 
-				IRanges(start=repeatsTableToFilter[,"begin"],
+				IRanges::IRanges(start=repeatsTableToFilter[,"begin"],
 					end=repeatsTableToFilter[,"end"], 
 					width=repeatsTableToFilter[,"end"]-
 						repeatsTableToFilter[,"begin"]+1))
-			hitsFilter= findOverlaps(readGRanges, repeatGRanges, 
-				type= "any")
-			filtInd= which(is.na(match(queryHits(hits), 
-				queryHits(hitsFilter))))
+			hitsFilter= GenomicRanges::findOverlaps(readGRanges, 
+				repeatGRanges, type= "any")
+			filtInd= which(is.na(match(S4Vectors::queryHits(hits), 
+				S4Vectors::queryHits(hitsFilter))))
 			hits=hits[filtInd,]
 		}
 		# Filter reads mapped completely to Either introns or exons
 		if(junctionReadsOnly){
-			hitsFilter= findOverlaps(readGRanges, refGRanges, 
+			hitsFilter= GenomicRanges::findOverlaps(readGRanges, refGRanges, 
 				type= "within")
-			filtInd=which(is.na(match(queryHits(hits), 
-				queryHits(hitsFilter))))
+			filtInd=which(is.na(match(S4Vectors::queryHits(hits), 
+				S4Vectors::queryHits(hitsFilter))))
 			hits=hits[filtInd,]
 		}
 		refRes= rep(0,nrow(ref))
-		hitsApply=tapply(noVec[queryHits(hits)], subjectHits(hits), 
+		hitsApply=tapply(noVec[S4Vectors::queryHits(hits)], 
+			S4Vectors::subjectHits(hits), 
 			function(tmp) return(length(unique(tmp))) )
 		refRes[as.numeric(names(hitsApply))]= as.vector(hitsApply)
 		intRetRes<- rep(0,nrow(reference))
@@ -239,12 +236,6 @@ interestIntExAnalyseSingle <- function(
 	junctionReadsOnly)
 {
 
-	subjectHits<-  S4Vectors::subjectHits
-	queryHits<- S4Vectors::queryHits
-	GRanges<- GenomicRanges::GRanges
-	findOverlaps<- GenomicRanges::findOverlaps
-	IRanges<- IRanges::IRanges
-	
 # Filtering readTmp based on number of mapping targets for each read
 		lenTmp<- unlist(sapply(readTmp, length))
 		readTmpFil<- readTmp[which(lenTmp<= maxNoMappedReads)]
@@ -321,33 +312,36 @@ interestIntExAnalyseSingle <- function(
 	methodNo=which(method=="ExEx")
 	if(length(methodNo)>0){
 		ref=reference[which(referenceIntronExon=="exon"),]
-		readGRanges=GRanges( seqnames=chrVec, IRanges(start=begVec, 
-			end=endVec))
-		refGRanges= GRanges( seqnames=ref[,"chr"], 
-			IRanges(start=ref[,"begin"], end=ref[,"end"], 
+		readGRanges=GenomicRanges::GRanges( seqnames=chrVec, 
+			IRanges::IRanges(start=begVec, end=endVec))
+		refGRanges= GenomicRanges::GRanges( seqnames=ref[,"chr"], 
+			IRanges::IRanges(start=ref[,"begin"], end=ref[,"end"], 
 				width=ref[,"end"]-ref[,"begin"]+1))
-		hits1 <- findOverlaps(readGRanges, refGRanges, type= "start")
-		hits2 <- findOverlaps(readGRanges, refGRanges, type= "end")
-		hits3 <- findOverlaps(readGRanges, refGRanges, type= "equal")
+		hits1 <- GenomicRanges::findOverlaps(readGRanges, refGRanges, 
+			type= "start")
+		hits2 <- GenomicRanges::findOverlaps(readGRanges, refGRanges, 
+			type= "end")
+		hits3 <- GenomicRanges::findOverlaps(readGRanges, refGRanges, 
+			type= "equal")
 		hitsSubject<- c()
 		hitsQuery<- c()
 		# Filter reads mapped to repeats regions if requested
 		if(length(repeatsTableToFilter)!=0){
-			repeatGRanges= GRanges( 
+			repeatGRanges= GenomicRanges::GRanges( 
 				seqnames=repeatsTableToFilter[,"chr"], 
-				IRanges(start=repeatsTableToFilter[,"begin"], 
+				IRanges::IRanges(start=repeatsTableToFilter[,"begin"], 
 					end=repeatsTableToFilter[,"end"], 
 					width=repeatsTableToFilter[,"end"]-
 						repeatsTableToFilter[,"begin"]+1))
-			hitsFilter= findOverlaps(readGRanges, repeatGRanges, 
-				type= "any")
+			hitsFilter= GenomicRanges::findOverlaps(readGRanges, 
+				repeatGRanges, type= "any")
 
-			filtInd1= which(is.na(match(queryHits(hits1), 
-				queryHits(hitsFilter))))
-			filtInd2= which(is.na(match(queryHits(hits2),  
-				queryHits(hitsFilter))))
-			filtInd3= which(is.na(match(queryHits(hits3),  
-				queryHits(hitsFilter))))
+			filtInd1= which(is.na(match(S4Vectors::queryHits(hits1), 
+				S4Vectors::queryHits(hitsFilter))))
+			filtInd2= which(is.na(match(S4Vectors::queryHits(hits2),  
+				S4Vectors::queryHits(hitsFilter))))
+			filtInd3= which(is.na(match(S4Vectors::queryHits(hits3),  
+				S4Vectors::queryHits(hitsFilter))))
 			hits1= hits1[filtInd1,]
 			hits2= hits2[filtInd2,]
 			hits3= hits3[filtInd3,]
@@ -356,14 +350,14 @@ interestIntExAnalyseSingle <- function(
 		if(!junctionReadsOnly){
 			hitsExtra= GenomicRanges::findOverlaps(readGRanges, 
 				refGRanges, type= "within")
-			hitsSubject=subjectHits(hitsExtra)
-			hitsQuery=queryHits(hitsExtra)
+			hitsSubject=S4Vectors::subjectHits(hitsExtra)
+			hitsQuery=S4Vectors::queryHits(hitsExtra)
 		}
 	
-		hitsSubject=c(hitsSubject, subjectHits(hits1),
-			subjectHits(hits2),subjectHits(hits3))
-		hitsQuery=c(hitsQuery, queryHits(hits1), queryHits(hits2),
-			queryHits(hits3))
+		hitsSubject=c(hitsSubject, S4Vectors::subjectHits(hits1),
+			S4Vectors::subjectHits(hits2),S4Vectors::subjectHits(hits3))
+		hitsQuery=c(hitsQuery, S4Vectors::queryHits(hits1), 
+			S4Vectors::queryHits(hits2), S4Vectors::queryHits(hits3))
 		refRes= rep(0,nrow(ref))
 		hitsApply= tapply(noVec[hitsQuery], hitsSubject, function(tmp) 
 			return(length(unique(tmp))) )
@@ -376,36 +370,38 @@ interestIntExAnalyseSingle <- function(
 	if(length(methodNo)>0){
 
 		ref=reference[which(referenceIntronExon=="intron"),]
-		readGRanges=GRanges( seqnames=chrVec, IRanges(start=begVec, 
-			end=endVec))
-		refGRanges= GRanges( seqnames=ref[,"chr"], 
+		readGRanges=GenomicRanges::GRanges( seqnames=chrVec, 
+			IRanges::IRanges(start=begVec, end=endVec))
+		refGRanges= GenomicRanges::GRanges( seqnames=ref[,"chr"], 
 			IRanges(start=ref[,"begin"], end=ref[,"end"], 
 				width=ref[,"end"]-ref[,"begin"]+1))
-		hits <- findOverlaps(readGRanges, refGRanges, type= "any")
+		hits <- GenomicRanges::findOverlaps(readGRanges, refGRanges, 
+			type= "any")
 		# Filter reads mapped to repeats regions if requested
 		if(length(repeatsTableToFilter)!=0){
-			repeatGRanges= GRanges( 
+			repeatGRanges= GenomicRanges::GRanges( 
 				seqnames=repeatsTableToFilter[,"chr"], 
-				IRanges(start=repeatsTableToFilter[,"begin"],
+				IRanges::IRanges(start=repeatsTableToFilter[,"begin"],
 					end=repeatsTableToFilter[,"end"], 
 					width=repeatsTableToFilter[,"end"]-
 						repeatsTableToFilter[,"begin"]+1))
-			hitsFilter= findOverlaps(readGRanges, repeatGRanges, 
-				type= "any")
-			filtInd= which(is.na(match(queryHits(hits), 
-				queryHits(hitsFilter))))
+			hitsFilter= GenomicRanges::findOverlaps(readGRanges, 
+				repeatGRanges, type= "any")
+			filtInd= which(is.na(match(S4Vectors::queryHits(hits), 
+				S4Vectors::queryHits(hitsFilter))))
 			hits=hits[filtInd,]
 		}
 		# Filter reads mapped completely to Either introns or exons
 		if(junctionReadsOnly){
-			hitsFilter= findOverlaps(readGRanges, refGRanges, 
-				type= "within")
-			filtInd=which(is.na(match(queryHits(hits), 
-				queryHits(hitsFilter))))
+			hitsFilter= GenomicRanges::findOverlaps(readGRanges, 
+				refGRanges, type= "within")
+			filtInd=which(is.na(match(S4Vectors::queryHits(hits), 
+				S4Vectors::queryHits(hitsFilter))))
 			hits=hits[filtInd,]
 		}
 		refRes= rep(0,nrow(ref))
-		hitsApply=tapply(noVec[queryHits(hits)], subjectHits(hits), 
+		hitsApply=tapply(noVec[S4Vectors::queryHits(hits)], 
+			S4Vectors::subjectHits(hits), 
 			function(tmp) return(length(unique(tmp))) )
 		refRes[as.numeric(names(hitsApply))]= as.vector(hitsApply)
 		intRetRes<- rep(0,nrow(reference))
@@ -422,18 +418,4 @@ interestIntExAnalyseSingle <- function(
 #End of defining function for single mapped reads that runs on paralle cores
 } 
 	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
