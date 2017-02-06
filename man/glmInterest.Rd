@@ -14,7 +14,7 @@ package. For more information see \code{\link[edgeR]{glmfit}} and
 }
 \arguments{
 \item{x}{ 
-Object of type \code{InterestResult}.
+Object of type \code{SummarizedExperiment}.
 }
 \item{design}{
 Design matrix.

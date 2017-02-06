@@ -5,8 +5,8 @@ boxplot U12 introns retention levels (or flanking exons junction levels) and
 (up/down)stream U2 introns (or exons junction levels)
 }
 \description{
-boxplot U12 introns and (Up/Down)stream U2 introns in \code{InterestResult} 
-objects.
+boxplot U12 introns and (Up/Down)stream U2 introns in 
+\code{SummarizedExperiment} objects.
 }
 \usage{
 u12BoxplotNb(x, sampleAnnoCol=2, intExCol="int_ex",
@@ -16,33 +16,30 @@ u12BoxplotNb(x, sampleAnnoCol=2, intExCol="int_ex",
 }
 \arguments{
 \item{x}{ 
-Object of type \code{InterestResult}.
+Object of type \code{SummarizedExperiment}.
 }
 \item{sampleAnnoCol}{
-Which colummn of \code{@sampleAnnotation} data frame in \code{x} (the input 
-object of \code{InterestResult} type) to consider for plotting.
+Which colummn of \code{colData} of \code{x} to consider for plotting.
 }
 \item{intExCol}{
-Column name (or number) that represents whether each row is "intron" or "exon" 
-in \code{@interestDf} of the \code{InterestResult} object.
+Column name (or number) that represents whether each row of \code{x} assays is 
+"intron" or "exon".
 }
 \item{intTypeCol}{
 Column name (or number) that represents what type of intron each row of 
-\code{@interestDf} of \code{x} represents. The values in the column are either 
-"U12", "U2" or \code{NA} (for the exons).
+\code{x} assays represents.
 }
 \item{intronExon}{
 Whether plot intron retention (set \code{intronExon="intron"}) or exon-exon 
 junction (set \code{intronExon="exon"}) levels. 
 }
 \item{strandCol}{
-Column name (or number) that represents the strand of each row of 
-\code{@interestDf} in \code{x}. The values in the column are either "+", "-" or
-"*".
+Column name (or number) that represents the strand of each row of assays in
+\code{x}. The values in the column are either "+", "-" or "*".
 }
 \item{geneIdCol}{
-Column name (or number) that represents the gene ID of each row of 
-\code{@interestDf} in \code{x}.
+Column name (or number) that represents the gene ID of each row of assays in
+\code{x}.
 }
 \item{col}{
 Vector containing box colours. It is either of size 1 or the same size as the 
@@ -77,7 +74,7 @@ The replacement texts to be used in legend.
 }
 }
 \value{
-A code{InterestResult} object.
+Returns NULL
 }
 
 \seealso{
@@ -88,83 +85,12 @@ A code{InterestResult} object.
 
 \examples{
 
-
-geneId<- paste("gene", c(rep(1,7), rep(2,7), rep(3,7), rep(4,7)), 
-	sep="_")
-readCnt1<- sample(1:100, 28)
-readCnt2<- sample(1:100, 28)
-readCnt3<- sample(1:100, 28)
-readCnt4<- sample(1:100, 28)
-fpkm1<- readCnt1/(tapply(readCnt1, geneId, sum))[geneId]
-fpkm2<- readCnt2/(tapply(readCnt2, geneId, sum))[geneId]
-fpkm3<- readCnt3/(tapply(readCnt3, geneId, sum))[geneId]
-fpkm4<- readCnt4/(tapply(readCnt4, geneId, sum))[geneId]
-
-# Creating object using test data
-interestDat<- data.frame( 
-		int_ex=rep(c(rep(c("exon","intron"),3),"exon"),4),
-		int_ex_num= rep(c(1,1,2,2,3,3,4),4),         
-		int_type=rep(c(NA,"U2",NA,"U12",NA,"U2",NA),4),
-		strand=rep("*",28),
-		gene_id= geneId,
-		sam1_readCnt=readCnt1,
-		sam2_readCnt=readCnt2,
-		sam3_readCnt=readCnt3,
-		sam4_readCnt=readCnt4,
-		sam1_fpkm=fpkm1,
-		sam2_fpkm=fpkm2,
-		sam3_fpkm=fpkm3,
-		sam4_fpkm=fpkm4
-)
-readFreqColIndex<- grep("_readCnt$",colnames(interestDat))
-scaledRetentionColIndex<- grep("_fpkm$",colnames(interestDat))
-InterestResultObj<- InterestResult(
-	resultFiles=paste("file",1:4, sep="_"),
-	interestDf= interestDat[, -c(readFreqColIndex, 
-		scaledRetentionColIndex)],
-	readFreq= as.matrix(interestDat[, readFreqColIndex]),
-	scaledRetention= as.matrix(interestDat[, 
-		scaledRetentionColIndex]),
-	sampleNames=paste("sam",1:4, sep=""),
-	scaleLength=TRUE, 
-	scaleFragment=FALSE,
-	sampleAnnotation=data.frame(
-		sampleName=paste("sam",1:4, sep=""),
-		gender=c("M","M","F","F"),
-		health=c("healthy","unhealthy","healthy","unhealthy")
-	)
-)
-
-interestDatPosStr<- interestDat
-interestDatPosStr[,"strand"]<- rep("+",28)
-InterestResultPosStrObj<- InterestResult(
-	resultFiles=paste("file",1:4, sep="_"),
-	interestDf= interestDatPosStr[, -c(readFreqColIndex, 
-		scaledRetentionColIndex)],
-	readFreq= as.matrix(interestDat[, readFreqColIndex]),
-	scaledRetention= as.matrix(interestDat[, 
-		scaledRetentionColIndex]),
-	sampleNames=paste("sam",1:4, sep=""),
-	scaleLength=TRUE, 
-	scaleFragment=FALSE,
-	sampleAnnotation=data.frame(
-		sampleName=paste("sam",1:4, sep=""),
-		gender=c("M","M","F","F"),
-		health=c("healthy","unhealthy","healthy","unhealthy")
-	)
-)
-# plot data where all introns/exons have unknown "*" strand
-u12BoxplotNb(InterestResultObj, sampleAnnoCol=2, intExCol="int_ex",
-intTypeCol="int_type", intronExon="intron", boxplotNames=c(), 
-lasNames=1, outline=FALSE, plotLegend=TRUE, geneIdCol="gene_id",
-xLegend="topleft", col=c("pink", "lightblue"))
-
-# plot data with all introns/exons featuring "+" strand
-u12BoxplotNb(InterestResultPosStrObj, sampleAnnoCol=2, 
-intExCol="int_ex", intTypeCol="int_type",intronExon="intron",  
-boxplotNames=c(), lasNames=1, outline=FALSE, plotLegend=TRUE, 
-geneIdCol="gene_id", xLegend="topleft", 
-col=c("pink", "lightblue"))
+u12BoxplotNb(mdsChr22Obj, sampleAnnoCol="type", lasNames=1,
+    intExCol="int_ex", intTypeCol="int_type", intronExon="intron", 
+    boxplotNames=c(), outline=FALSE, plotLegend=TRUE, 
+    geneIdCol="ens_gene_id", xLegend="topleft", 
+    col=c("pink", "lightblue", "lightyellow"), ylim=c(0,1e+06), 
+    ylab="FPKM", cex.axis=0.8)
 
 }
 

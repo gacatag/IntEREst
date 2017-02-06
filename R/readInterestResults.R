@@ -39,14 +39,38 @@ readInterestResults<-function(resultFiles, sampleNames, sampleAnnotation,
 			res[,ncol(res)]=FPKM
 		}
 	}
-	if(is.vector(sampleAnnotation))
-		sampleAnnotation=data.frame(sampleGroup=sampleAnnotation)
-	sampleAnnotation=data.frame(sampleNames=sampleNames,sampleAnnotation)
-	resObj=InterestResult(resultFiles=resultFiles, 
-		readFreq=as.matrix(res[,readFreqColIndex]), 
-		scaledRetention=as.matrix(res[,scaledRetentionColIndex]), 
-		sampleNames=sampleNames, scaleLength=scaleLength, 
-		scaleFragment=scaleFragment, sampleAnnotation=sampleAnnotation, 
-		interestDf=ref)
+	if(!missing(sampleAnnotation)){
+		if(is.vector(sampleAnnotation))
+			sampleAnnotation=data.frame(sampleGroup=sampleAnnotation)
+		rownames(sampleAnnotation)=sampleNames
+
+		readFrq<-as.matrix(res[,readFreqColIndex])
+		scaledRet<-as.matrix(res[,scaledRetentionColIndex])
+		colnames(readFrq)<-sampleNames
+		colnames(scaledRet)<-sampleNames
+		resObj=InterestResult(
+			resultFiles=resultFiles,
+			counts=readFrq,
+			scaledRetention=scaledRet,
+			sampleAnnotation=sampleAnnotation,
+			rowData=ref,
+			scaleLength=scaleLength, 
+			scaleFragment=scaleFragment)
+	} else {
+
+		readFrq<-as.matrix(res[,readFreqColIndex])
+		scaledRet<-as.matrix(res[,scaledRetentionColIndex])
+		colnames(readFrq)<-c()
+		colnames(scaledRet)<-c()
+		resObj=InterestResult(
+			resultFiles=resultFiles,
+			counts=readFrq,
+			scaledRetention=scaledRet,
+			rowData=ref,
+			scaleLength=scaleLength, 
+			scaleFragment=scaleFragment)
+
+	}
+
 	return(resObj)
 }

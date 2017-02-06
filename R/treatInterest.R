@@ -1,6 +1,6 @@
 treatInterest<-function(x, design=c(), silent=TRUE, disp="common", coef=c(),
 	contrast=NULL, lfc=0, ...){
-	y=nread(x)
+	y=counts(x)
 	if(length(design)==0){
 		stop('Please provide a suitable design.')
 	}

@@ -1,6 +1,6 @@
 glmInterest<-function(x, design=c(), silent=TRUE, disp="common", coef=c(), 
 	contrast=NULL, ...){
-	y=nread(x)
+	y=counts(x)
 	if(length(design)==0){
 		stop('Please provide a suitable design.')
 	}

@@ -33,7 +33,7 @@ u12DensityPlot<-function(x, type=c("U12", "U2Up", "U2Dn", "U2UpDn", "U2Rand"),
 	u12Ind=u12Index(object,intExCol=intExCol, intTypeCol=intTypeCol)
 	u12NbInd=u12NbIndex(object,intExCol=intExCol, intTypeCol=intTypeCol, 
 		strandCol=strandCol, geneIdCol=geneIdCol, naUnstrand=naUnstrand)
-	uniStrand=unique(object@interestDf[,strandCol])
+	uniStrand=unique(SummarizedExperiment::rowData(object)[,strandCol])
 	definedStrand=uniStrand[uniStrand!="*"]
 	listPlot=c()	
 	if(intronExon=="intron"){
@@ -50,7 +50,8 @@ u12DensityPlot<-function(x, type=c("U12", "U2Up", "U2Dn", "U2UpDn", "U2Rand"),
 				fcRes[c(u12NbInd$downIntron,u12NbInd$upIntron)]))
 		if("U2Rand"%in% type){
 			set.seed(randomSeed)
-			allIntronsInd=which(object@interestDf[,intExCol]=="intron")
+			allIntronsInd=which(SummarizedExperiment::rowData(object)[,
+				intExCol]=="intron")
 			randInd=sample(
 				allIntronsInd[which(is.na(match(allIntronsInd,u12Ind)))], 
 				length(u12Ind))
@@ -98,7 +99,8 @@ u12DensityPlot<-function(x, type=c("U12", "U2Up", "U2Dn", "U2UpDn", "U2Rand"),
 				fcRes[ upDnIndsU2 ]))
 		if("U2Rand"%in% type){
 			set.seed(randomSeed)
-			allExonsInd=which(interestDf(object)[,intExCol]=="exon")
+			allExonsInd=which(SummarizedExperiment::rowData(object)[,
+				intExCol]=="exon")
 			randInd=sample(allExonsInd[ which(is.na(match(allExonsInd, 
 				unique(c(upIndsU12, dnIndsU12)) )))], length(u12Ind))
 			listPlot=c(listPlot, list(random_U2_introns=fcRes[randInd]))

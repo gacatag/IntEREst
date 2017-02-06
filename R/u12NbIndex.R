@@ -2,7 +2,7 @@ u12NbIndex<- function(
 	x, intExCol="int_ex", intTypeCol="int_type", strandCol="strand", 
 	geneIdCol="collapsed_transcripts", naUnstrand=FALSE) {
 	object=x
-	dat=interestDf(object)
+	dat=SummarizedExperiment::rowData(object)
 	minInd=tapply(1:nrow(dat), dat[,geneIdCol], min)
 	maxInd=tapply(1:nrow(dat), dat[,geneIdCol], max)
 	u12Ind=u12Index(object, intExCol=intExCol, intTypeCol=intTypeCol)

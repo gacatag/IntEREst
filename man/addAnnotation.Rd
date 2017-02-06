@@ -1,10 +1,12 @@
 \name{addAnnotation}
 \alias{addAnnotation}
 \title{
-	Adding sample annotations to a InterestResult object
+	Adding sample annotations to a \code{SummarizedExperiment} object
 }
 \description{
-	Adds a new sample annotation to the InterestResult object.
+Adds a new sample annotation to the \code{SummarizedExperiment} object. In 
+other words it adds and column with sample annotations to the colData of the 
+\code{SummarizedExperiment} object. 
 }
 \usage{
 addAnnotation(x, sampleAnnotationType, sampleAnnotation)
@@ -12,16 +14,15 @@ addAnnotation(x, sampleAnnotationType, sampleAnnotation)
 }
 \arguments{
 \item{x}{ 
-	Object of type \code{InterestResult}.
+Object of type \code{SummarizedExperiment}.
 }
 \item{sampleAnnotationType}{
-	The name of the new column to be added to the \code{@sampleAnnotation} table
-	of \code{InterestResult} object.
+The name of the new column to be added to the \code{colData} table of 
+\code{SummarizedExperiment} object.
 }
 \item{sampleAnnotation}{
-	Vector with the same length as the row-size of the \code{@sampleAnnotation} 
-	attribute of the \code{InterestResult} object, which includes the sample 
-	annotations.
+Vector with the same length as the row-size of the \code{colData} attribute of 
+the \code{SummarizedExperiment} object, which includes the sample annotations.
 }
 
 }

@@ -14,22 +14,22 @@ exactTestInterest(x, sampleAnnoCol=c(), sampleAnnotation=c(),
 }
 \arguments{
 \item{x}{ 
-	Object of type \code{InterestResult}.
+	Object of type \code{SummarizedExperiment}.
 }
 \item{sampleAnnoCol}{
-Which colummn of \code{@sampleAnnotation} of object \code{InterestResult} to
-consider for the analysis.
+Which colummn of \code{colData} of \code{x} to consider for the analysis.
 }
 \item{sampleAnnotation}{
-A vector of size 2 which cotains values from \code{@sampleAnnotation} of 
-\code{InterestResult} object; e.g. if \code{x@sampleAnnotation[,sampleAnnoCol]=
-c("test", "test", "ctrl","ctrl", ...)}, and the goal is to compare "test" and 
-"ctrl" samples, \code{sampleAnnotation} should either be \code{c("test",
-"ctrl")} or \code{c("ctrl","test")}.
+A vector of size 2 which cotains values from \code{colData} of 
+\code{SummarizedExperiment} object; e.g. if \code{getAnnotation(x)[,
+sampleAnnoCol]= c("test", "test", "ctrl","ctrl", ...)} , and the goal is to 
+compare "test" and "ctrl" samples, \code{sampleAnnotation} should either be 
+\code{c("test", "ctrl")} or \code{c("ctrl", "test")}.
 }
 \item{geneIdCol}{
-Column name (or number) that represents the gene ID of each row of 
-\code{@sampleAnnotation} in object \code{InterestResult}.
+Column name (or number of column) in \code{rowData} of \code{x}, i.e. 
+\code{SummarizedExperiment} object, that represents the gene ID of the 
+introns and exons in \code{x}.
 }
 \item{silent}{
 Whether run the function silently, i.e. without printing the top differential 
@@ -81,26 +81,21 @@ log2 counts-per-million (logCPM), and the two-sided p-value (PValue).
 \examples{
 
 
-geneId<- paste("gene", c(rep(1,7), rep(2,7), rep(3,7), rep(4,7)), 
+geneId<- paste("gene", c(rep(1,5), rep(2,5), rep(3,5), rep(4,5)), 
 	sep="_")
-
-y <- matrix(rnbinom(28*4,size=1/0.2,mu=10),nrow=28,ncol=4)
-readCnt1<- y[,1]
-readCnt2<- y[,2]
-readCnt3<- y[,3]
-readCnt4<- y[,4]
-# Scale to reads fragments mapped to the genes 
+readCnt1<- sample(1:100, 20)
+readCnt2<- sample(1:100, 20)
+readCnt3<- sample(1:100, 20)
+readCnt4<- sample(1:100, 20)
 fpkm1<- readCnt1/(tapply(readCnt1, geneId, sum))[geneId]
 fpkm2<- readCnt2/(tapply(readCnt2, geneId, sum))[geneId]
 fpkm3<- readCnt3/(tapply(readCnt3, geneId, sum))[geneId]
 fpkm4<- readCnt4/(tapply(readCnt4, geneId, sum))[geneId]
 
 # Creating object using test data
-interestDat<-data.frame( 
-		int_ex=rep(c(rep(c("exon","intron"),3),"exon"),4),
-		int_ex_num= rep(c(1,1,2,2,3,3,4),4),         
-		int_type=rep(c(NA,"U2",NA,"U12",NA,"U2",NA),4),
-		strand=rep("*",28),
+interestDat<- data.frame( 
+		int_ex=rep(c(rep(c("exon","intron"),2),"exon"),4),
+		int_ex_num= rep(c(1,1,2,2,3),4),         
 		gene_id= geneId,
 		sam1_readCnt=readCnt1,
 		sam2_readCnt=readCnt2,
@@ -111,27 +106,31 @@ interestDat<-data.frame(
 		sam3_fpkm=fpkm3,
 		sam4_fpkm=fpkm4
 )
-
 readFreqColIndex<- grep("_readCnt$",colnames(interestDat))
 scaledRetentionColIndex<- grep("_fpkm$",colnames(interestDat))
 
-interestResObj<- InterestResult(
+scalRetTmp<- as.matrix(interestDat[ ,scaledRetentionColIndex])
+colnames(scalRetTmp)<-gsub("_fpkm$","", colnames(scalRetTmp))
+
+frqTmp<- as.matrix(interestDat[ ,readFreqColIndex])
+colnames(frqTmp)<-gsub("_readCnt$","", colnames(frqTmp))
+
+
+InterestResultObj<- InterestResult(
 	resultFiles=paste("file",1:4, sep="_"),
-	interestDf= interestDat[, -c(readFreqColIndex, 
+	rowData= interestDat[ , -c(readFreqColIndex, 
 		scaledRetentionColIndex)],
-	readFreq=as.matrix(interestDat[, readFreqColIndex]),
-	scaledRetention=as.matrix(interestDat[, 
-		scaledRetentionColIndex]),
-	sampleNames=paste("sam",1:4, sep=""),
-	scaleLength=FALSE, scaleFragment=TRUE, 
+	counts= frqTmp,
+	scaledRetention= scalRetTmp,
+	scaleLength=TRUE, 
+	scaleFragment=FALSE,
 	sampleAnnotation=data.frame(
 		sampleName=paste("sam",1:4, sep=""),
-		gender=c("M","M","F","F"),
-		health=c("healthy","unhealthy","healthy","unhealthy")
+		gender=c("M","M","F","F"), row.names=paste("sam", 1:4, sep="")
 	)
 )
 
-res<- exactTestInterest(interestResObj, sampleAnnoCol="gender", 
+res<- exactTestInterest(InterestResultObj, sampleAnnoCol="gender", 
 	sampleAnnotation=c("F","M"), geneIdCol= "gene_id", 
 	silent=TRUE, disp="common")
 

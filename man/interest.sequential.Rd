@@ -56,7 +56,7 @@ as FALSE.}
 The log file path; if defined log information are written to the log file. }
 \item{returnObj}{
 If set \code{TRUE} in addition to producing result text files, the results 
-would also be returned as an object of class \code{InterestResult}.}
+would also be returned as an object of class \code{SummarizedExperiment}.}
 \item{method}{
 A vector describing the methods to use; i.e. whether estimate Intron retention 
 (\code{IntRet}) or Exon-Exon junction (\code{ExEx}) levels or both. By default 
@@ -80,9 +80,9 @@ fragments) over the genes.}
 \value{
 If \code{returnObj} is set \code{TRUE} in addition to making result text files,
 dependant on whether a single or two \code{method} is defined, the results
-would be returned as a single object of class \code{InterestResult} or as a
-list of size 2 which includes 2 objects of class \code{InterestResult} one for
-IntRet and the other for ExEx. 
+would be returned as a single object of class \code{SummarizedExperiment} or as 
+a list of size 2 which includes 2 objects of class \code{SummarizedExperiment} 
+one for IntRet and the other for ExEx. 
 }
 \seealso{
   \code{\link{interest}}.

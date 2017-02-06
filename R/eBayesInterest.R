@@ -4,9 +4,9 @@ eBayesInterest<- function(x, sampleAnnoCol=c(), sampleAnnotation=c(),
 
 	if(length(group)==0 & length(sampleAnnoCol)>0 & length(sampleAnnotation)>0 &
 		length(design)==0){
-		colInd<- !is.na(match(x@sampleAnnotation[,sampleAnnoCol],
+		colInd<- !is.na(match(getAnnotation(x)[,sampleAnnoCol],
 			sampleAnnotation))
-		group<- x@sampleAnnotation[colInd,sampleAnnoCol]
+		group<- getAnnotation(x)[colInd,sampleAnnoCol]
 	} else if (length(group)>0 & length(design)==0){
 		#Check if sampleAnnotation param is set correctly
 		if(length(sampleAnnotation)>0)
@@ -31,8 +31,8 @@ to be set.')
 	if(length(design)==0)
 		design<- stats::model.matrix(~factor(group))
 
-	lmMat<- scaledRetention(subInterestResult(x, interestDfRow= 
-		which(interestDf(x)[,"int_ex"]=="intron") ))
+	lmMat<- scaledRetention(subInterestResult(x, selectRow= 
+		which(rowData(x)[,"int_ex"]=="intron") ))
 	if(!is.na(logBase))
 		lmMat<- log(lmMat+1, base=2)
 

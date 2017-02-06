@@ -5,19 +5,18 @@
 }
 \description{
 Extract row numbers where introns (or exons dependant on user's request) 
-are located in \code{@sampleAnnotation} of an object of type 
-\code{InterestResult}.
+are located in an object of type \code{SummarizedExperiment}.
 }
 \usage{
 intexIndex(x, intExCol="int_ex", what="intron")
 }
 \arguments{
 \item{x}{ 
-Object of type \code{InterestResult}.
+Object of type \code{SummarizedExperiment}.
 }
 \item{intExCol}{
 Column name (or number) that represents whether each row is "intron" or "exon"
- in \code{@sampleAnnotation} of \code{x}.
+ in \code{rowData} of \code{x}.
 }
 \item{what}{
 A character string that defines whether the index for the introns or exons 

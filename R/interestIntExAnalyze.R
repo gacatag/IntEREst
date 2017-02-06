@@ -415,7 +415,7 @@ interestIntExAnalyseSingle <- function(
 		finalRes<-c(finalRes, exExRes)
 	}
 	return(finalRes)
-#End of defining function for single mapped reads that runs on paralle cores
+#End of defining function for single mapped reads that runs on parallel cores
 } 
 	
 

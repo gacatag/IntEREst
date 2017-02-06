@@ -14,7 +14,7 @@ lfc(x, fcType="edgeR", sampleAnnoCol=c(), sampleAnnotation=c(),
 }
 \arguments{
 \item{x}{ 
-	Object of type \code{InterestResult}.
+	Object of type \code{SummarizedExperiment}.
 }
 \item{fcType}{
 Available as "scaledRetention" or "edgeR" (as default) corresponding to either
@@ -22,15 +22,14 @@ log fold change of scaled retention values or degeR normalized log fold change
 values.
 }
 \item{sampleAnnoCol}{
-Which column of \code{@sampleAnnotation} of object \code{InterestResult} to
- consider for plotting.
+Which colummn of \code{colData} of \code{x} to consider for the analysis.
 }
 \item{sampleAnnotation}{
-A vector of size 2 which cotains values from \code{@sampleAnnotation} of
- \code{InterestResult} object; e.g. if x@sampleAnnotation[,sampleAnnoCol] =
- c("test", "test", "ctrl","ctrl", ...), and the goal is to compare "test" and
- "ctrl" samples, \code{sampleAnnotation} should either be c("test","ctrl") or
- c("ctrl","test").
+A vector of size 2 which cotains values from \code{colData} of 
+\code{SummarizedExperiment} object; e.g. if \code{getAnnotation(x)[,
+sampleAnnoCol]= c("test", "test", "ctrl","ctrl", ...)} , and the goal is to 
+compare "test" and "ctrl" samples, \code{sampleAnnotation} should either be 
+\code{c("test", "ctrl")} or \code{c("ctrl", "test")}.
 }
 \item{silent}{
 Whether run \code{\link{exactTestInterest}} silently, without warnings.
@@ -67,24 +66,21 @@ Vector including fold change values.
 
 \examples{
 
-
-geneId<- paste("gene", c(rep(1,7), rep(2,7), rep(3,7), rep(4,7)), 
+geneId<- paste("gene", c(rep(1,5), rep(2,5), rep(3,5), rep(4,5)), 
 	sep="_")
-readCnt1<- sample(1:100, 28)
-readCnt2<- sample(1:100, 28)
-readCnt3<- sample(1:100, 28)
-readCnt4<- sample(1:100, 28)
+readCnt1<- sample(1:100, 20)
+readCnt2<- sample(1:100, 20)
+readCnt3<- sample(1:100, 20)
+readCnt4<- sample(1:100, 20)
 fpkm1<- readCnt1/(tapply(readCnt1, geneId, sum))[geneId]
 fpkm2<- readCnt2/(tapply(readCnt2, geneId, sum))[geneId]
 fpkm3<- readCnt3/(tapply(readCnt3, geneId, sum))[geneId]
 fpkm4<- readCnt4/(tapply(readCnt4, geneId, sum))[geneId]
 
 # Creating object using test data
-interestDat<-data.frame( 
-		int_ex=rep(c(rep(c("exon","intron"),3),"exon"),4),
-		int_ex_num= rep(c(1,1,2,2,3,3,4),4),         
-		int_type=rep(c(NA,"U2",NA,"U12",NA,"U2",NA),4),
-		strand=rep("*",28),
+interestDat<- data.frame( 
+		int_ex=rep(c(rep(c("exon","intron"),2),"exon"),4),
+		int_ex_num= rep(c(1,1,2,2,3),4),         
 		gene_id= geneId,
 		sam1_readCnt=readCnt1,
 		sam2_readCnt=readCnt2,
@@ -97,33 +93,40 @@ interestDat<-data.frame(
 )
 readFreqColIndex<- grep("_readCnt$",colnames(interestDat))
 scaledRetentionColIndex<- grep("_fpkm$",colnames(interestDat))
-interestResObj<-InterestResult(
+
+scalRetTmp<- as.matrix(interestDat[ ,scaledRetentionColIndex])
+colnames(scalRetTmp)<-gsub("_fpkm$","", colnames(scalRetTmp))
+
+frqTmp<- as.matrix(interestDat[ ,readFreqColIndex])
+colnames(frqTmp)<-gsub("_readCnt$","", colnames(frqTmp))
+
+
+InterestResultObj<- InterestResult(
 	resultFiles=paste("file",1:4, sep="_"),
-	interestDf= interestDat[ , -c(readFreqColIndex, 
+	rowData= interestDat[ , -c(readFreqColIndex, 
 		scaledRetentionColIndex)],
-	readFreq=as.matrix(interestDat[ , readFreqColIndex]),
-	scaledRetention=as.matrix(interestDat[ , 
-		scaledRetentionColIndex]),
-	sampleNames=paste("sam",1:4, sep=""),
+	counts= frqTmp,
+	scaledRetention= scalRetTmp,
 	scaleLength=TRUE, 
 	scaleFragment=FALSE,
 	sampleAnnotation=data.frame(
 		sampleName=paste("sam",1:4, sep=""),
 		gender=c("M","M","F","F"),
 		health=c("healthy","unhealthy","healthy","unhealthy")
+		, row.names=paste("sam", 1:4, sep="")
 	)
 )
 
-lfcFpkm<- lfc(interestResObj, fcType="scaledRetention",
+lfcFpkm<- lfc(InterestResultObj, fcType="scaledRetention",
 	sampleAnnoCol="health", 
 	sampleAnnotation=c("unhealthy", "healthy"), 
 	silent=TRUE, group=c(), pseudoFpkm=1, log2=TRUE)
-lfcFpkm2<- lfc(interestResObj, fcType="scaledRetention", 
+lfcFpkm2<- lfc(InterestResultObj, fcType="scaledRetention", 
 	group=c("healthy","unhealthy","healthy","unhealthy"),
 	sampleAnnotation=c("unhealthy", "healthy"), 
 	silent=TRUE, pseudoFpkm=1, log2=TRUE)
 
-lfcEdgeRFpkm<- lfc(interestResObj, fcType="edgeR",
+lfcEdgeRFpkm<- lfc(InterestResultObj, fcType="edgeR",
 	sampleAnnoCol="health", 
 	sampleAnnotation=c("unhealthy", "healthy"), 
 	silent=TRUE, group=c(), pseudoFpkm=1, log2=TRUE)

@@ -169,11 +169,8 @@ mdsChr22Obj<-readInterestResults(
 	scaleLength=TRUE, scaleFragment=TRUE, reScale=FALSE)
 
 # Choose chromosome 22 only
-index<- which(interestDf(mdsChr22Obj)[,"chr"]=="chr22")
-mdsChr22ObjFil<- subInterestResult(mdsChr22Obj, 
-    interestDfRow=index, interestDfSample=c(), sampleAnnotation=2, 
-    sampleAnnoCol=c()
-)
+index<- which(rowData(mdsChr22Obj)[,"chr"]=="chr22")
+mdsChr22ObjFil<- subInterestResult(mdsChr22Obj, selectRow=index)
 
 mdsChr22Obj<- mdsChr22ObjFil
 
@@ -253,29 +250,29 @@ test<- exactTestInterest(mdsChr22Obj,
 # Number of stabilized introns (in Chr 22)
 sInt<- length(which(test$table[,"PValue"]<0.05 
 	& test$table[,"logFC"]>0 & 
-	interestDf(mdsChr22Obj)[,"int_ex"]=="intron"))
+	rowData(mdsChr22Obj)[,"int_ex"]=="intron"))
 print(sInt)
 # Number of stabilized (significantly retained) U12 type introns
 numStU12Int<- length(which(test$table[,"PValue"]<0.05 & 
 	test$table[,"logFC"]>0 & 
-	interestDf(mdsChr22Obj)[,"int_type"]=="U12" & 
-	!is.na(interestDf(mdsChr22Obj)[,"int_type"])))
+	rowData(mdsChr22Obj)[,"int_type"]=="U12" & 
+	!is.na(rowData(mdsChr22Obj)[,"int_type"])))
 # Number of U12 introns
 numU12Int<- 
-	length(which(interestDf(mdsChr22Obj)[,"int_type"]=="U12" & 
-	!is.na(interestDf(mdsChr22Obj)[,"int_type"]))) 
+	length(which(rowData(mdsChr22Obj)[,"int_type"]=="U12" & 
+	!is.na(rowData(mdsChr22Obj)[,"int_type"]))) 
 # Fraction(%) of stabilized (significantly retained) U12 introns
 perStU12Int<- numStU12Int/numU12Int*100
 print(perStU12Int)
 # Number of stabilized U2 type introns
 numStU2Int<- length(which(test$table[,"PValue"]<0.05 & 
 	test$table[,"logFC"]>0 & 
-	interestDf(mdsChr22Obj)[,"int_type"]=="U2" & 
-	!is.na(interestDf(mdsChr22Obj)[,"int_type"])))
+	rowData(mdsChr22Obj)[,"int_type"]=="U2" & 
+	!is.na(rowData(mdsChr22Obj)[,"int_type"])))
 # Number of U2 introns
 numU2Int<- 
-	length(which(interestDf(mdsChr22Obj)[,"int_type"]=="U2" & 
-	!is.na(interestDf(mdsChr22Obj)[,"int_type"])))
+	length(which(rowData(mdsChr22Obj)[,"int_type"]=="U2" & 
+	!is.na(rowData(mdsChr22Obj)[,"int_type"])))
 # Fraction(%) of stabilized U2 introns
 perStU2Int<- numStU2Int/numU2Int*100
 print(perStU2Int)
@@ -311,7 +308,7 @@ qlfRes<- qlfInterest(x=mdsChr22Obj,
 # Extract index of the introns with significant retention changes
 ind= which(qlfRes$table$PValue< 0.05)
 # Extract introns with significant retention level changes
-variedIntrons= interestDf(mdsChr22Obj)[ind,]
+variedIntrons= rowData(mdsChr22Obj)[ind,]
 
 #Show first 5 rows and columns of the result table
 print(variedIntrons[1:5,1:5])

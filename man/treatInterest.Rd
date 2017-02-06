@@ -14,7 +14,7 @@ function in \code{edgeR} package.
 }
 \arguments{
 \item{x}{ 
-	Object of type \code{InterestResult}.
+	Object of class \code{SummarizedExperiment}.
 }
 \item{design}{
 	Design matrix.

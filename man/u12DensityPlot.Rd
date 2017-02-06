@@ -34,7 +34,7 @@ u12DensityPlotIntron(x,
 }
 \arguments{
 \item{x}{ 
-	Object of type \code{InterestResult}.
+	Object of type \code{SummarizedExperiment}.
 }
 \item{type}{
 A vector that includes the type of introns to plot. Available options are U12 
@@ -48,50 +48,46 @@ Available as "fpkm" or "edgeR" (as default) corresponding to either log fold
 change of fpkm values or degeR normalized log fold change values.
 }
 \item{sampleAnnoCol}{
-Which colummn of \code{@sampleAnnotation} of object \code{InterestResult} to 
-consider for plotting.
+Which colummn of \code{colData} of \code{x} to consider for plotting.
 }
 \item{sampleAnnotation}{
-A vector of size 2 which cotains values from \code{@sampleAnnotation} attribute
-of \code{InterestResult} object; e.g. if 
-\code{x@sampleAnnotation[,sampleAnnoCol] = c("test", "test", "ctrl", "ctrl", 
-...)}, and the goal is to compare "test" and "ctrl" samples, 
-\code{sampleAnnotation} should either be c("test","ctrl") or c("ctrl","test").
+A vector of size 2 which cotains values from \code{colData} of 
+\code{SummarizedExperiment} object; e.g. if \code{getAnnotation(x)[,
+sampleAnnoCol]= c("test", "test", "ctrl","ctrl", ...)} , and the goal is to 
+compare "test" and "ctrl" samples, \code{sampleAnnotation} should either be 
+\code{c("test", "ctrl")} or \code{c("ctrl", "test")}.
 }
 \item{group}{
 Vector to manually define the sample groups (or annotations). It is ignored if 
 \code{sampleAnnoCol} is defined.
 }
 \item{intExCol}{
-Column name (or number) that represents whether each row is "intron" or "exon" 
-in \code{@interestDf} in \code{x}.
+Column name (or number) that represents whether each row of \code{x} assays is 
+"intron" or "exon".
 }
 \item{intTypeCol}{
 Column name (or number) that represents what type of intron each row of 
-\code{@interestDf} of \code{x} (the input \code{InterestResult} type object) 
-represents.
+\code{x} assays represents.
 }
 \item{intronExon}{
 Whether plot intron retention (set \code{intronExon="intron"}) or exon-exon 
 junction (set \code{intronExon="exon"}) levels. 
 }
 \item{strandCol}{
-Column name (or number) that represents the strand of each row of 
-\code{@interestDf} in \code{x}. The values in the column are either "+", "-" or
-"*".
+Column name (or number) that represents the strand of each row of assays in
+\code{x}. The values in the column are either "+", "-" or "*".
 }
 \item{geneIdCol}{
-Column name (or number) that represents the gene ID of each row of 
-\code{@interestDf} in \code{x}.
+Column name (or number) that represents the gene ID of each row of assays in
+\code{x}.
 }
 \item{naUnstrand}{
 Replace unstranded results, i.e. introns or exon with "*" strand, with NA (to 
 be excluded).
 }
 \item{col}{
-A vector wiintronExon= "intron"th the size of 1 or the same size as the 
-\code{type} parameter which includes the colour/colours of the plotted density 
-lines (default=1).
+A vector with the size of 1 or the same size as the \code{type} parameter which 
+includes the colour/colours of the plotted density lines (default=1).
 }
 \item{lty}{
 A vector with the size of 1 or the same size as the \code{type} parameter which
@@ -137,71 +133,15 @@ Returns NULL.
 
 \examples{
 
-
-geneId<- paste("gene", c(rep(1,7), rep(2,7), rep(3,7), rep(4,7)), 
-	sep="_")
-readCnt1<- sample(1:100, 28)
-readCnt2<- sample(1:100, 28)
-readCnt3<- sample(1:100, 28)
-readCnt4<- sample(1:100, 28)
-fpkm1<- readCnt1/(tapply(readCnt1, geneId, sum))[geneId]
-fpkm2<- readCnt2/(tapply(readCnt2, geneId, sum))[geneId]
-fpkm3<- readCnt3/(tapply(readCnt3, geneId, sum))[geneId]
-fpkm4<- readCnt4/(tapply(readCnt4, geneId, sum))[geneId]
-
-# Creating object using test data
-interestDat<-data.frame( 
-		int_ex=rep(c(rep(c("exon","intron"),3),"exon"),4),
-		int_ex_num= rep(c(1,1,2,2,3,3,4),4),         
-		int_type=rep(c(NA,"U2",NA,"U12",NA,"U2",NA),4),
-		strand=rep("*",28),
-		gene_id= geneId,
-		sam1_readCnt=readCnt1,
-		sam2_readCnt=readCnt2,
-		sam3_readCnt=readCnt3,
-		sam4_readCnt=readCnt4,
-		sam1_fpkm=fpkm1,
-		sam2_fpkm=fpkm2,
-		sam3_fpkm=fpkm3,
-		sam4_fpkm=fpkm4
-)
-readFreqColIndex<- grep("_readCnt$",colnames(interestDat))
-scaledRetentionColIndex<- grep("_fpkm$",colnames(interestDat))
-interestResObj<-InterestResult(
-	resultFiles=paste("file",1:4, sep="_"),
-	interestDf= interestDat[, -c(readFreqColIndex,
-		scaledRetentionColIndex)],
-	readFreq= as.matrix(interestDat[, readFreqColIndex]),
-	scaledRetention=as.matrix(interestDat[, 
-		scaledRetentionColIndex]),
-	sampleNames=paste("sam",1:4, sep=""),
-	scaleLength=TRUE, 
-	scaleFragment=FALSE,
-	sampleAnnotation=data.frame(
-		sampleName=paste("sam",1:4, sep=""),
-		gender=c("M","M","F","F"),
-		health=c("healthy","unhealthy","healthy","unhealthy")
-	)
-)
-
-u12DensityPlotIntron(interestResObj, 
-	type= c("U12", "U2Up", "U2Dn", "U2UpDn", "U2Rand"), 
-	fcType= "edgeR", sampleAnnotation=c("F","M"),  
-	sampleAnnoCol="gender", group=c(), intExCol="int_ex", 
-	intTypeCol="int_type", strandCol= "strand", 
-	geneIdCol= "gene_id", naUnstrand=FALSE, col=c(2,3,4,5,6), 
-	lty=1, lwd=1, plotLegend=TRUE, cexLegend=1, xLegend="topright", 
-	yLegend=NULL, legend=c(), randomSeed=10)
-
-# This produces the same result
-u12DensityPlot(interestResObj, 
-	type= c("U12", "U2Up", "U2Dn", "U2UpDn", "U2Rand"), 
-	fcType= "edgeR", sampleAnnotation=c("F","M"),  
-	sampleAnnoCol="gender", group=c(), intExCol="int_ex", 
-	intTypeCol="int_type", strandCol= "strand", 
-	geneIdCol= "gene_id", naUnstrand=FALSE, col=c(2,3,4,5,6), 
-	lty=1, lwd=1, plotLegend=TRUE, cexLegend=1, xLegend="topright", 
-	yLegend=NULL, legend=c(), randomSeed=10, intronExon= "intron")
+u12DensityPlotIntron(mdsChr22Obj, 
+    type= c("U12", "U2Up", "U2Dn", "U2UpDn", "U2Rand"), 
+    fcType= "edgeR", sampleAnnoCol="test_ctrl", 
+    sampleAnnotation=c("ctrl","test"), intExCol="int_ex", 
+    intTypeCol="int_type", strandCol= "strand", 
+    geneIdCol= "ens_gene_id", naUnstrand=FALSE, col=c(2,3,4,5,6), 
+    lty=c(1,2,3,4,5), lwd=1, plotLegend=TRUE, cexLegend=0.7, 
+    xLegend="topright", yLegend=NULL, legend=c(), randomSeed=10,
+    ylim=c(0,0.6), xlab=expression("log"[2]*" fold change FPKM"))
 
 }
 

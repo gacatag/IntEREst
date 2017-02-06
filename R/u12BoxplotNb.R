@@ -5,7 +5,7 @@ u12BoxplotNb<-function(
 	yLegend=NULL, legend=c(), ...)
 {
 	object=x
-	group=as.vector(object@sampleAnnotation[,sampleAnnoCol])
+	group=as.vector(SummarizedExperiment::colData(object)[,sampleAnnoCol])
 	uniGroup=unique(as.vector(group))
 	if(length(col)!=1 & length(col)!=length(uniGroup) ){
 		stop(paste("Length of col should be either 1 or ",length(uniGroup),
@@ -26,8 +26,10 @@ u12BoxplotNb<-function(
 	u12Plot=c()
 	dnPlot=c()
 	updnPlot=c()
-	upIntType=interestDf(object)[u12NbInd$upIntron, intTypeCol]
-	dnIntType=interestDf(object)[u12NbInd$downIntron, intTypeCol]
+	upIntType=SummarizedExperiment::rowData(object)[u12NbInd$upIntron, 
+		intTypeCol]
+	dnIntType=SummarizedExperiment::rowData(object)[u12NbInd$downIntron, 
+		intTypeCol]
 	for(cnt in 1:ncol(datFpkm)){
 		if(intronExon=="intron"){
 			upTmp=datFpkm[u12NbInd$upIntron,cnt]
@@ -81,7 +83,7 @@ levels.'
 	
 	color=c(as.vector(col[group]), NA)
 	
-	strand=interestDf(object)[u12Ind, strandCol]
+	strand=SummarizedExperiment::rowData(object)[u12Ind, strandCol]
 
 	if(unique(strand=="*") & length(unique(strand))==1){
 		typePlot=2

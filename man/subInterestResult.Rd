@@ -4,35 +4,36 @@
 Extract subset of object 
 }
 \description{
-Build a new object using subset of data in an \code{InterestResult} object. 
+Build a new object using subset of data in an \code{SummarizedExperiment} 
+object. 
 }
 \usage{
-subInterestResult(x, interestDfRow=c(), interestDfSample=c(), 
-	sampleAnnoCol=c(), sampleAnnotation=c())
+subInterestResult(x, selectRow, selectCol, 
+	sampleAnnoCol, sampleAnnotation=c())
 }
 \arguments{
 \item{x}{ 
-Object of type \code{InterestResult}.
+Object of type \code{SummarizedExperiment}.
 }
-\item{interestDfRow}{
+\item{selectRow}{
 Numeric or TRUE/FALSE Vector indicating what rows to extract.
 }
-\item{interestDfSample}{
+\item{selectCol}{
 A vector with Numeric values, character strings (sample names) or TRUE/FALSE 
 Vector indicating what columns to extract.
 }
 \item{sampleAnnoCol}{
-Which colummn of \code{@sampleAnnotation} of object \code{InterestResult} to 
-consider for subset data extraction.
+Which colummn of \code{colData} of object \code{x} to consider for subset data 
+extraction.
 }
 \item{sampleAnnotation}{
-which annotation to consider for subset data extraction. It should be included 
-in the \code{sampleAnnoCol} column of the \code{@sampleAnnotation} attribute of
-object \code{InterestResult}.
+Vector including the annotations to consider for subset data extraction. They 
+should be present in the \code{sampleAnnoCol} column of the \code{colData} of 
+\code{x}.
 }
 }
 \value{
-An object of calss \code{InterestResult}.
+An object of calss \code{SummarizedExperiment}.
 }
 
 \seealso{
@@ -73,25 +74,29 @@ interestDat<-data.frame(
 )
 readFreqColIndex<- grep("_readCnt$",colnames(interestDat))
 scaledRetentionColIndex<- grep("_fpkm$",colnames(interestDat))
-interestResObj<-InterestResult(
+samNames<-paste("sam", 1:4, sep="")
+frqTmp<-as.matrix(interestDat[, readFreqColIndex])
+sclTmp<-as.matrix(interestDat[, scaledRetentionColIndex])
+colnames(frqTmp)<- samNames
+colnames(sclTmp)<- samNames
+interestResObj<- InterestResult(
 	resultFiles=paste("file",1:4, sep="_"),
-	interestDf= interestDat[, -c(readFreqColIndex, 
+	rowData= interestDat[, -c(readFreqColIndex, 
 		scaledRetentionColIndex)],
-	readFreq= as.matrix(interestDat[, readFreqColIndex]),
-	scaledRetention= as.matrix(interestDat[, 
-		scaledRetentionColIndex]),
-	sampleNames=paste("sam",1:4, sep=""),
+	counts= frqTmp,
+	scaledRetention= sclTmp ,
 	scaleLength=TRUE, 
 	scaleFragment=FALSE,
 	sampleAnnotation=data.frame(
 		sampleName=paste("sam",1:4, sep=""),
 		gender=c("M","M","F","F"),
-		health=c("healthy","unhealthy","healthy","unhealthy")
+		health=c("healthy","unhealthy","healthy","unhealthy"),
+		row.names=samNames
 	)
 )
 
 #Build new object
-newObj<- subInterestResult(interestResObj, interestDfRow=1:20)
+newObj<- subInterestResult(interestResObj, selectRow=1:20)
 
 #View newObj
 print(newObj)

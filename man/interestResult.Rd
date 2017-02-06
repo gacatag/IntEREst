@@ -1,30 +1,28 @@
 \name{InterestResult}
 \alias{InterestResult}
 \title{
-	Results object for interest and interest.sequential functions.
+	Building SummarizedExperiment object from results in IntEREst.
 }
 \description{
-Creates an \code{InterestResult} object that includes information from result 
-files created by \code{interest()} and \code{interest.sequential()} functions. 
+Calls the constructors and creates a \code{SummarizedExperiment} object. 
+For more information on the resulted object and the class see 
+\code{\link[SummarizedExperiment]{SummarizedExperiment-class}}.
 }
 \usage{
-InterestResult (resultFiles=c(), readFreq, 
-	scaledRetention, sampleNames, scaleLength, 
-	scaleFragment, sampleAnnotation, interestDf)
+
+InterestResult(resultFiles=c(), counts, scaledRetention, 
+	scaleLength, scaleFragment, sampleAnnotation, rowData)
+
 }
 \arguments{
 \item{resultFiles}{
 Vector of link to the result files of \code{interest}.
 }
-\item{readFreq}{
+\item{counts}{
 Numeric Matrix that includes the read counts.
 }
 \item{scaledRetention}{
 Matrix that includes the scaled retention values.
-}
-\item{sampleNames}{
-Vector with same size as \code{resultFiles} which contains the names of the 
-samples.
 }
 \item{scaleLength}{
 Logical value, indicating whether the intron/exon retention levels are scaled 
@@ -39,17 +37,20 @@ Data frame with the row-size equal to the size of \code{resultFiles} and
 \code{sampleAnnotation}. Each column of the matrix represents annotations for 
 the samples. Column name represents annotation name.
 }
-\item{interestDf}{ 
+\item{rowData}{ 
 Data frame with Intron/Exon annotations and read count  and scaled retention 
 values for each sample.
 }
 }
 \value{
-Returns an object of class \code{InterestResult}. 
+Returns an object of class \code{SummarizedExperiment}. 
 }
 \seealso{
-	\code{\link{attributes}},
-	\code{\link{addAnnotation}}.
+	\code{\link[SummarizedExperiment]{SummarizedExperiment-class}}
+	\code{\link{attributes}}
+	\code{\link{addAnnotation}}
+	\code{\link{counts-method}}
+	\code{\link{plot-method}}
 }
 
 \author{Ali Oghabian}
@@ -82,21 +83,27 @@ interestDat<- data.frame(
 		sam3_fpkm=fpkm3,
 		sam4_fpkm=fpkm4
 )
-readFreqColIndex=grep("_readCnt$",colnames(interestDat))
-scaledRetentionColIndex=grep("_fpkm$",colnames(interestDat))
+readFreqColIndex<- grep("_readCnt$",colnames(interestDat))
+scaledRetentionColIndex<- grep("_fpkm$",colnames(interestDat))
+
+scalRetTmp<- as.matrix(interestDat[ ,scaledRetentionColIndex])
+colnames(scalRetTmp)<-gsub("_fpkm$","", colnames(scalRetTmp))
+
+frqTmp<- as.matrix(interestDat[ ,readFreqColIndex])
+colnames(frqTmp)<-gsub("_readCnt$","", colnames(frqTmp))
+
+
 InterestResultObj<- InterestResult(
 	resultFiles=paste("file",1:4, sep="_"),
-	interestDf= interestDat[,-c(readFreqColIndex, 
+	rowData= interestDat[ , -c(readFreqColIndex, 
 		scaledRetentionColIndex)],
-	readFreq=as.matrix(interestDat[,readFreqColIndex]),
-	scaledRetention=as.matrix(interestDat[,
-		scaledRetentionColIndex]),
-	sampleNames=paste("sam",1:4, sep=""),
+	counts= frqTmp,
+	scaledRetention= scalRetTmp,
 	scaleLength=TRUE, 
-	scaleFragment=FALSE, 
+	scaleFragment=FALSE,
 	sampleAnnotation=data.frame(
 		sampleName=paste("sam",1:4, sep=""),
-		gender=c("M","M","F","F")
+		gender=c("M","M","F","F"), row.names=paste("sam", 1:4, sep="")
 	)
 )
 

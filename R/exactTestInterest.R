@@ -4,9 +4,10 @@ exactTestInterest<- function(x, sampleAnnoCol=c(), sampleAnnotation=c(),
 {
 
 	if(length(group)==0 & length(sampleAnnoCol)>0 & length(sampleAnnotation)>0){
-		colInd=!is.na(match(x@sampleAnnotation[,sampleAnnoCol],
-			sampleAnnotation))
-		group=x@sampleAnnotation[colInd,sampleAnnoCol]
+		colInd=!is.na(match(as.character(SummarizedExperiment::colData(x)[,
+			sampleAnnoCol]), sampleAnnotation))
+		group=as.character(SummarizedExperiment::colData(x)[colInd,
+			sampleAnnoCol])
 	} else if (length(group)>0){
 		#Check if sampleAnnotation param is set correctly
 		if(length(sampleAnnotation)>0)
@@ -26,7 +27,7 @@ c("test","ctrl") or c("ctrl","test").')
 'Either group or the sampleAnnotation and sampleAnnoCol parameters need to be
 set.')
 	}
-	y <- edgeR::DGEList(counts=nread(x)[,colInd], group=group )
+	y <- edgeR::DGEList(counts=counts(x)[,colInd], group=group )
 	if(is.character(disp)){
 		if((is.na(match(disp, c("tagwise", "trended", "common", "genewise", 
 			"auto")))) & length(disp)==1){
@@ -49,10 +50,11 @@ set.')
 		dispersion=dispTmp$common.dispersion
 	} else if(disp=="genewise"& length(disp)==1){
 		dispersionType="genewise"
-		dispTmp=edgeR::estimateExonGenewiseDisp(nread(x)[,colInd], 
-			geneID=x@interestDf[,geneIdCol], 
+		dispTmp=edgeR::estimateExonGenewiseDisp(counts(x)[,colInd], 
+			geneID=SummarizedExperiment::rowData(x)[,geneIdCol], 
 			group=group)
-		dispersion=as.numeric(dispTmp[as.character(x@interestDf[,geneIdCol])])
+		dispersion=as.numeric(dispTmp[as.character(
+			SummarizedExperiment::rowData(x)[,geneIdCol])])
 	} else if(is.numeric(disp)){
 		dispersionType="manualSet"
 	}

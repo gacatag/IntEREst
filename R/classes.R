@@ -1,70 +1,32 @@
-# Class definition
-
-methods::setClass("InterestResult", 
-	methods::representation(resultFiles="character", readFreq="matrix", 
-		scaledRetention="matrix", sampleNames="character",
-		scaleLength="logical", scaleFragment="logical", 
-		sampleAnnotation="data.frame", interestDf="data.frame") 
-)
-
-#Constructor
-InterestResult <- function(resultFiles=c(), readFreq, scaledRetention, 
-	sampleNames, scaleLength, scaleFragment, sampleAnnotation, interestDf){
-	methods::new("InterestResult", resultFiles=resultFiles, readFreq=readFreq, 
-		scaledRetention=scaledRetention, sampleNames=sampleNames, 
-		scaleLength= scaleLength, scaleFragment= scaleFragment, 
-		sampleAnnotation=sampleAnnotation, interestDf=interestDf)
+#Calling the constructor
+InterestResult <- function(resultFiles=c(), counts, scaledRetention, 
+	scaleLength, scaleFragment, sampleAnnotation, rowData){
+	if(!missing(sampleAnnotation)){
+		if(length(resultFiles)>0)
+			sampleAnnotation<- data.frame(resultFiles=resultFiles, 
+				sampleAnnotation, row.names= rownames(sampleAnnotation))
+		res<- SummarizedExperiment::SummarizedExperiment(
+			assays=list(counts=counts, 
+			scaledRetention=scaledRetention), 
+			rowData=rowData,
+			colData=sampleAnnotation, 
+			metadata=list( scaleFragment= scaleFragment,
+			scaleLength= scaleLength)		
+		)
+	} else {
+		if(length(resultFiles)>0)
+			sampleAnnotation<- data.frame(resultFiles=resultFiles,
+				row.names=colnames(counts))
+		res<- SummarizedExperiment::SummarizedExperiment(
+			assays=list(counts=counts, 
+			scaledRetention=scaledRetention), 
+			rowData=rowData, 
+			metadata=list( scaleFragment= scaleFragment,
+			scaleLength= scaleLength)
+		)
+	}
+	return(res)
 }
-
-#view largedf
-viewLargeDf<-function(datf, nrow=4, nchar=40, col.names=TRUE, row.names=FALSE, 
-	sep=' '){
-	if(col.names & !row.names)
-		cat(substr(paste(unlist(lapply(colnames(datf), as.character)), 
-			collapse=sep), 1, nchar), "...", sep="")
-	if(col.names & row.names)
-		cat(sep, substr(paste(unlist(lapply(colnames(datf), as.character)), 
-			collapse=sep), 1, nchar), "...", sep="")
-	if(!row.names)
-		cat("\n", substr(paste(unlist(lapply(datf[1,], as.character)), 
-			collapse=sep), 1, nchar), "...", sep="")
-	if(row.names)
-		cat("\n", substr(paste(unlist(lapply(rownames(datf)[1], as.character)), 
-			datf[1,], collapse=sep), 1, nchar), "...", sep="")
-
-	if(!row.names & nrow>1)
-		lapply(2:min(nrow,nrow(datf)), function(n) cat("\n", 
-			substr(paste(unlist(lapply(datf[n,], as.character)), collapse=sep), 
-			1, nchar), sep=""))
-	if(row.names & nrow>1)
-		lapply(2:min(nrow,nrow(datf)), function(n) cat("\n", 
-			substr(paste(unlist(lapply(rownames(datf)[n], as.character)), 
-			unlist(lapply(datf[n,], as.character)), collapse=sep), 1, nchar), 
-			sep=""))
-	cat("\n...\n")
-}
-
-#show method
-methods::setMethod("show", "InterestResult",
-	function(object){
-		cat("  @resultFiles: ", strtrim(paste(object@resultFiles, collapse=", ")
-			, 40), "... ", length(object@resultFiles), " files", sep="" )
-		cat("\n", "  @sampleNames: ", strtrim(paste(object@sampleNames, 
-			collapse=", "), 40), "... ", length(object@sampleNames), 
-			" samples", sep="" )
-		cat("\n", "  @scaleLength: ", object@scaleLength, sep="" )
-		cat("\n", "  @scaleFragment: ", object@scaleFragment, sep="" )
-		cat("\n\n", "  @sampleAnnotation: \n", sep="")
-		viewLargeDf(object@sampleAnnotation)
-		cat(nrow(object@sampleAnnotation), " rows and ", 
-			ncol(object@sampleAnnotation), " columns.\n", sep="")
-		cat("\n\n", "  @interestDf: \n", sep="")
-		viewLargeDf(object@interestDf)
-		cat(nrow(object@interestDf), " rows and ", ncol(object@interestDf), 
-			" columns.\n\n", sep="")
-cat("Use nread() to get the raw reteniton levels (Number of mapped fragments)
-and scaledRetention() to get the scaled retention levels.\n")}
-)
 
 # plot method
 plot.InterestResult<-function(x, summary="none", subsetRows=NULL, 
@@ -80,30 +42,30 @@ plot.InterestResult<-function(x, summary="none", subsetRows=NULL,
 	if(summary=="median")
 		summaryFun=stats::median
 	if(is.null(subsetRows))
-		subsetRows=1:nrow(object@interestDf)
-	subDat=object@interestDf[subsetRows, ]
+		subsetRows=1:nrow(SummarizedExperiment::rowData(object))
+	subDat=SummarizedExperiment::rowData(object)[subsetRows, ]
 
 	indRow=!is.na(match(subDat$int_ex, intronExon))
 
-	if(ncol(object@sampleAnnotation)==2){
-		sampleGroups=object@sampleAnnotation[,2]
-	} else if( ncol(object@sampleAnnotation)>2 & length(sampleAnnoCol)>0 & 
-		summary!="none"){
-		sampleGroups=object@sampleAnnotation[,sampleAnnoCol]
-	} else if (ncol(object@sampleAnnotation)>2 & length(sampleAnnoCol)==0 & 
-		summary!="none"){
+	if(ncol(SummarizedExperiment::colData(object))==2){
+		sampleGroups=SummarizedExperiment::colData(object)[,2]
+	} else if( ncol(SummarizedExperiment::colData(object))>2 & 
+		length(sampleAnnoCol)>0 & summary!="none"){
+		sampleGroups=SummarizedExperiment::colData(object)[,sampleAnnoCol]
+	} else if (ncol(SummarizedExperiment::colData(object))>2 & 
+		length(sampleAnnoCol)==0 & summary!="none"){
 		stop('Please define the sampleAnnoCol.')
 	}
 
 	if(summary=="none"& what=="scaled"){
-		plotDat=object@scaledRetention[subsetRows,]
+		plotDat=scaledRetention(object)[subsetRows,]
 	}
-	if(summary=="none"& what=="readFreq"){
-		plotDat=object@readFreq[subsetRows,]
+	if(summary=="none"& what=="counts"){
+		plotDat=counts(object)[subsetRows,]
 	}
 	if(summary!="none"&what=="scaled"){
-		plotList= tapply(1:ncol(object@scaledRetention), sampleGroups, 
-			function(x) apply(object@scaledRetention[subsetRows,x], 1, 
+		plotList= tapply(1:ncol(scaledRetention(object)), sampleGroups, 
+			function(x) apply(scaledRetention(object)[subsetRows,x], 1, 
 				summaryFun) )
 		plotList= plotList[match(unique(sampleGroups),names(plotList))]
 		plotDat= matrix(unlist(plotList), ncol=length(unique(sampleGroups)), 
@@ -111,9 +73,9 @@ plot.InterestResult<-function(x, summary="none", subsetRows=NULL,
 		colnames(plotDat)= names(plotList)
 		plotDat= as.data.frame(plotDat)
 	}
-	if(summary!="none"&what=="readFreq"){
-		plotList=tapply(1:ncol(object@readFreq), sampleGroups, function(x) 
-			apply(object@readFreq[subsetRows,x], 1, summaryFun) )
+	if(summary!="none"&what=="counts"){
+		plotList=tapply(1:ncol(counts(object)), sampleGroups, function(x) 
+			apply(counts(object)[subsetRows,x], 1, summaryFun) )
 		plotList=plotList[match(unique(sampleGroups),names(plotList))]
 		plotDat=matrix(unlist(plotList), ncol=length(unique(sampleGroups)), 
 			byrow=FALSE)
@@ -246,30 +208,32 @@ plot.InterestResult<-function(x, summary="none", subsetRows=NULL,
 	
 }
 
-methods::setMethod("plot", "InterestResult", plot.InterestResult)
+methods::setMethod("plot", "SummarizedExperiment", plot.InterestResult)
 
 # Functions getting methods  
 getAnnotation<-function(x){
-	return(x@sampleAnnotation)
+	return(SummarizedExperiment::colData(x))
+}
+
+getRowData<-function(x){
+	return(SummarizedExperiment::rowData(x))
 }
 
 addAnnotation<-function(x, sampleAnnotationType, sampleAnnotation){
-	x@sampleAnnotation=cbind(x@sampleAnnotation, sampleAnnotation)
-	colnames(x@sampleAnnotation)[ncol(x@sampleAnnotation)]=sampleAnnotationType
+	tmp=cbind(as.data.frame(SummarizedExperiment::colData(x)), 
+		sampleAnnotation)
+	colnames(tmp)[ncol(tmp)]= sampleAnnotationType
+	SummarizedExperiment::colData(x)<-
+		S4Vectors::DataFrame(tmp)
 	return(x)
 }
 
 
 scaledRetention<-function(x){
-	return(x@scaledRetention)
+	return(SummarizedExperiment::assays(x)$scaledRetention)
 }
 
-nread<-function(x){
-	return(x@readFreq)
+counts.InterestResults<-function(object){
+	return(SummarizedExperiment::assays(object)$counts)
 }
-
-interestDf<-function(x){
-	return(x@interestDf)
-}
-
-
+methods::setMethod("counts", "SummarizedExperiment", counts.InterestResults)

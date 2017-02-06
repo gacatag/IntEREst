@@ -4,7 +4,7 @@ u12Boxplot<-function(x, sampleAnnoCol=NA, intExCol="int_ex",
 {
 	object=x
 	if(!is.na(sampleAnnoCol)){
-		groups=object@sampleAnnotation[,sampleAnnoCol]
+		groups=SummarizedExperiment::colData(object)[,sampleAnnoCol]
 	} else {
 		groups=x@sampleNames
 	}
@@ -21,19 +21,26 @@ u12Boxplot<-function(x, sampleAnnoCol=NA, intExCol="int_ex",
 		if(intronExon=="intron"){
 			plotList=c(plotList, 
 				list( as.vector(
-					unlist(object@scaledRetention[
-						object@interestDf[,intExCol]=="intron" & 
-						object@interestDf[,intTypeCol]=="U12", 
+					unlist(scaledRetention(object)[
+						SummarizedExperiment::rowData(object)[,intExCol]==
+							"intron" & 
+						SummarizedExperiment::rowData(object)[,intTypeCol]==
+							"U12", 
 						which(groups==uniGroup[cnt])])), 
-					as.vector(unlist(object@scaledRetention[
-						object@interestDf[,intExCol]=="intron" & 
-						object@interestDf[,intTypeCol]=="U2",
+					as.vector(unlist(scaledRetention(object)[
+						SummarizedExperiment::rowData(object)[,intExCol]==
+							"intron" & 
+						SummarizedExperiment::rowData(object)[,intTypeCol]==
+							"U2",
 					which(groups==uniGroup[cnt])])), NA))
 		} else if (intronExon=="exon") {
-			indChooseIntU12=unique(which(object@interestDf[,intExCol]=="intron"
-				& object@interestDf[,intTypeCol]=="U12"))
-			indChooseIntU2=unique(which(object@interestDf[,intExCol]=="intron"
-				& (object@interestDf[,intTypeCol]!="U12") ))
+			indChooseIntU12=unique(which(SummarizedExperiment::rowData(
+				object)[,intExCol]=="intron"
+				& SummarizedExperiment::rowData(object)[,intTypeCol]=="U12"))
+			indChooseIntU2=unique(which(SummarizedExperiment::rowData(
+				object)[,intExCol]=="intron"
+				& (SummarizedExperiment::rowData(object)[,
+					intTypeCol]!="U12") ))
 
 			indChooseExU12=unique(unlist(lapply(indChooseIntU12, function(tmp)
 				return(c(tmp-1, tmp+1)))))
@@ -42,9 +49,9 @@ u12Boxplot<-function(x, sampleAnnoCol=NA, intExCol="int_ex",
 			indChooseExU2=indChooseExU2[which(is.na(match(indChooseExU2,
 				indChooseExU12)))]
 			plotList=c(plotList, 
-				list( as.vector(unlist(object@scaledRetention[indChooseExU12,
+				list( as.vector(unlist(scaledRetention(object)[indChooseExU12,
 					which(groups==uniGroup[cnt])])), 
-					as.vector(unlist(object@scaledRetention[indChooseExU2,
+					as.vector(unlist(scaledRetention(object)[indChooseExU2,
 					which(groups==uniGroup[cnt])])), NA))				
 		}
 		if(length(boxplotNames)==0){

@@ -16,18 +16,18 @@ intron/exons and the sum of the retention levels across across the gene.
 }
 \arguments{
 \item{x}{ 
-	Object of type \code{InterestResult}.
+	Object of type \code{SummarizedExperiment}.
 }
 \item{sampleAnnoCol}{
-Which colummn of \code{@sampleAnnotation} of object \code{InterestResult} to 
-consider for the analysis.
+Which colummn of \code{colData} of object \code{SummarizedExperiment} 
+to consider for the analysis.
 }
 \item{sampleAnnotation}{
-A vector of size 2 which cotains values from \code{@sampleAnnotation} of 
-\code{InterestResult} object; e.g. if \code{x@sampleAnnotation[,sampleAnnoCol]=
-c("test", "test", "ctrl","ctrl", ...)} , and the goal is to compare "test" and 
-"ctrl" samples, \code{sampleAnnotation} should either be \code{c("test", 
-"ctrl")} or \code{c("ctrl", "test")}.
+A vector of size 2 which cotains values from \code{colData} of 
+\code{SummarizedExperiment} object; e.g. if \code{getAnnotation(x)[,
+sampleAnnoCol]= c("test", "test", "ctrl","ctrl", ...)} , and the goal is to 
+compare "test" and "ctrl" samples, \code{sampleAnnotation} should either be 
+\code{c("test", "ctrl")} or \code{c("ctrl", "test")}.
 }
 \item{group}{
 Vector to manually define the sample groups (or annotations). It is ignored if 

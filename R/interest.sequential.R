@@ -89,32 +89,35 @@ function(
 
 	if(returnObj & length(method)==1){
 		tmpDat<- read.table(outFile, header=TRUE, stringsAsFactors=FALSE)
-		resObj=InterestResult(resultFiles=outFile, 
-			readFreq=matrix(tmpDat[,(ncol(tmpDat)-1)], ncol=1), 
-			scaledRetention=matrix(tmpDat[,ncol(tmpDat)], ncol=1), 
-				sampleNames=sampleName, 	
-			scaleLength=scaleLength, scaleFragment=scaleFragment, 
-				sampleAnnotation=data.frame(), 
-				interestDf=tmpDat[, 1:(ncol(tmpDat)-2)])
+	readFrq<-matrix(tmpDat[,(ncol(tmpDat)-1)], ncol=1)
+	scaledRet<-matrix(tmpDat[,ncol(tmpDat)], ncol=1)
+	colnames(readFrq)<-c()
+	colnames(scaledRet)<-c()
+	resObj=InterestResult(
+		resultFiles=outFile,
+		counts=readFrq,
+		scaledRetention=scaledRet,
+		rowData=tmpDat[, 1:(ncol(tmpDat)-2)],
+		scaleLength=scaleLength, 
+		scaleFragment=scaleFragment)
+
+
+
 	} else if (returnObj & length(method)==2){
 		tmpDat<- read.table(outFile, header=TRUE, stringsAsFactors=FALSE)
 		resObj= list(
 			IntRet=InterestResult(resultFiles=outFile, 
-				readFreq=matrix(tmpDat[,(ncol(reference)+1)], ncol=1), 
+				counts=matrix(tmpDat[,(ncol(reference)+1)], ncol=1), 
 				scaledRetention=matrix(tmpDat[,(ncol(reference)+2)], ncol=1), 
-				sampleNames=sampleName, 
 				scaleLength=scaleLength[method="IntRet"], 
 				scaleFragment=scaleFragment[method="IntRet"], 
-				sampleAnnotation=data.frame(), 
-				interestDf=tmpDat[, 1:ncol(reference)]), 
+				rowData=tmpDat[, 1:ncol(reference)]), 
 			ExEx=InterestResult(resultFiles=outFile, 
-				readFreq=matrix(tmpDat[,(ncol(reference)+3)], ncol=1), 
+				counts=matrix(tmpDat[,(ncol(reference)+3)], ncol=1), 
 				scaledRetention=matrix(tmpDat[,(ncol(reference)+4)], ncol=1), 
-				sampleNames=sampleName, 
 				scaleLength=scaleLength[method="ExEx"], 
 				scaleFragment=scaleFragment[method="ExEx"], 
-				sampleAnnotation=data.frame(), 
-				interestDf=tmpDat[, 1:ncol(reference)]) )
+				rowData=tmpDat[, 1:ncol(reference)]) )
 	}
 	time2=Sys.time()
 	runTime=difftime(time2,time1, units="secs")
