@@ -1,28 +1,30 @@
 \docType{methods}
-\name{show-method}
-\alias{show,InterestResult-method}
-\alias{show-method}
+\name{counts-method}
+\alias{counts.InterestResults}
+\alias{counts,SummarizedExperiment-method}
+\alias{counts-method}
 
 \title{
-	show - method
+	Counts - method
 }
 \description{
-	Show \code{InterestResult} objects.
+	Returns the (row) number of reads that are mapped to introns/exons in 
+	various samples.
 }
 \usage{
-\S4method{show}{InterestResult}(object)
+\S4method{counts}{SummarizedExperiment}(object)
 }
 \arguments{
 \item{object}{ 
-	Object of type \code{InterestResult}.
+	Object of type \code{SummarizedExperiment}.
 }
 }
 \value{
-	Returns NULL.
+	Returns a numeric matrix.
 }
 \seealso{
 Class:
-	\code{\link{InterestResult-class}}.
+	\code{\link[SummarizedExperiment]{SummarizedExperiment-class}}
 
 
 Method:
@@ -32,7 +34,7 @@ Method:
 
 \examples{
 #Show contents of a InterestResults object included in IntEREst 
-mdsChr22Obj
+head(counts(mdsChr22Obj))
 
 #Make a test InterestResults object
 geneId<- paste("gene", c(rep(1,5), rep(2,5), rep(3,5), rep(4,5)), 
@@ -62,23 +64,31 @@ interestDat<- data.frame(
 )
 readFreqColIndex<- grep("_readCnt$",colnames(interestDat))
 scaledRetentionColIndex<- grep("_fpkm$",colnames(interestDat))
+
+scalRetTmp<- as.matrix(interestDat[ ,scaledRetentionColIndex])
+colnames(scalRetTmp)<-gsub("_fpkm$","", colnames(scalRetTmp))
+
+frqTmp<- as.matrix(interestDat[ ,readFreqColIndex])
+colnames(frqTmp)<-gsub("_readCnt$","", colnames(frqTmp))
+
+
 InterestResultObj<- InterestResult(
 	resultFiles=paste("file",1:4, sep="_"),
-	interestDf= interestDat[,-c(readFreqColIndex, 
+	rowData= interestDat[ , -c(readFreqColIndex, 
 		scaledRetentionColIndex)],
-	readFreq= as.matrix(interestDat[,readFreqColIndex]),
-	scaledRetention=as.matrix(interestDat[,
-		scaledRetentionColIndex]),
-	sampleNames=paste("sam",1:4, sep=""),
+	counts= frqTmp,
+	scaledRetention= scalRetTmp,
 	scaleLength=TRUE, 
-	scaleFragment=FALSE, 
+	scaleFragment=FALSE,
 	sampleAnnotation=data.frame(
 		sampleName=paste("sam",1:4, sep=""),
-		gender=c("M","M","F","F")
+		gender=c("M","M","F","F"),
+		health=c("healthy","unhealthy","healthy","unhealthy")
+		, row.names=paste("sam", 1:4, sep="")
 	)
 )
 
-#Show object
-InterestResultObj
+#Show 
+head(counts(InterestResultObj))
 }
 
