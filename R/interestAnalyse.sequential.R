@@ -74,7 +74,12 @@ function(
 		junctionReadsOnly=junctionReadsOnly,
 		BPPARAM=bpparam)
 
-	res<- Reduce("+", resTmpPair)+Reduce("+", resTmpSingle)
+	if(length(which(sapply(resTmpSingle, length)>0))>0)
+		resSingle<-Reduce("+", resTmpSingle)
+	if(length(which(sapply(resTmpPair, length)>0))>0)
+		resPair<-Reduce("+", resTmpPair)
+
+	res<- resPair+resSingle
 
 	time2=Sys.time()
 	runTime=difftime(time2,time1, units="secs")
