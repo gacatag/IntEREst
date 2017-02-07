@@ -95,39 +95,40 @@ one for IntRet and the other for ExEx.
 \author{Ali Oghabian}
 
 \examples{
-# Time demanding function
-\dontrun{
+
 # Creating temp directory to store the results
 outDir<- file.path(tempdir(),"interestFolder")
 dir.create(outDir)
 outDir<- normalizePath(outDir)
 
 # Loading suitable bam file
-library("MDS.Chr22.U12Genes")
+bamF <- system.file("extdata", "small_test_SRR1691637_ZRSR2Mut_RHBDD3.bam", 
+	package="IntEREst", mustWork=TRUE)
 
-# Analyse the first bam file
-i<- 1
+# Choosing reference for the gene RHBDD3
+ref=u12[u12[,"gene_name"]=="RHBDD3",]
 
-dir.create(paste(outDir, names(MDS_Chr22_BAMFILES)[i], sep="/"))
-interest(
-	bamFileYieldSize=1000000,
-	tmpDir=paste(outDir, names(MDS_Chr22_BAMFILES)[i], "tmp", 
-		sep="/"),
-	bamFile=MDS_Chr22_BAMFILES[i],
-	isPairedDuplicate=TRUE,
-	isSingleReadDuplicate=FALSE,
-	reference=u12,
-	referenceGeneNames=u12[,"ens_gene_id"],
-	referenceIntronExon=u12[,"int_ex"],
-	outFile=paste(outDir, names(MDS_Chr22_BAMFILES)[i], 
-		"interestRes.tsv", sep="/"),
-	logFile=paste(outDir, names(MDS_Chr22_BAMFILES)[i], 
-		"log.txt", sep="/"),
+test= interest(
+	bamFileYieldSize=10000,
+	bamFile=bamF,
+	isPairedDuplicate=FALSE,
+	isSingleReadDuplicate=NA,
+	reference=ref,
+	referenceGeneNames=ref[,"ens_gene_id"],
+	referenceIntronExon=ref[,"int_ex"],
+	repeatsTableToFilter=c(),
+	outFile=paste(outDir,
+	    "interestRes.tsv", sep="/"),
+	logFile=paste(outDir, 
+	    "log.txt", sep="/"),
 	method=c("IntRet","ExEx"),
-	clusterNo="",
+	clusterNo=1,
+	returnObj=TRUE, 
 	scaleLength= c(TRUE,FALSE), 
 	scaleFragment= c(TRUE,TRUE)
 )
-}
+
+test
+
 }
 
