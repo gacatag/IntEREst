@@ -49,7 +49,12 @@ function(
 	bpparam <- BiocParallel::SerialParam()
 
 # Initialize the iterator and combine with REDUCE:
-	ITER <- bamIterPair(bf, isPairedDuplicate=isPairedDuplicate)
+	scParam=Rsamtools::ScanBamParam(
+		what=Rsamtools::scanBamWhat()[c(1,
+			3,5,8,13,9, 10, 6, 4, 14, 15)], 
+		flag=Rsamtools::scanBamFlag(isPaired=TRUE,
+			isDuplicate=isPairedDuplicate))
+	ITER <- bamIterPair(bf, scParam= scParam)
 
 	resTmpPair<- BiocParallel::bpiterate(ITER, interestIntExAnalysePair, 
 		reference=reference,
@@ -62,7 +67,13 @@ function(
 		junctionReadsOnly=junctionReadsOnly,
 		BPPARAM=bpparam)
 
-	ITER <- bamIterSingle(bf, isSingleReadDuplicate=isSingleReadDuplicate)
+	scParam=Rsamtools::ScanBamParam(
+		what=Rsamtools::scanBamWhat()[c(1,
+			3,5,8,13,9, 10, 6, 4, 14, 15)], 
+		flag=Rsamtools::scanBamFlag(hasUnmappedMate=TRUE,
+			isPaired=TRUE, 
+			isDuplicate=isSingleReadDuplicate))
+	ITER <- bamIterSingle(bf, scParam= scParam)
 	resTmpSingle<- BiocParallel::bpiterate(ITER, interestIntExAnalyseSingle, 
 		reference=reference,
 		maxNoMappedReads=maxNoMappedReads,
