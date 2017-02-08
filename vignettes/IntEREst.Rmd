@@ -77,6 +77,7 @@ lapply(1:length(MDS_Chr22_BAMFILES), function(i){
 	interest(
 		bamFileYieldSize=10000,
 		bamFile=MDS_Chr22_BAMFILES[i],
+		isPaired=TRUE,
 		isPairedDuplicate=FALSE,
 		isSingleReadDuplicate=NA,
 		reference=u12,
@@ -128,6 +129,7 @@ lapply(1:length(MDS_Chr22_BAMFILES), function(i){
 	interest.sequential(
 		bamFileYieldSize=10000,
 		bamFile=MDS_Chr22_BAMFILES[i],
+		isPaired=TRUE,
 		isPairedDuplicate=FALSE,
 		isSingleReadDuplicate=NA,
 		reference=u12,

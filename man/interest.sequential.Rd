@@ -5,7 +5,7 @@
 A wrapper function that runs all necessary functions for the intron/exon 
 retention analysis. }
 \usage{
-interest.sequential( bamFileYieldSize=1000000, bamFile, 
+interest.sequential( bamFileYieldSize=1000000, bamFile, isPaired,
 	isPairedDuplicate=FALSE, isSingleReadDuplicate=NA, 
 	reference, referenceGeneNames, 
 	referenceIntronExon, repeatsTableToFilter=c(), 
@@ -19,6 +19,8 @@ interest.sequential( bamFileYieldSize=1000000, bamFile,
 Maximum number of paired Reads in the temprorary files created as the result of
 dividing the input .bam file. }
 \item{bamFile}{ Path of the input bam file.}
+\item{isPaired}{Whether the bam file is the result of a paired end sequencing
+read mapping (TRUE) or not (FALSE).}
 \item{isPairedDuplicate}{
 Whether extract only (if set TRUE), filter (FALSE) or include (if set NA) PCR 
 dupplicates for paired mapped reads. It uses the FLAG field in the bam file to 
@@ -108,6 +110,7 @@ ref=u12[u12[,"gene_name"]=="RHBDD3",]
 test= interest.sequential(
 	bamFileYieldSize=10000,
 	bamFile=bamF,
+	isPaired=TRUE,
 	isPairedDuplicate=FALSE,
 	isSingleReadDuplicate=NA,
 	reference=ref,

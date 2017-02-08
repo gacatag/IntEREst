@@ -1,6 +1,8 @@
 interest <-
 function(
-	bamFileYieldSize=1000000, bamFile,
+	bamFileYieldSize=1000000, 
+	bamFile,
+	isPaired,
 	isPairedDuplicate=FALSE,
 	isSingleReadDuplicate=NA,
 	reference, referenceGeneNames,
@@ -46,6 +48,7 @@ function(
 		inAnRes<- interestAnalyse(
 			reference=reference,
 			bamFile=bamFile,
+			isPaired=isPaired,
 			yieldSize=bamFileYieldSize,
 			maxNoMappedReads=1,
 			appendLogFile=TRUE,
@@ -62,6 +65,7 @@ function(
 		inAnRes<- interestAnalyse(
 			reference=reference,
 			bamFile=bamFile,
+			isPaired=isPaired,
 			yieldSize=bamFileYieldSize,
 			maxNoMappedReads=1,
 			appendLogFile=TRUE,

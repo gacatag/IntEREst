@@ -2,6 +2,7 @@ interestAnalyse.sequential <-
 function(
 	reference,
 	bamFile,
+	isPaired,
 	yieldSize,
 	maxNoMappedReads,
 	logFile,
@@ -41,50 +42,78 @@ function(
 
 	time1=Sys.time()
 
-	bf<- Rsamtools::BamFile(bamFile, yieldSize=yieldSize, 
-			asMates=TRUE )
-
 
 	# Set parallel environment	
 	bpparam <- BiocParallel::SerialParam()
 
 # Initialize the iterator and combine with REDUCE:
-	scParam=Rsamtools::ScanBamParam(
-		what=Rsamtools::scanBamWhat()[c(1,
-			3,5,8,13,9, 10, 6, 4, 14, 15)], 
-		flag=Rsamtools::scanBamFlag(isPaired=TRUE,
-			isDuplicate=isPairedDuplicate))
-	ITER <- bamIterPair(bf, scParam= scParam)
+	if(isPaired){
+		#Defining connecting to bam file
+		bf<- Rsamtools::BamFile(bamFile, yieldSize=yieldSize, 
+				asMates=TRUE )
+		# Analyzing mapped paired reads together
+		scParam=Rsamtools::ScanBamParam(
+			what=Rsamtools::scanBamWhat()[c(1,
+				3,5,8,13,9, 10, 6, 4, 14, 15)], 
+			flag=Rsamtools::scanBamFlag(isPaired=TRUE,
+				isDuplicate=isPairedDuplicate))
+		ITER <- bamIterPair(bf, scParam= scParam)
 
-	resTmpPair<- BiocParallel::bpiterate(ITER, interestIntExAnalysePair, 
-		reference=reference,
-		maxNoMappedReads=maxNoMappedReads,
-		logFile=logFile,
-		method=method,
-		appendLogFile=appendLogFile,
-		repeatsTableToFilter=repeatsTableToFilter,
-		referenceIntronExon=referenceIntronExon,
-		junctionReadsOnly=junctionReadsOnly,
-		BPPARAM=bpparam)
+		resTmpPair<- BiocParallel::bpiterate(ITER, interestIntExAnalysePair, 
+			reference=reference,
+			maxNoMappedReads=maxNoMappedReads,
+			logFile=logFile,
+			method=method,
+			appendLogFile=appendLogFile,
+			repeatsTableToFilter=repeatsTableToFilter,
+			referenceIntronExon=referenceIntronExon,
+			junctionReadsOnly=junctionReadsOnly,
+			BPPARAM=bpparam)
 
-	scParam=Rsamtools::ScanBamParam(
-		what=Rsamtools::scanBamWhat()[c(1,
-			3,5,8,13,9, 10, 6, 4, 14, 15)], 
-		flag=Rsamtools::scanBamFlag(hasUnmappedMate=TRUE,
-			isPaired=TRUE, 
-			isDuplicate=isSingleReadDuplicate))
-	ITER <- bamIterSingle(bf, scParam= scParam)
-	resTmpSingle<- BiocParallel::bpiterate(ITER, interestIntExAnalyseSingle, 
-		reference=reference,
-		maxNoMappedReads=maxNoMappedReads,
-		logFile=logFile,
-		method=method,
-		appendLogFile=appendLogFile,
-		repeatsTableToFilter=repeatsTableToFilter,
-		referenceIntronExon=referenceIntronExon,
-		junctionReadsOnly=junctionReadsOnly,
-		BPPARAM=bpparam)
+		# Analyzing single mapped reads
+		scParam=Rsamtools::ScanBamParam(
+			what=Rsamtools::scanBamWhat()[c(1,
+				3,5,8,13,9, 10, 6, 4, 14, 15)], 
+			flag=Rsamtools::scanBamFlag(hasUnmappedMate=TRUE,
+				isPaired=TRUE, 
+				isDuplicate=isSingleReadDuplicate))
+		ITER <- bamIterSingle(bf, scParam= scParam)
+		resTmpSingle<- BiocParallel::bpiterate(ITER, 
+			interestIntExAnalyseSingle, 
+			reference=reference,
+			maxNoMappedReads=maxNoMappedReads,
+			logFile=logFile,
+			method=method,
+			appendLogFile=appendLogFile,
+			repeatsTableToFilter=repeatsTableToFilter,
+			referenceIntronExon=referenceIntronExon,
+			junctionReadsOnly=junctionReadsOnly,
+			BPPARAM=bpparam)
+	} else {
+		#Defining connecting to bam file
+		bf<- Rsamtools::BamFile(bamFile, yieldSize=yieldSize)
+		#Analyzing unpaired sequencing data
+		scParam=Rsamtools::ScanBamParam(
+			what=Rsamtools::scanBamWhat()[c(1,
+				3,5,8,13,9, 10, 6, 4, 14, 15)], 
+			flag=Rsamtools::scanBamFlag(
+				isPaired=NA, 
+				isDuplicate=isSingleReadDuplicate))
 
+		ITER <- bamIterSingle(bf, scParam= scParam)
+		resTmpSingle<- BiocParallel::bpiterate(ITER, 
+			interestIntExAnalyseSingle, 
+			reference=reference,
+			maxNoMappedReads=maxNoMappedReads,
+			logFile=logFile,
+			method=method,
+			appendLogFile=appendLogFile,
+			repeatsTableToFilter=repeatsTableToFilter,
+			referenceIntronExon=referenceIntronExon,
+			junctionReadsOnly=junctionReadsOnly,
+			BPPARAM=bpparam)
+	}
+	
 	if(length(which(sapply(resTmpSingle, length)>0))>0)
 		resSingle<-Reduce("+", resTmpSingle)
 	if(length(which(sapply(resTmpPair, length)>0))>0)

@@ -2,6 +2,7 @@ interest.sequential <-
 function(
 	bamFileYieldSize=1000000,
 	bamFile,
+	isPaired,
 	isPairedDuplicate=FALSE,
 	isSingleReadDuplicate=NA,
 	reference,
@@ -55,6 +56,7 @@ function(
 		inAnRes<- interestAnalyse.sequential(
 			reference=reference,
 			bamFile=bamFile,
+			isPaired=isPaired,
 			yieldSize=bamFileYieldSize,
 			maxNoMappedReads=1,
 			appendLogFile=TRUE,
