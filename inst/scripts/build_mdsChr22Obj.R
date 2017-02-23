@@ -8,6 +8,8 @@ the path to the ouput data should be supplied as the 2nd argument",
 call.=FALSE)
 }
 MDS_Chr22_BAMFILES<-dir(path = args[1], pattern = ".bam$", full.names = TRUE)
+names(MDS_Chr22_BAMFILES)<-
+	gsub("\\.bam", "", gsub("/","",gsub(args[1], "",MDS_Chr22_BAMFILES)))
 
 library("IntEREst")
 
