@@ -1,0 +1,32 @@
+export(interest, interest.sequential, InterestResult, getAnnotation, 
+	addAnnotation, scaledRetention, referencePrepare, readInterestResults, 
+	subInterestResult, mergeInterestResult, u12NbIndex, u12Index, 
+	exactTestInterest, glmInterest, qlfInterest, treatInterest, eBayesInterest, 
+	u12BoxplotNb, u12DensityPlot, u12DensityPlotIntron, lfc, getRepeatTable, 
+	u12Boxplot, annotateU12, intexIndex, buildSsTypePwms, updateRowDataCol, 
+	counts.InterestResults, plot.InterestResult)
+exportMethods(counts, plot)
+import(graphics, grDevices, utils, grid, methods, SummarizedExperiment)
+importFrom(Biostrings, getSeq, matchPWM, PWM, unitScale, reverseComplement, 
+	DNAString)
+importFrom(BiocGenerics, counts)
+importFrom(seqinr, read.fasta, getSequence, getFrag)
+importFrom(seqLogo, seqLogo)
+importFrom(IRanges, IRanges)
+importFrom(stats, density, loess.smooth, cor, median, model.matrix)
+importFrom(S4Vectors, queryHits, subjectHits, metadata)
+importFrom(limma, lmFit, eBayes)
+importFrom(edgeR, DGEList, estimateDisp, estimateExonGenewiseDisp, exactTest, 
+	topTags, estimateGLMTagwiseDisp, estimateGLMTrendedDisp, 
+	estimateGLMCommonDisp, glmFit, glmLRT, glmQLFit, glmQLFTest, glmTreat)
+importFrom(GenomicFeatures, DEFAULT_CIRC_SEQS, makeTxDbFromUCSC, 
+	makeTxDbFromBiomart, makeTxDbFromGFF, exonsBy, transcriptsBy, 
+	intronsByTranscript)
+importFrom(GenomicRanges, seqnames, start, end, width, strand, ranges, GRanges, 
+	findOverlaps, reduce, gaps)
+importFrom(Rsamtools, BamFile, ScanBamParam, scanBamFlag, scanBamWhat, isOpen)
+importFrom(DBI, dbConnect, dbSendQuery, dbGetQuery, dbDisconnect)
+importFrom(RMySQL, MySQL)
+importFrom(BiocParallel, SerialParam, MulticoreParam, bpiterate)
+importFrom(GenomicAlignments, readGAlignmentPairs, readGAlignmentsList)
+
