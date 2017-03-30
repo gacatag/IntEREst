@@ -1,6 +1,6 @@
 u12Boxplot<-function(x, sampleAnnoCol=NA, intExCol="int_ex", 
 	intTypeCol="int_type", intronExon, col="white", boxplotNames=c(), 
-	lasNames=3, outline=FALSE, ...)
+	lasNames=3, outline=FALSE, addGrid=FALSE, ...)
 {
 	object=x
 	if(!is.na(sampleAnnoCol)){
@@ -69,6 +69,11 @@ u12Boxplot<-function(x, sampleAnnoCol=NA, intExCol="int_ex",
 
 	graphics::boxplot(plotList, names=c(), xaxt = "n", outline=outline, 
 		col=color, ...)
+	if(addGrid){
+		graphics::grid(nx=NA, ny=NULL)
+		graphics::boxplot(plotList, names=c(), xaxt = "n", outline=outline, 
+		col=color, add=TRUE, ...)
+	}
 	if(length(boxplotNames)==0)
 		boxplotNames=names(plotList)
 	graphics::axis(1,at=which(axisAt), labels=boxplotNames[boxplotNames!=""],

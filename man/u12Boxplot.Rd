@@ -10,7 +10,7 @@ objects.
 \usage{
 u12Boxplot(x, sampleAnnoCol=NA, intExCol="int_ex",
 	intTypeCol="int_type", intronExon, col="white",
-	boxplotNames=c(), lasNames=3, outline=FALSE, ...)
+	boxplotNames=c(), lasNames=3, outline=FALSE, addGrid=FALSE, ...)
 }
 \arguments{
 \item{x}{ 
@@ -44,6 +44,9 @@ Orientation of the box names.
 \item{outline}{
 If outline is TRUE the outlier points are drawn otherwise if FALSE (default) 
 they are not.
+}
+\item{addGrid}{ 
+Whether add a grid under the boxplots (FALSE by default). 
 }
 \item{...}{
 Other arguments to pass to the \code{boxplot()} function.

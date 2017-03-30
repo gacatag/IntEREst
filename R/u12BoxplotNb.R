@@ -2,7 +2,7 @@ u12BoxplotNb<-function(
 	x, sampleAnnoCol=2, intExCol="int_ex", intTypeCol="int_type", 
 	intronExon, strandCol="strand", geneIdCol, col=c(), names=c(), lasNames=1, 
 	outline=FALSE, plotLegend=TRUE, cexLegend=1, xLegend="topright", 
-	yLegend=NULL, legend=c(), ...)
+	yLegend=NULL, bgLegend="transparent", legend=c(), addGrid=FALSE, ...)
 {
 	object=x
 	group=as.vector(SummarizedExperiment::colData(object)[,sampleAnnoCol])
@@ -84,8 +84,8 @@ levels.'
 	color=c(as.vector(col[group]), NA)
 	
 	strand=SummarizedExperiment::rowData(object)[u12Ind, strandCol]
-
-	if(unique(strand=="*") & length(unique(strand))==1){
+# If all strands are * plot introns up- and down-stream U12 introns together
+	if(length(which(unique(strand)=="*"))==1 & length(unique(strand))==1){
 		typePlot=2
 		plotList=c(updnPlot,list(NA),u12Plot)
 	} else {
@@ -99,9 +99,14 @@ levels.'
 			by=trunc((length(plotList)-2)/3)+1, length.out=3)
 		graphics::axis(1 ,at=axisAt, labels=c("Upstream U2 intron", 
 			"U12 intron", "Downstream U2 intron"), las=lasNames, ...)
+		if(addGrid){
+			graphics::grid(nx=NA, ny=NULL)
+			graphics::boxplot(plotList, names=c(), xaxt = "n", yaxt="n",
+				outline=outline, col=color, add=TRUE)	
+		}
 		if(plotLegend)
 			graphics::legend(x=xLegend,y=yLegend, legend=uniGroup, fill=col, 
-				cex=cexLegend)
+				cex=cexLegend, bg=bgLegend)
 	} else if(typePlot==2){
 		graphics::boxplot(plotList, names=c(), xaxt = "n", outline=outline, 
 			col=color, ...)
@@ -110,11 +115,17 @@ levels.'
 		graphics::axis(1 ,at=axisAt, 
 			labels=c("(Up/Down)stream U2 intron", "U12 intron"), las=lasNames, 
 			...)
+
+		if(addGrid){
+			graphics::grid(nx=NA, ny=NULL)
+			graphics::boxplot(plotList, names=c(), xaxt = "n", yaxt="n", 
+				outline=outline, col=color, add=TRUE)	
+		}
 		if(length(legend)==0 & plotLegend)
 			legend=uniGroup
 		if(plotLegend)
 			graphics::legend(x=xLegend,y=yLegend, legend=legend, 
-				fill=unique(color), cex=cexLegend)
+				fill=unique(color), cex=cexLegend, bg=bgLegend)
 	}
 
 }
