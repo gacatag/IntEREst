@@ -11,26 +11,26 @@ vignette: >
   \usepackage[utf8]{inputenc}
 ---
 The Intron Exon Retention Estimator (IntEREst) facilitates estimation and 
-comparison of splicing efficiency of various transcripts across several samples. 
-In particular, it can estimate the intron-retention levels or the exon junction 
-levels in the transcripts. Our method estimates the Intron-retention by 
-counting the number of rna-seq reads that have been mapped to the Intron-exon 
-junctions of the genes, and it can estimate the exon junction levels by 
-counting the reads that have been mapped to the exon-exon junctions. In 
-addition, it is possible to limit the analysis to reads that are mapped to the 
-intron-exon or exon-exon junctions only (See the `junctionReadsOnly` parameter
-in the `interest()` and `interest.sequential()` functions). However, by default 
-this limitation is not taken into account, *i.e.* the reads that are fully 
-mapped to the introns or exons are also considered. The method is similar to 
-the Intron retention analysis used by Niemelä *et al.* [-@pmid24848017]. 
-The package accepts standard BAM files as input and produces tab separated text 
+comparison of splicing efficiency of various transcripts across several 
+samples. In particular, it can estimate the intron-retention levels or the exon
+junction levels in the transcripts. Our method estimates the Intron-retention 
+by counting the number of rna-seq reads that have been mapped to the 
+Intron-exon junctions of the genes, and it can estimate the exon junction 
+levels by counting the reads that have been mapped to the exon-exon junctions.
+In addition, it is possible to limit the analysis to reads that are mapped to
+the intron-exon or exon-exon junctions only (See the `junctionReadsOnly` 
+parameter in the `interest()` and `interest.sequential()` functions). However,
+by default this limitation is not taken into account, *i.e.* the reads that are
+fully mapped to the introns or exons are also considered. The method is similar
+to the Intron retention analysis used by Niemelä *et al.* [-@pmid24848017]. 
+The package accepts standard BAM files as input and produces tab separated text
 files together with `SummarizedExperiment` objects as results. To improve the 
 performance and running time, the processing of each single BAM file can be 
-distributed and run on several computing cores. The results can also be plotted 
+distributed and run on several computing cores. The results can also be plotted
 and statistically analyzed to check the distribution of the intron retention 
 levels, and compare the retention levels of U12 type introns to the U2 type 
 across the studied samples. Note that although we mainly use this package to 
-compare the splicing efficiency of the transcripts containing U12-type introns, 
+compare the splicing efficiency of the transcripts containing U12-type introns,
 some functions can be used with U2-type introns as well. The functions 
 `u12NbIndex()`, `u12Index()`, `u12Boxplot()`, `u12BoxplotNb()`, 
 `u12DensityPlot()`and `u12DensityPlotIntron()` are specifically used for the 
@@ -83,12 +83,13 @@ and 4 were healthy individuals.
 The data is accessible through GEO with the accession number GSE63816 and the 
 scripts that we ran to map the RNA-seq data, modify the bam files, extract the 
 reads mapped to U12 genes in chr22 and build `mdsChr22Obj` object have been 
-listed in the `readme.txt` file in `scripts` folder of the `IntEREst` package 
-(full path: `r system.file("scripts","readme.txt", package="IntEREst")`). The 
-`mdsChr22Obj` object is a `summarizedExperiment` object that includes retention
-levels of the introns of the genes located in the Chromosome 22 that feature 
-at least one U12-type intron, across the 16 MDS samples. The `mdsChr22Obj` 
-object is included in the `IntEREst` package.
+listed in the `readme.txt` file in `scripts` folder of the `IntEREst` package.
+You can get its full path using this script in R:
+`system.file("scripts","readme.txt", package="IntEREst")`. 
+The `mdsChr22Obj` object is a `summarizedExperiment` object that includes 
+retention levels of the introns of the genes located in the Chromosome 22 that
+feature at least one U12-type intron, across the 16 MDS samples. The
+`mdsChr22Obj` object is included in the `IntEREst` package.
 
 <br>
 ```{r view_object, out.width = 500, echo=TRUE, eval=TRUE }
@@ -191,7 +192,7 @@ significantly more retained. For more complex experiments such as comparing
 samples based on a user defined design matrix other differential expression 
 analysis functions from `edgeR` package, e.g. Linear Model (GLM) functions, 
 have also been implemented in IntEREst; `glmInterest()` performs GLM likelihood
-ratio test, `qlfInterest()` runs quasi likelihood F-test, and `treatInterest()` 
+ratio test, `qlfInterest()` runs quasi likelihood F-test, and `treatInterest()`
 runs fold-change threshold test on the retention levels of the introns/exons. 
 The following commands can be used to extract the data for introns/exons that 
 their retention levels vary significantly across all sample types: ZRSR2 
@@ -253,7 +254,7 @@ u12BoxplotNb(mdsChr22Obj, sampleAnnoCol="type", lasNames=1,
 
 The boxplot clearly shows the increase retention of U12-type introns comparing 
 to all the U2 introns (*figure 4*) and in particular comparing to the U2-type 
-introns located on the up- or down-stream of the U12-type introns (*figure 5*). 
+introns located on the up- or down-stream of the U12-type introns (*figure 5*).
 It is also clear that the elevated level of intron retention with U12-type 
 introns is exacerbated in the ZRSR2 mutated samples comparing to the other 
 studied samples. In order to better illustrate the stabilization of the 
@@ -315,11 +316,11 @@ jtRes
 
 <br>
 
-The result of the Jonckheere-Terpstra test with 1000 permutation runs shows 
-that when comparing the samples that lack the ZRSR2 mutation to the the ZRSR2 
-mutated samples, the null hypothesis that the log fold-changes of the 
-retentions of U12-type and U2-type introns are equally distributed was rejected 
-with p-value `r jtRes$p.value`, while the alternative being that the values in 
+The result of the Jonckheere-Terpstra test with 1000 permutation runs shows
+that when comparing the samples that lack the ZRSR2 mutation to the the ZRSR2
+mutated samples, the null hypothesis that the log fold-changes of the
+retentions of U12-type and U2-type introns are equally distributed was rejected
+with p-value `r jtRes$p.value`, while the alternative being that the values in
 the U12-type introns are higher compared to the U2-type.
 
 ## References

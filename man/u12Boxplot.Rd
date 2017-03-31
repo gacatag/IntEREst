@@ -36,7 +36,8 @@ Vector showing box colours. It is either of size 1 or the same size as the
 number of groups to be plotted.
 }
 \item{boxplotNames}{
-Names to write under boxes.
+Names to write under boxes. If not defined, as names, it pastes U12/U2 (intron 
+annotation) to the sample group annotations separated by a space " ".
 }
 \item{lasNames}{
 Orientation of the box names.
