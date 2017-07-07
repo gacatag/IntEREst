@@ -13,3 +13,15 @@ Importing required functions from the DEXSeq package.
 
 }}
 
+\section{Version 1.1.2}{\itemize{
+\item
+unionRefTr() function added.
+
+\item
+u12DensityPlot corrected to support results based on unionRefTr built 
+references.
+
+\item
+u12Index supports parameter intronExon now.
+
+}}
