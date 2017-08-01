@@ -25,3 +25,15 @@ references.
 u12Index supports parameter intronExon now.
 
 }}
+
+\section{Version 1.1.3}{\itemize{
+
+\item
+Correct interestAnalyse.R and interestAnalyse.sequential.R for single 
+(unpaired) reads.
+
+\item
+Correct bpparam setting in interest.R .
+
+}}
+

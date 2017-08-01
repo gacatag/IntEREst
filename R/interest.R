@@ -60,7 +60,7 @@ function(
 			junctionReadsOnly=junctionReadsOnly,
 			isPairedDuplicate=isPairedDuplicate, 
 			isSingleReadDuplicate=isSingleReadDuplicate,
-			bpparam<-bpparam)
+			bpparam=bpparam)
 	} else {
 		inAnRes<- interestAnalyse(
 			reference=reference,
