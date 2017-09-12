@@ -37,3 +37,14 @@ Correct bpparam setting in interest.R .
 
 }}
 
+\section{Version 1.1.4}{\itemize{
+
+\item
+Add deseqInterest function.
+
+\item
+Add deseqInterest function.
+
+}}
+
+

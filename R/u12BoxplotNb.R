@@ -3,7 +3,6 @@ u12BoxplotNb<-function(
 	intronExon, strandCol="strand", geneIdCol, col=c(), names=c(), lasNames=1, 
 	outline=FALSE, plotLegend=TRUE, cexLegend=1, xLegend="topright", 
 	yLegend=NULL, bgLegend="transparent", legend=c(), addGrid=FALSE, ...)
-
 {
 	object=x
 	group=as.vector(SummarizedExperiment::colData(object)[,sampleAnnoCol])
@@ -85,10 +84,8 @@ levels.'
 	color=c(as.vector(col[group]), NA)
 	
 	strand=SummarizedExperiment::rowData(object)[u12Ind, strandCol]
-
 # If all strands are * plot introns up- and down-stream U12 introns together
 	if(length(which(unique(strand)=="*"))==1 & length(unique(strand))==1){
-
 		typePlot=2
 		plotList=c(updnPlot,list(NA),u12Plot)
 	} else {
@@ -124,7 +121,6 @@ levels.'
 			graphics::boxplot(plotList, names=c(), xaxt = "n", yaxt="n", 
 				outline=outline, col=color, add=TRUE)	
 		}
-
 		if(length(legend)==0 & plotLegend)
 			legend=uniGroup
 		if(plotLegend)

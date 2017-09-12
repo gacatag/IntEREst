@@ -5,7 +5,7 @@ export(interest, interest.sequential, InterestResult, getAnnotation,
 	u12BoxplotNb, u12DensityPlot, u12DensityPlotIntron, lfc, getRepeatTable, 
 	u12Boxplot, annotateU12, intexIndex, buildSsTypePwms, updateRowDataCol, 
 	counts.InterestResults, plot.InterestResult, intexBoxplot, DEXSeqIntEREst,
-	unionRefTr)
+	unionRefTr, interestResultIntEx, deseqInterest)
 exportMethods(counts, plot, boxplot)
 import(graphics, grDevices, utils, grid, methods, SummarizedExperiment)
 importFrom(Biostrings, getSeq, matchPWM, PWM, unitScale, reverseComplement, 
@@ -31,4 +31,4 @@ importFrom(RMySQL, MySQL)
 importFrom(BiocParallel, SerialParam, MulticoreParam, bpiterate)
 importFrom(GenomicAlignments, readGAlignmentPairs, readGAlignmentsList)
 importFrom(DEXSeq, DEXSeqDataSet, DEXSeq)
-
+importFrom(DESeq2, DESeqDataSetFromMatrix, sizeFactors, DESeq, results)

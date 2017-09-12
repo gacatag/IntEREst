@@ -238,6 +238,7 @@ counts.InterestResults<-function(object){
 }
 methods::setMethod("counts", "SummarizedExperiment", counts.InterestResults)
 
+
 # box plot method
 intexBoxplot<- function(x, sampleAnnoCol=NA, intexTypeCol="int_type", 
 	intexType=c(), col="white", boxplotNames=c(), lasNames=3, outline=FALSE, 
@@ -313,4 +314,3 @@ intexBoxplot<- function(x, sampleAnnoCol=NA, intexTypeCol="int_type",
 		las=lasNames, ...)
 }
 methods::setMethod("boxplot", "SummarizedExperiment", intexBoxplot)
-

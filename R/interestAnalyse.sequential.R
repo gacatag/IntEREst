@@ -15,7 +15,7 @@ function(
 	isSingleReadDuplicate)
 {
 
-#Parallel running impelementation
+#Paralle running impelementation
 	if(logFile!=""){
 		cat( "InERESt:interestAnalyse: Begins ...\n", file=logFile, 
 			append=appendLogFile)
