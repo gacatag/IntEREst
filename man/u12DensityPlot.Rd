@@ -41,7 +41,10 @@ A vector that includes the type of introns to plot. Available options are U12
 introns "U12", U2 introns at downstream of U12 introns "U2Dn", U2 introns at 
 upstream of U12 introns "U2Up",  U2 introns at upstream or downstream of U12 
 introns suitable for when the coorduinates in object x are unstranded (their 
-strand is "*") "U2UpDn",  random U2 introns from object x "U2Rand".
+strand is "*") "U2UpDn",  random U2 introns from object x "U2Rand". Settings 
+"U2Up", "U2Dn" and "U2UpDn" are useful only if the refernce is linearly 
+ordered. References with exons only resulted by \code{referencePrepare} and 
+\code{unionRefTr} are NOT necessarily linearly ordered.
 }
 \item{fcType}{
 Available as "fpkm" or "edgeR" (as default) corresponding to either log fold 

@@ -12,7 +12,8 @@ boxplot U12 introns and (Up/Down)stream U2 introns in
 u12BoxplotNb(x, sampleAnnoCol=2, intExCol="int_ex",
 	intTypeCol="int_type", intronExon, strandCol="strand", geneIdCol, 
 	col=c(), names=c(), lasNames=1, outline=FALSE, plotLegend=TRUE, 
-	cexLegend=1, xLegend="topright", yLegend=NULL, legend=c() , ...)
+	cexLegend=1, xLegend="topright", yLegend=NULL, bgLegend="transparent", 
+	legend=c(), addGrid=FALSE, ...)
 }
 \arguments{
 \item{x}{ 
@@ -66,8 +67,14 @@ Size of the text in legend .
 Position of legend in the plot. For more info see \code{x} and \code{y} 
 parameters in \code{\link{legend}}.
 }
+\item{bgLegend}{ 
+Bakcground colour of the legend box. It is "transparent" by default.
+}
 \item{legend}{ 
 The replacement texts to be used in legend.
+}
+\item{addGrid}{ 
+Whether add a grid under the boxplots (FALSE by default). 
 }
 \item{...}{
 	Other arguments to pass to the \code{boxplot()} function.

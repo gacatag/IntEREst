@@ -33,13 +33,16 @@ The source to use to build the reference data, \code{"UCSC"}, \code{"biomaRt"},
 and \code{"file"} (for GFF3 or GTF files) are supported.}
 \item{ucscGenome}{
 The genome to use. \code{"hg19"} is the default. See \code{genome} parameter of
-\code{makeTxDbFromUCSC} function of \code{edgeR} library for more information.}
+\code{\link[GenomicFeatures]{makeTxDbFromUCSC}} function of 
+\code{GenomicFeatures} library for more information.}
 \item{ucscTableName}{
 The UCSC table name to use. See \code{tablename} parameter of 
-\code{makeTxDbFromUCSC} function of \code{edgeR} library for more information.}
+\code{\link[GenomicFeatures]{makeTxDbFromUCSC}} function of 
+\code{GenomicFeatures} library for more information.}
 \item{ucscUrl}{
-The UCSC URL address.  See \code{url} parameter of \code{makeTxDbFromUCSC} 
-function of \code{edgeR} library for more information.}
+The UCSC URL address.  See \code{url} parameter of 
+\code{\link[GenomicFeatures]{makeTxDbFromUCSC}} function of 
+\code{GenomicFeatures} library for more information.}
 \item{u12IntronsChr}{
 A vector of character strings that includes chromsomal locations of the U12 
 type introns. If defined together with \code{u12IntronsBeg} and 
@@ -54,25 +57,26 @@ A GRanges object that includes the coordinates of the U12 type introns. If
 defined, it would be used to annotate the U12-type introns.}
 \item{biomart}{
 BioMart database name. See \code{biomart} parameter of 
-\code{makeTxDbFromBiomart} function of \code{edgeR} library for more 
-information.}
+\code{\link[GenomicFeatures]{makeTxDbFromBiomart}} function of 
+\code{GenomicFeatures} library for more information.}
 \item{biomartDataset}{
 BioMart dataset name; default is "hsapiens_gene_ensembl". See \code{dataset} 
-parameter of \code{makeTxDbFromBiomart} function of \code{edgeR} library for 
-more information.}
+parameter of \code{\link[GenomicFeatures]{makeTxDbFromBiomart}} function of 
+\code{GenomicFeatures} library for more information.}
 \item{biomartTranscriptIds}{
 optional parameter to only retrieve transcript annotation results for a defined
 set of transcript ids. See \code{transcript_ids} parameter of 
-\code{makeTxDbFromBiomart} function of \code{edgeR} library for more 
-information.}
+\code{\link[GenomicFeatures]{makeTxDbFromBiomart}} function of 
+\code{GenomicFeatures} library for more information.}
 \item{biomartExtraFilters}{
 A list of names; i.e. additional filters to use in the BioMart query. See 
-\code{filters} parameter of \code{makeTxDbFromBiomart} function of \code{edgeR}
-library for more information.}
+\code{filters} parameter of \code{\link[GenomicFeatures]{makeTxDbFromBiomart}} 
+function of \code{GenomicFeatures} library for more information.}
 \item{biomartIdPrefix}{
 A list of names; i.e. additional filters to use in the BioMart query. See 
-\code{id_prefix} parameter of \code{makeTxDbFromBiomart} function of 
-\code{edgeR} library for more information.}
+\code{id_prefix} parameter of 
+\code{\link[GenomicFeatures]{makeTxDbFromBiomart}} function of 
+\code{GenomicFeatures} library for more information.}
 \item{biomartHost}{ 
 Host to connect to; the default is "www.ensembl.org". For older versions of the
 GRCH you can provide the archive websites, e.g. for GRCH37 you can use 
@@ -81,20 +85,23 @@ GRCH you can provide the archive websites, e.g. for GRCH37 you can use
 The port to use in the HTTP communication with the host. Default is 80.}
 \item{circSeqs}{
 A character vector that includes chromosomes that should be marked as circular.
-See \code{circ_seqs} parameter of \code{makeTxDbFromBiomart} and 
-\code{makeTxDbFromUCSC} functions of \code{edgeR} library for more 
-information.}
+See \code{circ_seqs} parameter of 
+\code{\link[GenomicFeatures]{makeTxDbFromBiomart}} and 
+\code{\link[GenomicFeatures]{makeTxDbFromUCSC}} functions of 
+\code{GenomicFeatures} library for more information.}
 \item{miRBaseBuild}{
 Set appropriate build Information from mirbase.db to use for microRNAs 
-(default=NA). See \code{miRBaseBuild} parameter of \code{makeTxDbFromBiomart} 
-and \code{makeTxDbFromUCSC} functions of \code{edgeR} library for more 
-information.}
+(default=NA). See \code{miRBaseBuild} parameter of 
+\code{\link[GenomicFeatures]{makeTxDbFromBiomart}} and 
+\code{\link[GenomicFeatures]{makeTxDbFromUCSC}} functions of 
+\code{GenomicFeatures} library for more information.}
 \item{taxonomyId}{
-This parameter can be used to provide taxonomy Ids. It is set to Na by default.
+This parameter can be used to provide taxonomy Ids. It is set to NA by default.
 You can check the taxonomy Ids with the \code{available.species()} function in 
 \code{GenomeInfoDb} package. For more information see \code{taxonomyId} 
-parameter of \code{makeTxDbFromBiomart} and \code{makeTxDbFromUCSC} functions
-of \code{edgeR} library.}
+parameter of \code{\link[GenomicFeatures]{makeTxDbFromBiomart}} and 
+\code{\link[GenomicFeatures]{makeTxDbFromUCSC}} functions of 
+\code{GenomicFeatures} library.}
 \item{filePath}{
 Character string i.e. the path to file. Used if \code{sourceBuild} is 
 \code{"file"}. }

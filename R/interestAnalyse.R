@@ -17,7 +17,7 @@ function(
 	bpparam)
 {
 
-#Paralle running impelementation
+#Parallel running impelementation
 	if(logFile!=""){
 		cat( "InERESt:interestAnalyse: Begins ...\n", file=logFile, 
 			append=appendLogFile)
@@ -118,10 +118,10 @@ function(
 	}
 	resPair<-rep(0, nrow(reference)*length(method))
 	resSingle<-rep(0, nrow(reference)*length(method))
-	if(length(which(sapply(resTmpSingle, length)>0))>0)
-		resSingle<-Reduce("+", resTmpSingle)
-	if(length(which(sapply(resTmpPair, length)>0))>0)
+	if(isPaired)
 		resPair<-Reduce("+", resTmpPair)
+
+	resSingle<-Reduce("+", resTmpSingle)
 
 	res<- resPair+resSingle
 

@@ -73,7 +73,7 @@ log2 counts-per-million (logCPM), and the two-sided p-value (PValue).
 }
 \seealso{
 \code{\link{lfc}}, \code{\link{glmInterest}}, \code{\link{qlfInterest}}, 
-\code{\link{treatInterest}}
+\code{\link{treatInterest}}, \code{\link{DEXSeqIntEREst}}
 }
 
 \author{Ali Oghabian}

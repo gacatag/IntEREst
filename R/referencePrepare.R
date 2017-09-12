@@ -273,7 +273,7 @@ function( outFileTranscriptsAnnotation="",
 		matInd= unlist(tapply(1:nrow(matTmp), as.character(matTmp[,7]), 
 			function(tmp)return( tmp[order(as.numeric(matTmp[tmp,5]), 
 				decreasing=FALSE)] )))
-		matOut= data.frame(
+		matOutTmp= data.frame(
 			chr=as.character(matTmp[,1]),
 			begin=as.numeric(matTmp[,2]), 
 			end=as.numeric(matTmp[,3]), 
@@ -282,6 +282,40 @@ function( outFileTranscriptsAnnotation="",
 			int_ex=as.character(matTmp[,6]), 
 			transcript_id=as.character(matTmp[,7]), 
 			stringsAsFactors=FALSE)[matInd,]
+		
+		matOut=  data.frame(
+			chr=as.character(unlist(tapply(1:nrow(matOutTmp), 
+				matOutTmp$transcript_id, function(tmp) 
+					return(matOutTmp$chr[order(as.numeric(matOutTmp$begin), 
+						decreasing=FALSE)])
+				))),
+			begin=as.numeric(unlist(tapply(1:nrow(matOutTmp), 
+				matOutTmp$transcript_id, function(tmp) 
+					return(matOutTmp$begin[order(as.numeric(matOutTmp$begin), 
+						decreasing=FALSE)])
+				))),
+			end=as.numeric(unlist(tapply(1:nrow(matOutTmp), 
+				matOutTmp$transcript_id, function(tmp) 
+					return(matOutTmp$end[order(as.numeric(matOutTmp$begin),
+						decreasing=FALSE)])
+				))),
+			strand=as.character(unlist(tapply(1:nrow(matOutTmp), 
+				matOutTmp$transcript_id, function(tmp) 
+					return(matOutTmp$strand[order(as.numeric(matOutTmp$begin),
+						decreasing=FALSE)])
+				))),
+			int_ex=as.character(unlist(tapply(1:nrow(matOutTmp), 
+				matOutTmp$transcript_id, function(tmp) 
+					return(matOutTmp$int_ex[order(as.numeric(matOutTmp$begin),
+						decreasing=FALSE)])
+				))),
+			int_ex_num=as.numeric(unlist(tapply(1:nrow(matOutTmp), 
+				matOutTmp$transcript_id, function(tmp) 
+					return(c(rep(1:trunc(length(tmp)/2),each=2), 
+						trunc(length(tmp)/2)))
+				))),
+			collapsed_transcripts_id= matOutTmp$collapsed_transcripts_id,
+			stringsAsFactors=FALSE)
 
 		if(annotateGeneIds){
 			trGenesTx<- GenomicFeatures::transcriptsBy(human.txdb, by="gene")

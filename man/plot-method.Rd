@@ -124,7 +124,9 @@ Other arguments to pass to the \code{plot()} function.
 Class:
 	\code{\link[SummarizedExperiment]{SummarizedExperiment-class}}
 Method:
-	 \code{\link{counts-method}}
+
+	\code{\link{counts-method}}
+	\code{\link{boxplot-method}}
 }
 \author{Ali Oghabian}
 

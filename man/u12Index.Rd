@@ -8,7 +8,7 @@ Extract row numbers of U12 introns in an object of class
 \code{SummarizedExperiment}.
 }
 \usage{
-u12Index(x, intExCol="int_ex", intTypeCol="int_type")
+u12Index(x, intExCol="int_ex", intTypeCol="int_type", intronExon="intron")
 }
 \arguments{
 \item{x}{ 
@@ -21,6 +21,10 @@ Column name (or number) that represents whether each row of \code{x} assays is
 \item{intTypeCol}{
 Column name (or number) that represents what type of intron each row of 
 \code{x} assays represents.
+}
+\item{intronExon}{
+Whether extract U12 type introns (set \code{intronExon="intron"}) or exon-exon 
+junction (set \code{intronExon="exon"}) flanking U12 introns. 
 }
 
 }

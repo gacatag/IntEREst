@@ -237,3 +237,80 @@ counts.InterestResults<-function(object){
 	return(SummarizedExperiment::assays(object)$counts)
 }
 methods::setMethod("counts", "SummarizedExperiment", counts.InterestResults)
+
+# box plot method
+intexBoxplot<- function(x, sampleAnnoCol=NA, intexTypeCol="int_type", 
+	intexType=c(), col="white", boxplotNames=c(), lasNames=3, outline=FALSE, 
+	addGrid=FALSE, ...){
+
+	object=x
+	if(!is.na(sampleAnnoCol)){
+		groups=SummarizedExperiment::colData(object)[,sampleAnnoCol]
+	} else {
+		groups=x@sampleNames
+	}
+	uniGroup=unique(as.vector(groups))
+	if(length(unique(intexType))==0){
+		uniIntexType= unique(rowData(object)[,intexTypeCol])
+	} else {
+		uniIntexType= unique(intexType)
+	}
+	color=c()	
+	plotList=c()
+	axisAt=c()
+	for(cnt in 1:length(uniGroup)){
+
+		for(tcnt in 1:length(uniIntexType)){
+			plotList=c(plotList, 
+				list( as.vector(
+					unlist(scaledRetention(object)[
+						which(!is.na(match(
+							SummarizedExperiment::rowData(object)[,
+								intexTypeCol],
+							uniIntexType[tcnt]
+						))), 
+						which(!is.na(match(
+						as.vector(groups), uniGroup[cnt])))]
+					)
+				))
+			)
+			if(length(boxplotNames)==0){
+				names(plotList)[length(plotList)]=
+					paste(uniIntexType[tcnt],uniGroup[cnt], sep=" ")
+						
+			}
+			axisAt=c(axisAt,TRUE)
+
+		}
+		axisAt=c(axisAt,FALSE)
+		if(length(col)>1)
+			color=c(color, col[((cnt-1)*length(uniIntexType)+1):
+				(cnt*length(uniIntexType))], NA)
+		if(length(col)==1)
+			color=c(color, rep(col,uniIntexType))
+		plotList<-c(plotList, list(NA))
+		if(length(boxplotNames)>0){
+			names(plotList)[(length(plotList)-length(uniIntexType)):
+				length(plotList)]=
+				c(boxplotNames[((cnt-1)*length(uniIntexType)+1):
+					(cnt*length(uniIntexType))], "")
+		}
+	}
+	plotList=plotList[-length(plotList)]
+	axisAt=axisAt[-length(axisAt)]
+	color=color[-length(color)]
+
+	graphics::boxplot(plotList, names=c(), xaxt = "n", outline=outline, 
+		col=color, ...)
+	if(addGrid){
+		graphics::grid(nx=NA, ny=NULL)
+		graphics::boxplot(plotList, names=c(), xaxt = "n", outline=outline, 
+		col=color, add=TRUE, ...)
+	}
+	if(length(boxplotNames)==0)
+		boxplotNames=names(plotList)
+	graphics::axis(1,at=which(axisAt), labels=boxplotNames[boxplotNames!=""],
+		las=lasNames, ...)
+}
+methods::setMethod("boxplot", "SummarizedExperiment", intexBoxplot)
+

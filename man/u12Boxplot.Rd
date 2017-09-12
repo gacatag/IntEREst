@@ -10,7 +10,7 @@ objects.
 \usage{
 u12Boxplot(x, sampleAnnoCol=NA, intExCol="int_ex",
 	intTypeCol="int_type", intronExon, col="white",
-	boxplotNames=c(), lasNames=3, outline=FALSE, ...)
+	boxplotNames=c(), lasNames=3, outline=FALSE, addGrid=FALSE, ...)
 }
 \arguments{
 \item{x}{ 
@@ -36,7 +36,8 @@ Vector showing box colours. It is either of size 1 or the same size as the
 number of groups to be plotted.
 }
 \item{boxplotNames}{
-Names to write under boxes.
+Names to write under boxes. If not defined, as names, it pastes U12/U2 (intron 
+annotation) to the sample group annotations separated by a space " ".
 }
 \item{lasNames}{
 Orientation of the box names.
@@ -44,6 +45,9 @@ Orientation of the box names.
 \item{outline}{
 If outline is TRUE the outlier points are drawn otherwise if FALSE (default) 
 they are not.
+}
+\item{addGrid}{ 
+Whether add a grid under the boxplots (FALSE by default). 
 }
 \item{...}{
 Other arguments to pass to the \code{boxplot()} function.
