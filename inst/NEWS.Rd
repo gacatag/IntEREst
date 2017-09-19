@@ -43,8 +43,13 @@ Correct bpparam setting in interest.R .
 Add deseqInterest function.
 
 \item
-Add deseqInterest function.
+Add interestResultIntEx function.
 
 }}
 
+\section{Version 1.1.5}{\itemize{
 
+\item
+Minor correction on the news.Rd file.
+
+}}
