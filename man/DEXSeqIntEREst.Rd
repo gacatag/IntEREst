@@ -70,11 +70,11 @@ filtered object, i.e. the number of the exons, introns or both based on the
 
 \examples{
 
-dexseqRes<-DEXSeqIntEREst (x=mdsChr22Obj, 
-	design= ~ sample + intron + test_ctrl:intron, 
-	reducedModel = ~ sample + intron, fitExpToVar="test_ctrl", 
-	intExCol="int_ex", geneIdCol="ens_gene_id", silent=TRUE)
+dexseqExRes<-DEXSeqIntEREst (x=mdsChr22ExObj, 
+	design= ~ sample + exon + test_ctrl:exon, 
+	reducedModel = ~ sample + exon, fitExpToVar="test_ctrl", 
+	intExCol="int_ex", geneIdCol="transcripts_id", silent=TRUE)
+head(dexseqExRes)
 
-dexseqRes
 }
 

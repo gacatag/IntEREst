@@ -68,12 +68,12 @@ introns.
 
 
 head(u12NbIndex(mdsChr22Obj, intExCol="int_ex", 
-	intTypeCol="int_type", strandCol="strand", 
-	geneIdCol="ens_trans_id", naUnstrand=FALSE))
-
+	intTypeCol="intron_type", strandCol="strand", 
+	geneIdCol="collapsed_transcripts_id", naUnstrand=FALSE))
+# Return NA if no strand information available
 head(u12NbIndex(mdsChr22Obj, intExCol="int_ex", 
-	intTypeCol="int_type", strandCol="strand", 
-	geneIdCol="ens_trans_id", naUnstrand=TRUE))
+	intTypeCol="intron_type", strandCol="strand", 
+	geneIdCol="collapsed_transcripts_id", naUnstrand=TRUE))
 
 }
 

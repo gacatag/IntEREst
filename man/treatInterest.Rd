@@ -68,6 +68,6 @@ group <- getAnnotation(mdsChr22Obj)[,"type"]
 treatRes<- treatInterest(x=mdsChr22Obj, 
 	design=model.matrix(~group), silent=TRUE, 
 	disp="tagwiseInitTrended", coef=2:3, contrast=NULL, lfc=0)
-
+treatRes
 }
 

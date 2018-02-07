@@ -122,7 +122,6 @@ annotateU12<-function(
 	u12Bool= u12DonMatch[,1]& u12BpMatch[,1]& u12AccMatch[,1]
 	u2Bool= u2DonMatch[,1]& u2AccMatch[,1]
 	u12CompBool= u12DonCompMatch[,1]& u12BpCompMatch[,1]& u12AccCompMatch[,1]
-	u2Bool= u2DonCompMatch[,1]& u2AccCompMatch[,1]
 	u2CompBool= u2DonCompMatch[,1]& u2AccCompMatch[,1]
 
 	resTmp[u12Bool]="U12"
@@ -143,7 +142,7 @@ annotateU12<-function(
 	res[!is.na(match(referenceIntronExon,intronExon)),1]=resTmp
 	res[!is.na(match(referenceIntronExon,intronExon)),2]=strandMatchTmp
 
-	if(annotateU12Subtype){
+	if(annotateU12Subtype & (length(which(res[,1]=="U12"))>0)){
 
 		if (as.character(class(refGenome)) == "BSgenome"){
 			donPosSeq= Biostrings::getSeq(refGenome, 
@@ -175,6 +174,54 @@ annotateU12<-function(
 				end=referenceBegin[!is.na(res[,1])&res[,1]=="U12"&res[,2]=="-"]+
 					1,
 				as.character=TRUE)
+		} else if (as.character(class(refGenome)) == "DNAStringSet"){
+
+			tmpGr<- GenomicRanges::GRanges (
+					, 
+					IRanges(,
+						))
+
+			tmpGr<- GenomicRanges::GRanges (
+					referenceChr[!is.na(res[,1])&res[,1]=="U12"&res[,2]=="+"], 
+					IRanges(referenceBegin[!is.na(res[,1])&res[,1]=="U12"&
+							res[,2]=="+"],
+						referenceBegin[!is.na(res[,1])&res[,1]=="U12"&
+							res[,2]=="+"]+1))
+
+			donPosSeq= as.character(Biostrings::getSeq(refGenome, 
+				tmpGr))
+
+			tmpGr<- GenomicRanges::GRanges (referenceChr[!is.na(res[,1])&
+				res[,1]=="U12"&res[,2]=="+"], 
+					IRanges(referenceEnd[!is.na(res[,1])&res[,1]=="U12"&
+							res[,2]=="+"]-1,
+						referenceEnd[!is.na(res[,1])&res[,1]=="U12"&
+							res[,2]=="+"]))
+
+			accPosSeq= as.character(Biostrings::getSeq(refGenome, 
+				tmpGr))
+
+			tmpGr<- GenomicRanges::GRanges (
+					referenceChr[!is.na(res[,1])&res[,1]=="U12"&res[,2]=="-"], 
+					IRanges(referenceEnd[!is.na(res[,1])&res[,1]=="U12"&
+							res[,2]=="-"]-1,
+						referenceEnd[!is.na(res[,1])&res[,1]=="U12"&
+							res[,2]=="-"]
+						))
+
+			donNegSeqTmp=as.character(Biostrings::getSeq(refGenome, 
+				tmpGr))
+
+			tmpGr<- GenomicRanges::GRanges (referenceChr[!is.na(res[,1])&
+				res[,1]=="U12"&res[,2]=="-"], 
+					IRanges(referenceBegin[!is.na(res[,1])&res[,1]=="U12"&
+							res[,2]=="-"],
+						referenceBegin[!is.na(res[,1])&res[,1]=="U12"&
+							res[,2]=="-"]+ 1
+						))
+
+			accNegSeqTmp=as.character(Biostrings::getSeq(refGenome, 
+				tmpGr))
 		} else if (file.exists(refGenome)) {
 
 			fa=seqinr::read.fasta(file = refGenome)

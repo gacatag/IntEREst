@@ -67,7 +67,7 @@ A \code{SummarizedExperiment} object.
 
 
 u12Boxplot(mdsChr22Obj, sampleAnnoCol="type", 
-    intExCol="int_ex",  intTypeCol="int_type", intronExon="intron", 
+    intExCol="int_ex",  intTypeCol="intron_type", intronExon="intron", 
     col=rep(c("orange", "yellow"),3) ,  lasNames=3, 
     outline=FALSE, ylab="FPKM", cex.axis=0.8)
 

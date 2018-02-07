@@ -2,8 +2,9 @@
 \alias{interest.sequential}
 \title{Wrapup function: Sequential running}
 \description{
-A wrapper function that runs all necessary functions for the intron/exon 
-retention analysis. }
+A read summarization function that countsns all the reads mapping to the 
+introns/exons based on the users detailed parameter settings. The process 
+runs on a single computing core.}
 \usage{
 interest.sequential( bamFileYieldSize=1000000, bamFile, isPaired,
 	isPairedDuplicate=FALSE, isSingleReadDuplicate=NA, 

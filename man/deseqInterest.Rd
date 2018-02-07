@@ -50,11 +50,11 @@ in the \code{DESeq2} package.
 \author{Ali Oghabian}
 
 \examples{
-
-deseqRes<- deseqInterest(x=mdsChr22Obj, 
+mdsChr22IntObj<- mdsChr22Obj[rowData(mdsChr22Obj)$int_ex=="intron",]
+deseqRes<- deseqInterest(x=mdsChr22IntObj, 
 	design=~test_ctrl, contrast=list("test_ctrl_test_vs_ctrl"))
 
 # Number of U12/U2 type significantly differential retained introns in chr22
-table(rowData(mdsChr22Obj)[which(deseqRes$padj<.01), "int_type"])
+table(rowData(mdsChr22Obj)[which(deseqRes$padj<.01), "intron_type"])
 }
 

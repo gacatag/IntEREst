@@ -74,21 +74,11 @@ Method:
 
 #Plotting U12- vs U2-type introns
 par(mar=c(8,4,2,1))
-intexBoxplot(x=mdsChr22Obj, sampleAnnoCol="type", intexTypeCol="int_type", 
+boxplot(x=mdsChr22Obj, sampleAnnoCol="type", intexTypeCol="intron_type", 
 	intexType=c("U2", "U12"), 
-	col=rep(c("yellow", "orange","red", "purple"),3), 
+	col=rep(c("yellow", "orange"),3), 
 	boxplotNames=c(), lasNames=3, outline=FALSE, 
 	addGrid=TRUE)
 
-#See the annotations for intron type in the data
-#There are 4: NA, "U2","U12","U12/U2"
-unique(rowData(mdsChr22Obj)[,"int_type"])
-
-#boxplot various intron type in various sample types.
-par(mar=c(8,4,2,1))
-intexBoxplot(x=mdsChr22Obj, sampleAnnoCol="type", intexTypeCol="int_type", 
-	col=rep(c("yellow", "orange","red", "purple"),3), 
-	boxplotNames=c(), lasNames=3, outline=FALSE, 
-	addGrid=TRUE)
 }
 

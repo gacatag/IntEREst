@@ -40,7 +40,7 @@ A numeric vector which includes the index of U12 introns.
 
 \examples{
 
-head(u12Index(mdsChr22Obj))
+head(u12Index(mdsChr22Obj, intTypeCol="intron_type"))
 
 }
 
