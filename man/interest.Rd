@@ -2,8 +2,9 @@
 \alias{interest}
 \title{Wrapper function: Parallel run}
 \description{
-A wrapper function that runs all necessary functions for the intron/exon 
-retention analysis. }
+A read summarization function that countsns all the reads mapping to the 
+introns/exons based on the users detailed parameter settings. The process can 
+be run in parallel on multiple computing cores to improve it performance.}
 \usage{
 interest( bamFileYieldSize=1000000, bamFile, isPaired, 
 	isPairedDuplicate=FALSE, isSingleReadDuplicate= NA, reference, 
@@ -108,7 +109,7 @@ bamF <- system.file("extdata", "small_test_SRR1691637_ZRSR2Mut_RHBDD3.bam",
 	package="IntEREst", mustWork=TRUE)
 
 # Choosing reference for the gene RHBDD3
-ref=u12[u12[,"gene_name"]=="RHBDD3",]
+ref= u12[u12[,"gene_name"]=="RHBDD3",]
 
 test= interest(
 	bamFileYieldSize=10000,
@@ -125,6 +126,7 @@ test= interest(
 	logFile=paste(outDir, 
 	    "log.txt", sep="/"),
 	method=c("IntRet","ExEx"),
+	junctionReadsOnly=FALSE,
 	clusterNo=1,
 	returnObj=TRUE, 
 	scaleLength= c(TRUE,FALSE), 

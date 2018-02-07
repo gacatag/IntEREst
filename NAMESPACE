@@ -1,11 +1,11 @@
 export(interest, interest.sequential, InterestResult, getAnnotation, 
 	addAnnotation, scaledRetention, referencePrepare, readInterestResults, 
 	subInterestResult, mergeInterestResult, u12NbIndex, u12Index, 
-	exactTestInterest, glmInterest, qlfInterest, treatInterest, eBayesInterest, 
+	exactTestInterest, glmInterest, qlfInterest, treatInterest, 
 	u12BoxplotNb, u12DensityPlot, u12DensityPlotIntron, lfc, getRepeatTable, 
 	u12Boxplot, annotateU12, intexIndex, buildSsTypePwms, updateRowDataCol, 
 	counts.InterestResults, plot.InterestResult, intexBoxplot, DEXSeqIntEREst,
-	unionRefTr, interestResultIntEx, deseqInterest)
+	unionRefTr, interestResultIntEx, deseqInterest, psi)
 exportMethods(counts, plot, boxplot)
 import(graphics, grDevices, utils, grid, methods, SummarizedExperiment)
 importFrom(Biostrings, getSeq, matchPWM, PWM, unitScale, reverseComplement, 
@@ -16,7 +16,6 @@ importFrom(seqLogo, seqLogo)
 importFrom(IRanges, IRanges)
 importFrom(stats, density, loess.smooth, cor, median, model.matrix)
 importFrom(S4Vectors, queryHits, subjectHits, metadata)
-importFrom(limma, lmFit, eBayes)
 importFrom(edgeR, DGEList, estimateDisp, estimateExonGenewiseDisp, exactTest, 
 	topTags, estimateGLMTagwiseDisp, estimateGLMTrendedDisp, 
 	estimateGLMCommonDisp, glmFit, glmLRT, glmQLFit, glmQLFTest, glmTreat)

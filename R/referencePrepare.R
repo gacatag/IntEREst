@@ -17,7 +17,7 @@ function( outFileTranscriptsAnnotation="",
 	ignore.strand=FALSE)
 {
 
-	if(circSeqs=="")
+	if(circSeqs[1]=="")
 		circSeqs=GenomicFeatures::DEFAULT_CIRC_SEQS
 
 	if(sourceBuild=="UCSC"){
@@ -60,17 +60,13 @@ function( outFileTranscriptsAnnotation="",
 	time1=Sys.time()
 
 	exonsGR=GenomicRanges::GRanges( 
-		seqnames=as.vector(unlist(sapply(exons,function(tmp)
-			return(as.character(GenomicRanges::seqnames(tmp)))))), 
+		seqnames=as.character(GenomicRanges::seqnames(unlist(exons))), 
 		IRanges::IRanges(
-			start=as.numeric(unlist(sapply(exons, function(tmp)
-				return(as.numeric(GenomicRanges::start(tmp)))))) , 
-			end=as.numeric(unlist(sapply(exons, function(tmp)
-				return(as.numeric(GenomicRanges::end(tmp)))))) ))
+			start=as.numeric(GenomicRanges::start(unlist(exons))) , 
+			end=as.numeric(GenomicRanges::end(unlist(exons))) ))
 
 	if(!ignore.strand){
-		strandsEx=as.character(unlist(sapply(exons, function(tmp)
-			return(as.character(GenomicRanges::strand(tmp))))))
+		strandsEx=as.character(GenomicRanges::strand(unlist(exons)))
 	}
 	if (collapseExons){
 		genMat=matrix(as.vector(unlist(sapply(exons,function(tmp)
@@ -234,42 +230,35 @@ function( outFileTranscriptsAnnotation="",
 				length(as.character(GenomicRanges::seqnames(unlist(exons))))+ 
 				length(as.character(GenomicRanges::seqnames(unlist(introns)))))
 		} else {
-			strMat=as.vector(unlist(lapply(1:length(exons), function(tmp) 
-				return(c(as.character(GenomicRanges::strand(exons[[tmp]])),
-					as.character(GenomicRanges::strand(introns[[tmp]])))))))
+			strMat<- c(as.character(GenomicRanges::strand(unlist(exons))), 
+				as.character(GenomicRanges::strand(unlist(introns))))
 		}
-		matOutVec=c(as.vector(unlist(lapply(1:length(exons), function(tmp) 
-			return(c(as.character(GenomicRanges::seqnames(exons[[tmp]])),
-				as.character(GenomicRanges::seqnames(introns[[tmp]]))))))),
-			as.vector(unlist(lapply(1:length(exons), function(tmp) 
-				return(c(as.numeric(GenomicRanges::start(exons[[tmp]])),
-					as.numeric(GenomicRanges::start(introns[[tmp]]))))))),
-			as.vector(unlist(lapply(1:length(exons), function(tmp) 
-				return(c(as.numeric(GenomicRanges::end(exons[[tmp]])),
-					as.numeric(GenomicRanges::end(introns[[tmp]]))))))),
-			strMat,
-			as.vector(unlist(lapply(1:length(exons), function(tmp) 
-				return(c(seq(from=1, by=2, 
-					length.out=length(as.numeric(GenomicRanges::start(
-						exons[[tmp]])))),
-					seq(from=2, by=2, 
-						length.out=length(as.numeric(GenomicRanges::start(
-							introns[[tmp]]))))))))),
-			as.vector(unlist(lapply(1:length(exons), function(tmp) 
-				return(c(rep("exon", length(as.numeric(GenomicRanges::start(
-					exons[[tmp]])))),
-					rep("intron", length(as.numeric(GenomicRanges::
-						start(introns[[tmp]]))))))))),
-			as.vector(unlist(lapply(1:length(exons), function(tmp) 
-				return(c(rep(names(exons[tmp]), 
-					length(as.numeric(GenomicRanges::start(exons[[tmp]])))),
-						rep(names(introns[tmp]), 
-					length(as.numeric(GenomicRanges::start(introns[[tmp]])))))
-						))
-				))
-			)
 
-		matTmp= matrix(matOutVec, ncol=7, byrow=FALSE)
+		chrEx<- as.character(GenomicRanges::seqnames(unlist(exons)))
+		chrInt<- as.character(GenomicRanges::seqnames(unlist(introns)))		
+		stEx<- as.numeric(GenomicRanges::start(unlist(exons)))
+		stInt<- as.numeric(GenomicRanges::start(unlist(introns)))
+		endEx<- as.numeric(GenomicRanges::end(unlist(exons)))
+		endInt<- as.numeric(GenomicRanges::end(unlist(introns)))
+		noEx<- as.vector(unlist(lapply(1:length(exons), function(tmp) 
+				return(seq(from=1, by=2, 
+					length.out=length(exons[[tmp]]))))))
+		noInt<- as.vector(unlist(lapply(1:length(introns), function(tmp) 
+				return(seq(from=2, by=2, 
+					length.out=length(introns[[tmp]]))))))
+
+		exInt<- c(rep("exon",length(unlist(exons))), 
+			rep("intron",length(unlist(introns))))
+		genNames<- c(names(unlist(exons)), names(unlist(introns)))
+		matTmp<- data.frame(chr=c(chrEx,chrInt), 
+			begin=c(stEx,stInt),
+			end=c(endEx,endInt),
+			strand=strMat,
+			int_ex_num=c(noEx,noInt),
+			int_ex= exInt,
+			transcript_id=genNames
+			)
+	
 		matInd= unlist(tapply(1:nrow(matTmp), as.character(matTmp[,7]), 
 			function(tmp)return( tmp[order(as.numeric(matTmp[tmp,5]), 
 				decreasing=FALSE)] )))
@@ -282,41 +271,9 @@ function( outFileTranscriptsAnnotation="",
 			int_ex=as.character(matTmp[,6]), 
 			transcript_id=as.character(matTmp[,7]), 
 			stringsAsFactors=FALSE)[matInd,]
-		
-		matOut=  data.frame(
-			chr=as.character(unlist(tapply(1:nrow(matOutTmp), 
-				matOutTmp$transcript_id, function(tmp) 
-					return(matOutTmp$chr[order(as.numeric(matOutTmp$begin), 
-						decreasing=FALSE)])
-				))),
-			begin=as.numeric(unlist(tapply(1:nrow(matOutTmp), 
-				matOutTmp$transcript_id, function(tmp) 
-					return(matOutTmp$begin[order(as.numeric(matOutTmp$begin), 
-						decreasing=FALSE)])
-				))),
-			end=as.numeric(unlist(tapply(1:nrow(matOutTmp), 
-				matOutTmp$transcript_id, function(tmp) 
-					return(matOutTmp$end[order(as.numeric(matOutTmp$begin),
-						decreasing=FALSE)])
-				))),
-			strand=as.character(unlist(tapply(1:nrow(matOutTmp), 
-				matOutTmp$transcript_id, function(tmp) 
-					return(matOutTmp$strand[order(as.numeric(matOutTmp$begin),
-						decreasing=FALSE)])
-				))),
-			int_ex=as.character(unlist(tapply(1:nrow(matOutTmp), 
-				matOutTmp$transcript_id, function(tmp) 
-					return(matOutTmp$int_ex[order(as.numeric(matOutTmp$begin),
-						decreasing=FALSE)])
-				))),
-			int_ex_num=as.numeric(unlist(tapply(1:nrow(matOutTmp), 
-				matOutTmp$transcript_id, function(tmp) 
-					return(c(rep(1:trunc(length(tmp)/2),each=2), 
-						trunc(length(tmp)/2)))
-				))),
-			collapsed_transcripts_id= matOutTmp$collapsed_transcripts_id,
-			stringsAsFactors=FALSE)
 
+		matOut=matOutTmp
+		
 		if(annotateGeneIds){
 			trGenesTx<- GenomicFeatures::transcriptsBy(human.txdb, by="gene")
 			trGenesVec= unlist(lapply(1:length(trGenesTx), function(tmp)

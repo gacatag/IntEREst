@@ -46,7 +46,7 @@ getAnnotation(mdsChr22Obj)
 head(scaledRetention(mdsChr22Obj))
 
 #for row and column data SummarizedExperiment methods can be used
-rowData(mdsChr22Obj)
+head(rowData(mdsChr22Obj))
 colData(mdsChr22Obj)
 
 }

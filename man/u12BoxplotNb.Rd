@@ -93,10 +93,10 @@ Returns NULL
 \examples{
 
 u12BoxplotNb(mdsChr22Obj, sampleAnnoCol="type", lasNames=1,
-    intExCol="int_ex", intTypeCol="int_type", intronExon="intron", 
+    intExCol="int_ex", intTypeCol="intron_type", intronExon="intron", 
     boxplotNames=c(), outline=FALSE, plotLegend=TRUE, 
-    geneIdCol="ens_gene_id", xLegend="topleft", 
-    col=c("pink", "lightblue", "lightyellow"), ylim=c(0,1e+06), 
+    geneIdCol="collapsed_transcripts_id", xLegend="topleft", 
+    col=c("pink", "lightblue", "lightyellow"), ylim=c(0,600000), 
     ylab="FPKM", cex.axis=0.8)
 
 }

@@ -111,14 +111,14 @@ function(
 			IntRet=InterestResult(resultFiles=outFile, 
 				counts=matrix(tmpDat[,(ncol(reference)+1)], ncol=1), 
 				scaledRetention=matrix(tmpDat[,(ncol(reference)+2)], ncol=1), 
-				scaleLength=scaleLength[method="IntRet"], 
-				scaleFragment=scaleFragment[method="IntRet"], 
+				scaleLength=scaleLength[method=="IntRet"], 
+				scaleFragment=scaleFragment[method=="IntRet"], 
 				rowData=tmpDat[, 1:ncol(reference)]), 
 			ExEx=InterestResult(resultFiles=outFile, 
 				counts=matrix(tmpDat[,(ncol(reference)+3)], ncol=1), 
 				scaledRetention=matrix(tmpDat[,(ncol(reference)+4)], ncol=1), 
-				scaleLength=scaleLength[method="ExEx"], 
-				scaleFragment=scaleFragment[method="ExEx"], 
+				scaleLength=scaleLength[method=="ExEx"], 
+				scaleFragment=scaleFragment[method=="ExEx"], 
 				rowData=tmpDat[, 1:ncol(reference)]) )
 	}
 	time2=Sys.time()

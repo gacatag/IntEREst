@@ -37,22 +37,22 @@ column names it will be added as a new column.
 
 test<- mdsChr22Obj
 # See the the frequency of each intron type annotation
-table(rowData(test)$int_type)
+table(rowData(test)$intron_type)
 
-#Change the ambiguous (U12/U2) cases to U2
-newIntType<- rowData(test)$int_type
-newIntType[newIntType=="U12/U2" & 
-	!is.na(newIntType=="U12/U2")]<- "U2"
+#Change U2 to u2
+newIntType<- as.character(rowData(test)$intron_type)
+newIntType[newIntType=="U2" & 
+	!is.na(newIntType=="U2")]<- "u2"
 #Updating values
-test<- updateRowDataCol(test, updateCol="int_type", 
+test<- updateRowDataCol(test, updateCol="intron_type", 
 	value=newIntType)
 #See the frequency of the updated intron type annotations
-table(rowData(test)$int_type)
+table(rowData(test)$intron_type)
 
 #Adding a new column
 test<- updateRowDataCol(test, updateCol="new_column", 
 	value=rep(NA, nrow(rowData(test))) )
-rowData(test)[1,]
+head(rowData(test))
 
 }
 

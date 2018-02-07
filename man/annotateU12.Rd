@@ -77,7 +77,9 @@ can be assigned which each shows the match score to use for each PWM in
 
 \item{refGenome}{
 The reference genome; Object of class BSgenome. Use \code{available.genome()} 
-from the \code{BSgenome} package to see the available genomes.}
+from the \code{BSgenome} package to see the available genomes. 
+\code{DNAStringSet} objects (from \code{Biostrings} package) and fasta files 
+are also accepted as input.}
 
 \item{setNaAs}{
 Defines that if reference (e.g. intron) did not match any of U12 or U2 type 

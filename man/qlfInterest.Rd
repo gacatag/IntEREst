@@ -69,5 +69,6 @@ qlfRes<- qlfInterest(x=mdsChr22Obj,
 	design=model.matrix(~group), silent=TRUE, 
 	disp="tagwiseInitTrended", coef=2:3, contrast=NULL)
 
+qlfRes
 }
 

@@ -78,6 +78,94 @@ information."
 			}) 
 		lenMatchInd=sapply(matchInd,length)
 
+	} else if (as.character(class(refGenome)) == "DNAStringSet"){
+
+		# Check if only intron sequences should be checked for U12 annotation 
+		if(length(intronExon)==1){
+			# Check whether an upstream or downstream window is NOT defined for 
+			#the PWM matching
+			if((!is.na(matchWindowRelativePos[1])) & 
+				(!is.na(matchWindowRelativePos[2]))){
+				tmpGr<- GenomicRanges::GRanges (
+					referenceChr[referenceIntronExon==intronExon], 
+					IRanges((referencePos+(matchWindowRelativePos[1]))[
+						referenceIntronExon==intronExon],
+						(referencePos+matchWindowRelativePos[2])[
+						referenceIntronExon==intronExon]))
+
+				seqIntEx=as.character(Biostrings::getSeq(refGenome, 
+					tmpGr))
+			# Check whether an upstream or downstream window is defined for the 
+			#PWM matching
+			} else {
+				tmpGr<- GenomicRanges::GRanges (
+					referenceChr[referenceIntronExon==intronExon], 
+					IRanges(
+						(referencePos-(pwmSsIndex-1))[
+							referenceIntronExon==intronExon],
+						(referencePos+(ncol(pwm)-pwmSsIndex))[
+							referenceIntronExon==intronExon]))
+
+				seqIntEx=as.character(Biostrings::getSeq(refGenome, 
+					tmpGr))
+			}
+		# Check if all (intron and exon) sequences should be checked for 
+		#U12 annotation  
+		} else if ( length(which(intronExon=="intron"))==1 & 
+			length(which(intronExon=="exon"))==1 ) {
+			
+			if((!is.na(matchWindowRelativePos[1])) & 
+				(!is.na(matchWindowRelativePos[2]))){
+				# run if upstream or downstream windows are NOT defined for the 
+				#PWM matching
+				tmpGr<-  GenomicRanges::GRanges (
+					referenceChr[referenceIntronExon==intronExon[1] | 
+						referenceIntronExon==intronExon[2]], 
+					IRanges(
+						(referencePos+(matchWindowRelativePos[1]))[
+						referenceIntronExon==intronExon[1] |
+							referenceIntronExon==intronExon[2]],
+						(referencePos+matchWindowRelativePos[2])[
+						referenceIntronExon==intronExon[1] | 
+							referenceIntronExon==intronExon[2]]))
+
+				seqIntEx=as.character(Biostrings::getSeq(refGenome, 
+					tmpGr))
+			} else {
+				# run if upstream or downstream windows are defined for the 
+				#PWM matching
+				tmpGr<-  GenomicRanges::GRanges (
+					referenceChr[referenceIntronExon==intronExon[1] | 
+						referenceIntronExon==intronExon[2]], 
+					IRanges(
+						(referencePos-(pwmSsIndex-1))[
+						referenceIntronExon==intronExon[1] | 
+							referenceIntronExon==intronExon[2]],
+						(referencePos+(ncol(pwm)-pwmSsIndex))[
+						referenceIntronExon==intronExon[1] | 
+							referenceIntronExon==intronExon[2]]))
+
+
+				seqIntEx=as.character(Biostrings::getSeq(refGenome, 
+					tmpGr))
+			}
+
+
+		} else {
+			msg<- 
+"Invalid intronExon parameter. Check ?matchPwmToReference for more 
+information."
+			stop(msg)
+		}
+
+		matchInd= lapply(seqIntEx, function(tmp) { 
+			test=Biostrings::matchPWM(pwm, tmp, min.score=minMatchScore,
+				with.score=TRUE)
+			return( unlist(GenomicRanges::ranges(test)))
+			}) 
+		lenMatchInd=sapply(matchInd,length)
+
+
 	} else if (file.exists(refGenome)) {
 		#Run if reference genome sequence is a fasta file
 		fa=seqinr::read.fasta(file = refGenome)
