@@ -2,6 +2,15 @@
 \title{IntEREst News}
 \encoding{UTF-8}
 
+\section{Version 1.3.2}{\itemize{
+
+\item
+Improve vignette document.
+
+\item
+Description corrected.
+}}
+
 
 \section{Version 1.3.1}{\itemize{
 \item
@@ -22,4 +31,5 @@ eBayesInterest() removed.
 \item
 Improve vignette document.
 }}
+
 
