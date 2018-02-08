@@ -3,7 +3,17 @@
 \encoding{UTF-8}
 
 
-\section{Version 1.3.1}{\itemize{
+\section{Version 1.2.2}{\itemize{
+
+\item
+Improve vignette document.
+
+\item
+Description corrected.
+}}
+
+
+\section{Version 1.2.1}{\itemize{
 \item
 Psi value calculation function, i.e. psi(), is added.
 
@@ -22,4 +32,3 @@ eBayesInterest() removed.
 \item
 Improve vignette document.
 }}
-

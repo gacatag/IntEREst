@@ -58,12 +58,12 @@ knitr::include_graphics("../inst/fig/IntEREst.png")
 ## Creating reference {#refChr}
 The first step is to build a reference which will be used for the summarization
 of the sequencing reads, and for downstream intron retention and/or exon-exon 
-junction anaysis. This can be carried out by referencePrepare the function. The
+junction analysis. This can be carried out by referencePrepare the function. The
 resulted reference includes coordinates of introns and exons of the genes and 
 they can be extracted from various sources i.e. UCSC, biomaRt or a user defined
 file (e.g. GFF3/GTF). The exons with overlapping genomic coordinates can be 
 collapsed (if `collapseExons` parameter is set as `TRUE`) to avoid assigning 
-reads mapping to any altrenatively skipped exons to their oevrlapping introns. 
+reads mapping to any alternatively skipped exons to their overlapping introns. 
 An example of the process is shown in *figure 2*.
 <br>
 ```{r collapseExons, out.width = 500, ppi=100, fig.retina = NULL, fig.align="center", echo=FALSE, eval=TRUE, fig.cap="**Figure 2:** Running reference isoforms a, b, c and d leads to gene A with exons that are results of collapsing of exons of all isoforms." }
@@ -123,7 +123,7 @@ splicing machinery. U12-type introns also feature evolutionary conserved splice
 sites which are distinguished from the splice sites of U2 type introns hence 
 they can be detected by mapping a position weigh matrix (PWM) to their spice 
 sites and measuring their match score based on the PWM. The following scripts
-reannotates introns of the genes RHBDD2 and YBX2.
+re-annotates introns of the genes RHBDD2 and YBX2.
 <br>
 ```{r annotate_u12, out.width = 500, echo=TRUE, eval=TRUE }
 # Improting genome
@@ -311,7 +311,14 @@ objects have been listed in the `readme.txt` file in `scripts` folder of the
 The `mdsChr22Obj` object is a `summarizedExperiment` object that includes 
 retention levels of the introns of the genes located in the Chromosome 22 that
 feature at least one U12-type intron, across the 16 MDS samples. The
-`mdsChr22ExObj` object contain the exon-exon junction levels.
+`mdsChr22ExObj` object contain the exon-exon junction levels. They include two
+assays: counts and scaledRetention. Both can be accessed using functions with
+the same names: `counts()` and `scaledRetention()`. The former (counts) returns
+a data frame which includes the read counts of each intron/exon in each 
+sample, and the latter (scaledRetention) returns a data frame with similar 
+dimensions that includes the FPKM normalized read counts. The result objects
+also include intron/exon and sample annotations that can be retrieved using
+`rowData()` and `colData()` functions.
 
 <br>
 ```{r view_object, out.width = 500, echo=TRUE, eval=TRUE }
@@ -321,6 +328,20 @@ suppressMessages(library("IntEREst"))
 mdsChr22Obj
 
 mdsChr22ExObj
+
+
+# See read counts
+head(counts(mdsChr22Obj))
+
+# See FPKM Normalized values
+head(scaledRetention(mdsChr22Obj))
+
+# See intron/exon annotations
+head(rowData(mdsChr22Obj))
+
+# See sample annotations
+head(colData(mdsChr22Obj))
+
 
 ```
 <br>
