@@ -74,9 +74,9 @@ information."
 		matchInd= lapply(seqIntEx, function(tmp) { 
 			test=Biostrings::matchPWM(pwm, tmp, min.score=minMatchScore,
 				with.score=TRUE)
-			return( unlist(GenomicRanges::ranges(test)))
+			return( length(GenomicRanges::ranges(test)))
 			}) 
-		lenMatchInd=sapply(matchInd,length)
+		lenMatchInd=matchInd
 
 	} else if (as.character(class(refGenome)) == "DNAStringSet"){
 
@@ -161,9 +161,9 @@ information."
 		matchInd= lapply(seqIntEx, function(tmp) { 
 			test=Biostrings::matchPWM(pwm, tmp, min.score=minMatchScore,
 				with.score=TRUE)
-			return( unlist(GenomicRanges::ranges(test)))
+			return( length(GenomicRanges::ranges(test)))
 			}) 
-		lenMatchInd=sapply(matchInd,length)
+		lenMatchInd=matchInd
 
 
 	} else if (file.exists(refGenome)) {
@@ -237,9 +237,9 @@ information."
 		matchInd= lapply(seqIntEx, function(tmp) { 
 			test=Biostrings::matchPWM(pwm, tmp, min.score=minMatchScore, 
 				with.score=TRUE)
-			return( unlist(GenomicRanges::ranges(test)))
+			return( length(GenomicRanges::ranges(test)))
 			}) 
-		lenMatchInd=sapply(matchInd,length)
+		lenMatchInd=matchInd
 
 
 	}

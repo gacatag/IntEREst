@@ -2,34 +2,46 @@
 \title{IntEREst News}
 \encoding{UTF-8}
 
-\section{Version 1.3.2}{\itemize{
+\section{CHANGES IN VERSION 1.4.0}{
 
-\item
-Improve vignette document.
+	\subsection{NEW FEATURES}{
 
-\item
-Description corrected.
-}}
+		\itemize{
+
+			\item \code{psi()} function is added. It calculates Psi values.
+
+			\item \code{annotateU12()} fucntion supports DNAStringSet objects 
+			as its \code{refGenome} input.
+
+			\item Improved vignette document.
 
 
-\section{Version 1.3.1}{\itemize{
-\item
-Psi value calculation function, i.e. psi(), is added.
+		}
+	}
 
-\item
-referencePrepare() function improved; It is optimized to run faster.
+	\subsection{SIGNIFICANT USER-VISIBLE CHANGES}{
 
-\item
-annotateU12() fucntion supports DNAStringSet objects as its refGenome input.
+		\itemize{
 
-\item
-Minor corrections to interest.sequential() and interest().
+			\item \code{eBayesInterest()} removed.
 
-\item
-eBayesInterest() removed.
+		}
+	}
 
-\item
-Improve vignette document.
-}}
+	\subsection{BUG FIXES}{
+
+		\itemize{
+
+		\item \code{interest.sequential()} and \code{interest()} corrections
+		to their object output option.
+
+		\item \code{annotateU12()} modified to work correctly with the new 
+		changes in \code{Biostrings} package.
+
+		}
+	}
+}
+
+
 
 
