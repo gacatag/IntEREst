@@ -114,6 +114,9 @@ function(
 			BPPARAM=bpparam)
 	}
 	
+	resPair<-rep(0, nrow(reference)*length(method))
+	resSingle<-rep(0, nrow(reference)*length(method))
+
 	if(isPaired)
 		resPair<-Reduce("+", resTmpPair)
 

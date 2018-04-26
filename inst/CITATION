@@ -1,0 +1,18 @@
+citHeader("To cite IntEREst in publications please use:")
+
+citEntry(entry="article",
+	title= "IntEREst: intron-exon retention estimator",
+	author= personList( as.person("Oghabian, A."),
+		as.person("Greco, D."),
+		as.person("Frilander, M. J.")),
+	year= 2018,
+	journal= "BMC Bioinformatics",
+	doi= "10.1186/s12859-018-2122-5",
+	volume= 19,
+	issue= 1,
+	pages= 130,
+		Month= "Apr", 
+         textVersion = 
+         paste("Oghabian, A., Greco, D., Frilander, M. J.", 
+               "IntEREst: intron-exon retention estimator",
+                "BMC Bioinformatics 11;19(1):130 (2018)" ) )

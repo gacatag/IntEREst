@@ -126,7 +126,7 @@ refExDf<- unionRefTr(referenceChr= refseqUncollapsed[,"chr"],
 
 
 # Creating temp directory to store the results
-outDir<- file.path(tempdir(),"interest_sequential_results")
+outDir<- file.path(tempdir(),"interest_exex_sequential_results")
 dir.create(outDir)
 outDir<- normalizePath(outDir)
 
@@ -190,3 +190,68 @@ exOverlap<- findOverlaps(mdsExRefObjGr, trChooseGr, type="any")
 mdsChr22ExObj<- mdsExRefObj[unique(queryHits(exOverlap)),]
 save(mdsChr22ExObj,file=paste(args[2],"mdsChr22ExObj.rda",sep="/"))
 
+
+### INTRON-SPAN MEASUREMENT
+
+library(BiocParallel)
+outDir<- "/netapp/ali/interestRun/MDS/intSpan/"
+dir.create(outDir)
+
+for(i in 1:length(MDS_BAMFILES)){
+	print(paste(i, length(MDS_BAMFILES), sep="/"))
+    dir.create(paste(outDir, names(MDS_BAMFILES)[i],
+        sep="/"), recursive = TRUE)
+   interest(
+        bamFileYieldSize=1000000,
+        bamFile=MDS_BAMFILES[i],
+        isPaired=TRUE,
+        isPairedDuplicate=FALSE,
+        isSingleReadDuplicate=NA,
+        reference=refseqRef,
+        referenceGeneNames=refseqRef[,"collapsed_transcripts_id"],
+        referenceIntronExon=refseqRef[,"int_ex"],
+        repeatsTableToFilter= c(),
+        junctionReadsOnly=FALSE,
+        outFile=paste(outDir, names(MDS_BAMFILES)[i], 
+            "interestRes.tsv", sep="/"),
+        logFile=paste(outDir, names(MDS_BAMFILES)[i], 
+			"log.txt", sep="/"),
+		method="IntSpan",
+        bpparam=SnowParam(workers=35),
+        returnObj=FALSE, 
+        scaleLength= TRUE, 
+        scaleFragment= TRUE
+    )
+}
+
+# Reading the intron retention results
+# and build SummarizedExperiment object
+mdsRefIntSpObj<-readInterestResults(
+    resultFiles=paste(outDir, names(MDS_BAMFILES), 
+            "exExRes.tsv", sep="/"), 
+    sampleNames=names(MDS_BAMFILES), 
+    sampleAnnotation=data.frame( 
+        type=c(rep("ZRSR2mut",8), rep("ZRSR2wt",4), rep("HEALTHY",4)),
+        test_ctrl=c(rep("test",8), rep("ctrl",8))), 
+    commonColumns=1:5, freqCol=6, scaledRetentionCol=7,
+    scaleLength=FALSE, scaleFragment=TRUE, reScale=FALSE, 
+    geneIdCol="transcripts_id")
+
+
+# Choose U12 genes on chromosome 22 only
+trChooseGr<- GRanges(
+	tapply(rowData(mdsChr22Obj)$chr,rowData(mdsChr22Obj)$
+		collapsed_transcripts_id,unique),
+    IRanges(tapply(rowData(mdsChr22Obj)$begin,rowData(mdsChr22Obj)$
+		collapsed_transcripts_id,min),
+        tapply(rowData(mdsChr22Obj)$end,rowData(mdsChr22Obj)$
+			collapsed_transcripts_id,max)))
+
+mdsRefIntSpObjGr<- GRanges(rowData(mdsRefIntSpObj)$chr,
+    IRanges(rowData(mdsRefIntSpObj)$begin,
+        rowData(mdsRefIntSpObj)$end))
+
+intSpOverlap<- findOverlaps(mdsRefIntSpObjGr, trChooseGr, type="any")
+mdsChr22IntSpObj<- mdsRefIntSpObj[unique(queryHits(intSpOverlap)),]
+
+save(mdsChr22IntSpObj,file=paste(args[2],"mdsChr22IntSpObj.rda",sep="/"))

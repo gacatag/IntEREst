@@ -75,7 +75,7 @@ information."
 			test=Biostrings::matchPWM(pwm, tmp, min.score=minMatchScore,
 				with.score=TRUE)
 			return( length(GenomicRanges::ranges(test)))
-			}) 
+			})
 		lenMatchInd=matchInd
 
 	} else if (as.character(class(refGenome)) == "DNAStringSet"){

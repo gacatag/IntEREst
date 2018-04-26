@@ -73,7 +73,7 @@ interestSummarise <-function(
 	reference,
 	referenceIntronExon,
 	inAnRes,
-	method=c("IntRet","ExEx"),
+	method=c("IntRet","ExEx", "IntSpan"),
 	referenceGeneNames,
 	outFile,
 	logFile="",
@@ -109,9 +109,11 @@ interestSummarise <-function(
 	writeResults=FALSE
 	intExInd=which(method=="IntRet")
 	exExInd=which(method=="ExEx")
+	intSpanInd=which(method=="IntSpan")
 
 	inAnMat<- matrix(inAnRes, 
-		ncol=length(which(c(length(intExInd)>0, length(exExInd)>0))), 
+		ncol=length(which(c(length(intExInd)>0, length(exExInd)>0, 
+			length(intSpanInd)>0))), 
 			byrow=FALSE)
 
 	if(length(intExInd)>0){
@@ -171,6 +173,35 @@ interestSummarise <-function(
 		res=cbind(res, resTmp)
 		colnames(res)[ncol(res)]="ExEx_genewide_scaled"
 	}
+	if(length(intSpanInd)>0){
+		ref=reference[which(referenceIntronExon=="intron"),]
+
+		# Calculate the corrected length
+		
+		lenRef=correctLengthRepeat(ref, repeatsTableToFilter)
+		writeResults=TRUE
+		res<- cbind(res, inAnMat[ , intSpanInd])
+		colnames(res)[ncol(res)]="IntSpan_frequency"
+		msg<-
+"IntERESt:interestSummarise: Normalizing intron retention read levels.\n"
+		if(logFile!="")
+			cat( msg, file=logFile, append=TRUE)
+		cat(msg)
+		frq<- inAnMat[ which(referenceIntronExon=="intron"), intSpanInd]
+		referenceGeneNamesTmp<- as.character(referenceGeneNames[
+			referenceIntronExon=="intron"])
+		geneCnt<- tapply(frq,referenceGeneNamesTmp,sum)
+		FPKM=frq
+		if(scaleFragment[intSpanInd])
+			FPKM=((10^6)*frq)/(as.numeric(geneCnt[referenceGeneNamesTmp])+1)
+		if(scaleLength[intSpanInd])
+			FPKM=((10^3)*FPKM)/lenRef
+
+		resTmp=rep(0,nrow(reference))
+		resTmp[referenceIntronExon=="intron"]=as.numeric(FPKM)
+		res=cbind(res, resTmp)
+		colnames(res)[ncol(res)]="IntSpan_genewide_scaled"
+	} 
 
 
 
@@ -178,7 +209,8 @@ interestSummarise <-function(
 		write.table(res, outFile, col.names=TRUE, row.names=FALSE, sep='\t', 
 			quote=FALSE)
 	} else {
-		stop('wrong method setting. The correct values are "IntRet" and "ExEx".'
+		stop(
+'wrong method setting. The correct values are "IntRet", "ExEx", and "IntSpan".'
 			)
 	}
 }

@@ -10,7 +10,7 @@ interest( bamFileYieldSize=1000000, bamFile, isPaired,
 	isPairedDuplicate=FALSE, isSingleReadDuplicate= NA, reference, 
 	referenceGeneNames, referenceIntronExon, repeatsTableToFilter=c(),
 	junctionReadsOnly=FALSE, outFile, logFile="", 
-	returnObj= FALSE, method=c("IntRet","ExEx"), 
+	returnObj= FALSE, method=c("IntRet", "ExEx", "IntSpan"), 
 	clusterNo=NULL, bpparam, appendLogFile=FALSE, sampleName="",
 	scaleLength= c(TRUE,FALSE), scaleFragment= c(TRUE,TRUE))
 }
@@ -50,9 +50,10 @@ to the described regions would be ingnored and the Intron/exon lengths would be
 corrected to exclude the to exclude the regions with repetitive DNA sequences. 
 See \code{\link{getRepeatTable}}.}
 \item{junctionReadsOnly}{
-Whether only consider the Intron-Exon or Exon-Exon junction reads and ignore 
-the reads that fully map to exons or introns. By default this argument is set 
-as FALSE.}
+The parameter is considered if the \code{method} is set as \code{IntRet} or 
+\code{ExEx} (NOT \code{IntSpan}). It declares whether only consider the 
+Intron-Exon or Exon-Exon junction reads and ignore the reads that fully map to 
+exons or introns. By default this argument is set as FALSE.}
 \item{outFile}{The name or path of the result file. }
 \item{logFile}{
 The log file path; if defined log information are written to the log file. }
@@ -60,9 +61,12 @@ The log file path; if defined log information are written to the log file. }
 If set \code{TRUE} in addition to making result text files, the results would 
 also be returned as an object of class \code{SummarizedExperiment}.}
 \item{method}{
-A vector describing the methods to use; i.e. whether estimate Intron retention 
-(\code{"IntRet"}) or Exon-Exon junction (\code{"ExEx"}) levels or both. By 
-default it returns both.}
+A vector describing the summarization methods to use; i.e. whether count reads 
+mapping to the introns (\code{IntRet}), reads mapping to the exons 
+(\code{ExEx}), or reads spanning the introns (\code{IntSpan}). In 
+\code{IntSpan} mode the introns in the reference are taken into account only; 
+while in \code{IntRet} the introns and their spanning exons, and in \code{ExEx}
+mode only the exons in the reference are taken into account.}
 \item{clusterNo}{
 Number of parallel cluster nodes. As default (clusterNo=NULL) the total number 
 of CPUs that are available in the cluster would be used.}
@@ -76,11 +80,11 @@ The name of the sample being analyzed. It will be included in the returned
 object if \code{returnObj} is \code{TRUE}.}
 \item{scaleLength}{
 A vector constructed of TRUE/FALSE values, same size as the 
-\code{method argument}. It indcates whether the retention levels of the 
+\code{method} argument. It indcates whether the retention levels of the 
 intron/exons should be scaled to their lengths.}
 \item{scaleFragment}{
 A vector constructed of TRUE/FALSE values, same size as the 
-\code{method argument}. It indcates whether the retention levels of the 
+\code{method} argument. It indcates whether the retention levels of the 
 intron/exons should be scaled to the sum of retention levels (i.e. mapped 
 fragments) over the genes.}
 }
@@ -125,7 +129,7 @@ test= interest(
 	    "interestRes.tsv", sep="/"),
 	logFile=paste(outDir, 
 	    "log.txt", sep="/"),
-	method=c("IntRet","ExEx"),
+	method=c("IntRet", "IntSpan"),
 	junctionReadsOnly=FALSE,
 	clusterNo=1,
 	returnObj=TRUE, 

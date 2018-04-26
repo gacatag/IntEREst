@@ -13,12 +13,15 @@ function(
 	outFile,
 	logFile="",
 	returnObj=FALSE,
-	method=c("IntRet","ExEx"),
+	method=c("IntRet","ExEx","IntSpan"),
 	appendLogFile=FALSE,
 	sampleName=c(), 
 	scaleLength= c(TRUE,FALSE), 
 	scaleFragment= c(TRUE,TRUE)){
-
+	method=unique(method)
+	if(length(which( ! method %in% c("IntRet", "ExEx", "IntSpan")))!=0)
+		stop(paste("Unknown method:", 
+			method[! method %in% c("IntRet", "ExEx", "IntSpan")], sep=" "))
 	time1=Sys.time()
 
 	if(logFile!=""){
@@ -105,21 +108,53 @@ function(
 
 
 
-	} else if (returnObj & length(method)==2){
-		tmpDat<- read.table(outFile, header=TRUE, stringsAsFactors=FALSE)
-		resObj= list(
-			IntRet=InterestResult(resultFiles=outFile, 
-				counts=matrix(tmpDat[,(ncol(reference)+1)], ncol=1), 
-				scaledRetention=matrix(tmpDat[,(ncol(reference)+2)], ncol=1), 
-				scaleLength=scaleLength[method=="IntRet"], 
-				scaleFragment=scaleFragment[method=="IntRet"], 
-				rowData=tmpDat[, 1:ncol(reference)]), 
-			ExEx=InterestResult(resultFiles=outFile, 
-				counts=matrix(tmpDat[,(ncol(reference)+3)], ncol=1), 
-				scaledRetention=matrix(tmpDat[,(ncol(reference)+4)], ncol=1), 
-				scaleLength=scaleLength[method=="ExEx"], 
-				scaleFragment=scaleFragment[method=="ExEx"], 
-				rowData=tmpDat[, 1:ncol(reference)]) )
+	} else if (returnObj & length(method)>1 & 
+		length(which( ! method %in% c("IntRet", "ExEx", "IntSpan")))==0){
+		resObj<- list()
+		if("IntRet" %in% method){
+
+			tmpDat<- read.table(outFile, header=TRUE, stringsAsFactors=FALSE)
+			
+			resObj<- c(resObj, list(
+				IntRet=InterestResult(resultFiles=outFile, 
+					counts=matrix(tmpDat[,(ncol(reference)+1)], ncol=1), 
+					scaledRetention=matrix(tmpDat[,(ncol(reference)+2)], ncol=1), 
+					scaleLength=scaleLength[method=="IntRet"], 
+					scaleFragment=scaleFragment[method=="IntRet"], 
+					rowData=tmpDat[, 1:ncol(reference)]) 
+			))
+		}
+		if("ExEx" %in% method){
+			indFrq<- 3
+			if(!"IntRet"%in%method)
+				indFrq<- 1
+			tmpDat<- read.table(outFile, header=TRUE, stringsAsFactors=FALSE)
+			resObj<- c(resObj, list(
+				IntSpan=InterestResult(resultFiles=outFile, 
+					counts=matrix(tmpDat[,(ncol(reference)+indFrq)], ncol=1), 
+					scaledRetention=
+						matrix(tmpDat[,(ncol(reference)+indFrq+1)], ncol=1), 
+					scaleLength=scaleLength[method=="ExEx"], 
+					scaleFragment=scaleFragment[method=="ExEx"], 
+					rowData=tmpDat[, 1:ncol(reference)]) 
+			))
+		}		
+		if("IntSpan" %in% method){
+			indFrq<- 3
+			if(length(method)==3)
+				indFrq<-5
+			tmpDat<- read.table(outFile, header=TRUE, stringsAsFactors=FALSE)
+			resObj<- c(resObj, list(
+				ExEx=InterestResult(resultFiles=outFile, 
+					counts=matrix(tmpDat[,(ncol(reference)+indFrq)], ncol=1), 
+					scaledRetention=
+						matrix(tmpDat[,(ncol(reference)+indFrq+1)], ncol=1), 
+					scaleLength=scaleLength[method=="IntSpan"], 
+					scaleFragment=scaleFragment[method=="IntSpan"], 
+					rowData=tmpDat[, 1:ncol(reference)]) 
+			))
+		}
+
 	}
 	time2=Sys.time()
 	runTime=difftime(time2,time1, units="secs")

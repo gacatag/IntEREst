@@ -8,6 +8,10 @@
 
 		\itemize{
 
+			\item \code{interest()} and \code{interest.sequential()} functions 
+			now support \code{"IntSpan"} method, allows counting intron-
+			spanning reads.
+
 			\item \code{psi()} function is added. It calculates Psi values.
 
 			\item \code{annotateU12()} fucntion supports DNAStringSet objects 
