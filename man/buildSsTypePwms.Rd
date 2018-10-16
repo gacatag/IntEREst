@@ -11,7 +11,12 @@ sequence logos of the results. The result is a list that contains PWMs of the
 splice sites of U12 and U2 dependent introns.}
 \usage{
 buildSsTypePwms( cexSeqLogo=1, pdfWidth=35, pdfHeight=10, tmpDir="./",
-	u12dbSpecies="Homo_sapiens", pwmSource="U12DB", 
+	u12dbSpecies="Homo_sapiens", 
+	pwmSource="U12DB", 
+	u12DonorBegin, u12BranchpointBegin, u12AcceptorBegin, 
+	u2DonorBegin, u2AcceptorBegin, u12DonorEnd, 
+	u12BranchpointEnd, u12AcceptorEnd, u2DonorEnd, 
+	u2AcceptorEnd, pasteSites=FALSE,
 	splicerackSsLinks=list(
 		U12_AT_AC_donor=
 			"http://katahdin.mssm.edu/splice/out/9606_logo_file.25", 
@@ -50,11 +55,27 @@ What species data to use when  getting the data from the U12DB database
 The source used to buildSplice Sites of U12 and U2 type introns the PWM for U12
 and U2 dependent introns. Default is \code{U12DB}; but also accepts 
 \code{SpliceRack}. }
+\item{u12DonorBegin, u12DonorEnd}{Integer values. They correspond to the begin 
+and end point of the donor sequences of U12-type introns to consider 
+(optional).}
+\item{u12BranchpointBegin, u12BranchpointEnd}{Integer values. Begin and end 
+points of the branch point sequences of U12-type introns (optional).} 
+\item{u12AcceptorBegin, u12AcceptorEnd}{Integer values. Begin and end points of
+the acceptor sequences of U12-type introns (optional).}
+\item{u2DonorBegin, u2DonorEnd}{Integer values. Begin and end points of the 
+donor sequences of U2-type introns (optional).} 
+\item{u2AcceptorBegin, u2AcceptorEnd}{Integer values. Begin and end points of 
+the acceptor sequences of U2-type introns (optional).} 
+\item{pasteSites}{Logical. If TRUE the donor, branch point and acceptor seqs 
+are pasted before a PWM is built; then the PWMs of each (donor, acceptor and 
+bp) are assigned. If FALSE (default) the PWMs for each is built separately.}
 \item{splicerackSsLinks}{
 A list (or vector) that contains the SpliceRack URL links to the text files 
 that contain Position Weigh Matrices of the splice sites of U12 and U2 introns.
-This parameter is used only when pwmSource="SpliceRack". The links should  be
-defined in the following order: \code{U12_AT_AC_donor}, 
+This parameter is used only when pwmSource="SpliceRack". You can get the links
+to PWM files from this URL (choose logo files with "File" links): 
+\url{http://katahdin.mssm.edu/splice/splice_matrix.cgi?database=spliceNew}.
+The links should  be defined in the following order: \code{U12_AT_AC_donor}, 
 \code{U12_AT_AC_branchpoint}, \code{U12_AT_AC_acceptor},
 \code{U12_GT_AG_donor}, \code{U12_GT_AG_branchpoint}, 
 \code{U12_GT_AG_acceptor}, \code{U2_GC_AG_donor}, \code{U2_GC_AG_acceptor}, 

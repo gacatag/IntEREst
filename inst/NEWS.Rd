@@ -2,6 +2,39 @@
 \title{IntEREst News}
 \encoding{UTF-8}
 
+\section{CHANGES IN VERSION 1.5.2}{
+
+	\subsection{NEW FEATURES}{
+
+		\itemize{
+
+			\item \code{buildSsTypePwms()} function supports the possibility 
+			to select begin and end point of splice sites sequences from which
+			PWMs are built. It also supports the possibility to paste splice 
+			sites to build PWM.
+
+	
+
+		}
+	}
+
+	\subsection{BUG FIXES}{
+
+		\itemize{
+
+		\item \code{interest.sequential()} and \code{interest()} corrections
+		to their object output option.
+
+		\item \code{annotateU12()} modified to work correctly with the new 
+		changes in \code{Biostrings} package.
+
+		\item \code{buildSsTypePwms()} corrected and modified to better suit 
+		data for all species from SpliceRack and U12DB.
+
+		}
+	}
+}
+
 \section{CHANGES IN VERSION 1.4.0}{
 
 	\subsection{NEW FEATURES}{
