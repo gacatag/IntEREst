@@ -53,8 +53,10 @@ and U2 dependent introns. Default is \code{U12DB}; but also accepts
 \item{splicerackSsLinks}{
 A list (or vector) that contains the SpliceRack URL links to the text files 
 that contain Position Weigh Matrices of the splice sites of U12 and U2 introns.
-This parameter is used only when pwmSource="SpliceRack". The links should  be
-defined in the following order: \code{U12_AT_AC_donor}, 
+This parameter is used only when pwmSource="SpliceRack". You can get the links
+to PWM files from this URL (choose logo files with "File" links): 
+\url{http://katahdin.mssm.edu/splice/splice_matrix.cgi?database=spliceNew}.
+The links should  be defined in the following order: \code{U12_AT_AC_donor}, 
 \code{U12_AT_AC_branchpoint}, \code{U12_AT_AC_acceptor},
 \code{U12_GT_AG_donor}, \code{U12_GT_AG_branchpoint}, 
 \code{U12_GT_AG_acceptor}, \code{U2_GC_AG_donor}, \code{U2_GC_AG_acceptor}, 

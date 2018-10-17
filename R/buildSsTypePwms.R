@@ -84,13 +84,58 @@ buildSsTypePwms<-function(
 
 
 
+		rowDifDonU12<- nrow(donGtagU12)-nrow(donAtacU12)
+		rowDifAccU12<- nrow(accGtagU12)-nrow(accAtacU12)
+		rowDifBpU12<- nrow(bpGtagU12)-nrow(bpAtacU12)
+
+		rowDifDonU2<- nrow(donGtagU2)-nrow(donGcagU2)
+		rowDifAccU2<- nrow(accGtagU2)-nrow(accGcagU2)
+
+		if(rowDifDonU12>0){
+			donAtacU12<- rbind(donAtacU12, matrix(rep(.25, 4*rowDifDonU12), 
+				nrow=rowDifDonU12) )
+		} else if(rowDifDonU12<0){
+			donGtagU12<- rbind(donGtagU12, matrix(rep(.25, 4*rowDifDonU12), 
+				nrow=abs(rowDifDonU12)) )
+		}
+
+		if(rowDifAccU12>0){
+			accAtacU12<- rbind(accAtacU12, matrix(rep(.25, 4*rowDifAccU12), 
+				nrow=rowDifAccU12) )
+		} else if(rowDifAccU12<0){
+			accGtagU12<- rbind(accGtagU12, matrix(rep(.25, 4*rowDifAccU12), 
+				nrow=abs(rowDifAccU12)) )
+		}
+
+		if(rowDifBpU12>0){
+			bpAtacU12<- rbind(bpAtacU12, matrix(rep(.25, 4*rowDifBpU12), 
+				nrow=rowDifBpU12) )
+		} else if(rowDifBpU12<0){
+			bpGtagU12<- rbind(bpGtagU12, matrix(rep(.25, 4*rowDifBpU12), 
+				nrow=abs(rowDifBpU12)) )
+		}
+		if(rowDifDonU2>0){
+			donGcagU2<- rbind(donGcagU2, matrix(rep(.25, 4*rowDifDonU2), 
+				nrow=rowDifDonU2) )
+		} else if(rowDifDonU2<0){
+			donGtagU2<- rbind(donGtagU2, matrix(rep(.25, 4*rowDifDonU2), 
+				nrow=abs(rowDifDonU2)) )
+		}
+		if(rowDifAccU2>0){
+			accGcagU2<- rbind(accGcagU2, matrix(rep(.25, 4*rowDifAccU2), 
+				nrow=rowDifAccU2) )
+		} else if(rowDifAccU2<0){
+			accGtagU2<- rbind(accGtagU2, matrix(rep(.25, 4*rowDifAccU2), 
+				nrow=abs(rowDifAccU2)) )
+		}
+
+
 		donU12=t((donAtacU12+donGtagU12)/2)
-		accU12=t((rbind(accAtacU12,rep(.25,4))+accGtagU12)/2)
+		accU12=t((accAtacU12+accGtagU12)/2)
 		bpU12=t((bpAtacU12+bpGtagU12)/2)
 
-		donU2=t((rbind(donGtagU2,rep(.25,4))+donGcagU2)/2)
-		accU2=t((rbind(accGtagU2,rep(.25,4))+accGcagU2)/2)
-
+		donU2=t((donGtagU2+donGcagU2)/2)
+		accU2=t((accGtagU2+accGcagU2)/2)
 	
 		# Plotting sequence logos
 
@@ -137,9 +182,11 @@ buildSsTypePwms<-function(
 			dev.off()
 		}
 
-		res=list(pwmDonorU12=unitScale(donU12), pwmBpU12=unitScale(bpU12), 
-			pwmAccU12=unitScale(accU12), pwmDonU2=unitScale(donU2), 
-			pwmAccU2=unitScale(accU2))
+		res=list(pwmDonorU12=Biostrings::unitScale(donU12), 
+			pwmBpU12=Biostrings::unitScale(bpU12), 
+			pwmAccU12=Biostrings::unitScale(accU12), 
+			pwmDonU2=Biostrings::unitScale(donU2), 
+			pwmAccU2=Biostrings::unitScale(accU2))
 
 		if(removeTempFiles){
 			file.remove(c(paste(tmpDir, "AT_AC_U12_Don.txt", sep="/"), 
@@ -223,7 +270,13 @@ buildSsTypePwms<-function(
 
 		accStrU2=acceptor[acceptor[,"type"]=="U2","seq"]
 		donStrU2=donor[donor[,"type"]=="U2","seq"]
+#Filter Sequences includng characters other than A, C, G and T
+		donStrU12<- donStrU12[grep("^[A|C|G|T]+$",donStrU12)]
+		bpStrU12<- bpStrU12[grep("^[A|C|G|T]+$",bpStrU12)]
+		accStrU12<- accStrU12[grep("^[A|C|G|T]+$",accStrU12)]
 
+		donStrU2<- donStrU2[grep("^[A|C|G|T]+$",donStrU2)]
+		accStrU2<- accStrU2[grep("^[A|C|G|T]+$",accStrU2)]
 		pwmDonU12=Biostrings::PWM(donStrU12)
 		pwmBpU12=Biostrings::PWM(bpStrU12)
 		pwmAccU12=Biostrings::PWM(accStrU12)
