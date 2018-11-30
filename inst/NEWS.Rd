@@ -2,7 +2,7 @@
 \title{IntEREst News}
 \encoding{UTF-8}
 
-\section{CHANGES IN VERSION 1.5.2}{
+\section{CHANGES IN VERSION 1.6.0}{
 
 	\subsection{NEW FEATURES}{
 
