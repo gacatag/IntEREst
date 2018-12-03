@@ -1,6 +1,6 @@
 Package: IntEREst
 Title: Intron-Exon Retention Estimator
-Version: 1.7.0
+Version: 1.7.1
 Date: 2016-12-15
 Author: Ali Oghabian <Ali.Oghabian@Helsinki.Fi>, Dario Greco
         <dario.greco@helsinki.fi>, Mikko Frilander
@@ -19,6 +19,6 @@ VignetteBuilder: knitr
 LazyData: true
 biocViews: Software, AlternativeSplicing, Coverage,
         DifferentialSplicing, Sequencing, RNASeq, Alignment,
-        Normalization, DifferentialExpression
+        Normalization, DifferentialExpression, ImmunoOncology
 License: GPL-2
 NeedsCompilation: no
