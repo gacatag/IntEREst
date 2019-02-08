@@ -12,7 +12,7 @@ interest( bamFileYieldSize=1000000, bamFile, isPaired,
 	junctionReadsOnly=FALSE, outFile, logFile="", 
 	returnObj= FALSE, method=c("IntRet", "ExEx", "IntSpan"), 
 	clusterNo=NULL, bpparam, appendLogFile=FALSE, sampleName="",
-	scaleLength= c(TRUE,FALSE), scaleFragment= c(TRUE,TRUE))
+	scaleLength= c(TRUE,FALSE), scaleFragment= c(TRUE,TRUE), ...)
 }
 \arguments{
 \item{bamFileYieldSize}{
@@ -87,6 +87,11 @@ A vector constructed of TRUE/FALSE values, same size as the
 \code{method} argument. It indcates whether the retention levels of the 
 intron/exons should be scaled to the sum of retention levels (i.e. mapped 
 fragments) over the genes.}
+\item{...}{
+Other parameter settings specific to \code{\link[Rsamtools]{BamFile}} function 
+in the \code{Rsamtools} package. Parameters \code{qnamePrefixEnd} and 
+\code{qnameSuffixStart} are in particular useful to modify qnames in the BAM 
+files.}
 }
 \value{
 If \code{returnObj} is set \code{TRUE} in addition to making result text files,

@@ -189,20 +189,25 @@ function( outFileTranscriptsAnnotation="",
 
 		if(annotateGeneIds){
 			trGenesTx<- GenomicFeatures::transcriptsBy(human.txdb, by="gene")
-			trGenesVec=unlist(lapply(1:length(trGenesTx), function(tmp)
-				paste(names(trGenesTx)[tmp], 
-					trGenesTx[[tmp]]$tx_name,sep=",")))
-			trGenes=unlist(strsplit(trGenesVec,split=","))[
-				seq(from=1,by=2,length.out=length(trGenesVec))]
-			names(trGenes)=unlist(strsplit(trGenesVec,split=","))[
-				seq(from=2,by=2,length.out=length(trGenesVec))]
+			if(length(trGenesTx)>0){
+				trGenesVec=unlist(lapply(1:length(trGenesTx), function(tmp)
+					paste(names(trGenesTx)[tmp], 
+						trGenesTx[[tmp]]$tx_name,sep=",")))
+				trGenes=unlist(strsplit(trGenesVec,split=","))[
+					seq(from=1,by=2,length.out=length(trGenesVec))]
+				names(trGenes)=unlist(strsplit(trGenesVec,split=","))[
+					seq(from=2,by=2,length.out=length(trGenesVec))]
 	
-			gene_ids= unlist(sapply(trAnnoCollList, function(tmp)
-				paste(unique(trGenes[tmp]), collapse=',')))
-			names(gene_ids)= 
-				as.character(unique(matOut[,"collapsed_transcripts_id"]))
-			matOut$collapsed_gene_id=
-				gene_ids[as.character(matOut[,"collapsed_transcripts_id"])]
+				gene_ids= unlist(sapply(trAnnoCollList, function(tmp)
+					paste(unique(trGenes[tmp]), collapse=',')))
+				names(gene_ids)= 
+					as.character(unique(matOut[,"collapsed_transcripts_id"]))
+				matOut$collapsed_gene_id=
+					gene_ids[as.character(matOut[,"collapsed_transcripts_id"])]
+			} else{
+				warning("Gene annotations were NOT available !")
+				annotateGeneIds=FALSE
+			}
 		}
 
 		if(outFileTranscriptsAnnotation!=""){
@@ -276,22 +281,27 @@ function( outFileTranscriptsAnnotation="",
 		
 		if(annotateGeneIds){
 			trGenesTx<- GenomicFeatures::transcriptsBy(human.txdb, by="gene")
-			trGenesVec= unlist(lapply(1:length(trGenesTx), function(tmp)
-				paste(names(trGenesTx)[tmp], trGenesTx[[tmp]]$tx_name,
-					sep=",")))
+			if(length(trGenesTx)>0){
+				trGenesVec= unlist(lapply(1:length(trGenesTx), function(tmp)
+					paste(names(trGenesTx)[tmp], trGenesTx[[tmp]]$tx_name,
+						sep=",")))
 
-			trGenes= unlist(strsplit(trGenesVec,split=","))[
-				seq(from=1,by=2,length.out=length(trGenesVec))]
-			names(trGenes)= unlist(strsplit(trGenesVec,split=","))[
-				seq(from=2,by=2,length.out=length(trGenesVec))]
+				trGenes= unlist(strsplit(trGenesVec,split=","))[
+					seq(from=1,by=2,length.out=length(trGenesVec))]
+				names(trGenes)= unlist(strsplit(trGenesVec,split=","))[
+					seq(from=2,by=2,length.out=length(trGenesVec))]
 	
-			matOut$gene_id= trGenes[as.character(matOut[,"transcript_id"])]
-
-			if(outFileTranscriptsAnnotation!="")
-				write.table(cbind(names(trGenes),as.vector(trGenes)), 
-					outFileTranscriptsAnnotation, sep='\t', quote=FALSE, 
-					col.names=c("transcript_id", "collapsed_transcripts"), 
-					row.names=FALSE)
+				matOut$gene_id= trGenes[as.character(matOut[,"transcript_id"])]
+	
+				if(outFileTranscriptsAnnotation!="")
+					write.table(cbind(names(trGenes),as.vector(trGenes)), 
+						outFileTranscriptsAnnotation, sep='\t', quote=FALSE, 
+						col.names=c("transcript_id", "collapsed_transcripts"), 
+						row.names=FALSE)
+			} else {
+				warning("Gene annotations were NOT available !")
+				annotateGeneIds<-FALSE
+			}
 
 		}
 #end else

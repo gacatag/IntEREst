@@ -2,6 +2,38 @@
 \title{IntEREst News}
 \encoding{UTF-8}
 
+
+\section{CHANGES IN VERSION 1.8.0}{
+
+	\subsection{NEW FEATURES}{
+
+		\itemize{
+
+			\item \code{interest()} and \code{interest.sequential()} functions 
+			support the possibility to define other parameter settings of 
+			\code{BamFile()} function of \code{Rsamtools} package e.g. 
+			"qnamePrefixEnd" and "qnameSuffixStart".
+
+		}
+	}
+
+	\subsection{BUG FIXES}{
+
+		\itemize{
+
+			\item \code{referencePrepare()} just gives warning and continue
+			without annotating gene names (when \code{annotateGeneIds=TRUE}
+			parameter is set) if annotating with gene names is not
+			possible.
+
+			\item \code{interest()} used to return Error if single end mapped 
+			reads did not existed at all (despite being requetsed). This has 
+			been corrected.
+
+		}
+	}
+}
+
 \section{CHANGES IN VERSION 1.6.0}{
 
 	\subsection{NEW FEATURES}{
@@ -13,8 +45,6 @@
 			PWMs are built. It also supports the possibility to paste splice 
 			sites to build PWM.
 
-	
-
 		}
 	}
 
@@ -22,14 +52,14 @@
 
 		\itemize{
 
-		\item \code{interest.sequential()} and \code{interest()} corrections
-		to their object output option.
+			\item \code{interest.sequential()} and \code{interest()}: 
+			corrections	to their object output option.
+	
+			\item \code{annotateU12()} modified to work correctly with the new 
+			changes in \code{Biostrings} package.
 
-		\item \code{annotateU12()} modified to work correctly with the new 
-		changes in \code{Biostrings} package.
-
-		\item \code{buildSsTypePwms()} corrected and modified to better suit 
-		data for all species from SpliceRack and U12DB.
+			\item \code{buildSsTypePwms()} corrected and modified to better 
+			suit data for all species from SpliceRack and U12DB.
 
 		}
 	}
@@ -69,11 +99,11 @@
 
 		\itemize{
 
-		\item \code{interest.sequential()} and \code{interest()} corrections
-		to their object output option.
+			\item \code{interest.sequential()} and \code{interest()}: 
+			corrections to their object output option.
 
-		\item \code{annotateU12()} modified to work correctly with the new 
-		changes in \code{Biostrings} package.
+			\item \code{annotateU12()} modified to work correctly with the new
+			changes in \code{Biostrings} package.
 
 		}
 	}

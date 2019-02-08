@@ -17,7 +17,8 @@ function(
 	appendLogFile=FALSE,
 	sampleName=c(), 
 	scaleLength= c(TRUE,FALSE), 
-	scaleFragment= c(TRUE,TRUE)){
+	scaleFragment= c(TRUE,TRUE),
+	... ){
 	method=unique(method)
 	if(length(which( ! method %in% c("IntRet", "ExEx", "IntSpan")))!=0)
 		stop(paste("Unknown method:", 
@@ -69,7 +70,8 @@ function(
 			referenceIntronExon=referenceIntronExon,
 			junctionReadsOnly=junctionReadsOnly,
 			isPairedDuplicate=isPairedDuplicate, 
-			isSingleReadDuplicate=isSingleReadDuplicate)
+			isSingleReadDuplicate=isSingleReadDuplicate,
+			...)
 
 
 

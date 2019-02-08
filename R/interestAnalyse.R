@@ -14,7 +14,8 @@ function(
 	junctionReadsOnly,
 	isPairedDuplicate,
 	isSingleReadDuplicate,
-	bpparam)
+	bpparam,
+	...)
 {
 
 #Paralle running impelementation
@@ -52,7 +53,7 @@ function(
 	if(isPaired){
 		# Defining connection to bam file
 		bf<- Rsamtools::BamFile(bamFile, yieldSize=yieldSize, 
-				asMates=TRUE )
+				asMates=TRUE, ... )
 		# Analyzing mapped paired reads together
 		scParam=Rsamtools::ScanBamParam(
 			what=Rsamtools::scanBamWhat()[c(1,
@@ -94,7 +95,7 @@ function(
 			BPPARAM=bpparam)
 	} else {
 		# Defining connection to bam file
-		bf<- Rsamtools::BamFile(bamFile, yieldSize=yieldSize)
+		bf<- Rsamtools::BamFile(bamFile, yieldSize=yieldSize, ...)
 		#Analyzing unpaired sequencing data
 		scParam=Rsamtools::ScanBamParam(
 			what=Rsamtools::scanBamWhat()[c(1,
@@ -119,10 +120,15 @@ function(
 	resPair<-rep(0, nrow(reference)*length(method))
 	resSingle<-rep(0, nrow(reference)*length(method))
 
-	if(isPaired)
+	
+	if(isPaired & (length(resTmpPair)>0)){
+		resTmpPair[sapply(resTmpPair, is.null)] <- NULL
 		resPair<-Reduce("+", resTmpPair)
-
-	resSingle<-Reduce("+", resTmpSingle)
+	}
+	if(length(resTmpSingle)>0){
+		resTmpSingle[sapply(resTmpSingle, is.null)] <- NULL
+		resSingle<-Reduce("+", resTmpSingle)
+	}
 
 	res<- resPair+resSingle
 

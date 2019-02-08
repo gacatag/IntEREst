@@ -10,7 +10,7 @@ function(
 	junctionReadsOnly=FALSE, outFile, logFile="",
 	returnObj=FALSE, method=c("IntRet", "ExEx", "IntSpan"),	clusterNo=NULL, 
 	bpparam, appendLogFile=FALSE, sampleName="", 
-	scaleLength= c(TRUE,FALSE), scaleFragment= c(TRUE,TRUE))
+	scaleLength= c(TRUE,FALSE), scaleFragment= c(TRUE,TRUE), ...)
 {
 
 
@@ -66,7 +66,7 @@ function(
 			junctionReadsOnly=junctionReadsOnly,
 			isPairedDuplicate=isPairedDuplicate, 
 			isSingleReadDuplicate=isSingleReadDuplicate,
-			bpparam=bpparam)
+			bpparam=bpparam, ...)
 	} else {
 		inAnRes<- interestAnalyse(
 			reference=reference,
@@ -82,7 +82,8 @@ function(
 			clusterNo=clusterNo,
 			junctionReadsOnly=junctionReadsOnly,
 			isPairedDuplicate=isPairedDuplicate, 
-			isSingleReadDuplicate=isSingleReadDuplicate)
+			isSingleReadDuplicate=isSingleReadDuplicate, 
+			...)
 
 	} 
 

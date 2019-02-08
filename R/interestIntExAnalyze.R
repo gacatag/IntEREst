@@ -18,7 +18,10 @@ interestIntExAnalysePair <- function(
 		"cigar")
 	colnames(sam2)<- c("qName","rName","strand","pos","qual",
 		"cigar")
-
+	if(logFile!="")
+		cat( "Analyzing paired reads, ID: ", sam1[1,"qName"], "\n", 
+			file=logFile, append=appendLogFile)
+	cat( "Analyzing paired reads, ID: ", sam1[1,"qName"], "\n")
 ######
 ######!!!
 	exExRes<- c()
@@ -411,6 +414,11 @@ interestIntExAnalyseSingle <- function(
 	colnames(sam1)<- c("qName","rName","strand","pos","qual",
 		"cigar")
 	sam2= NA
+
+	if(logFile!="")
+		cat( "Analyzing single reads, ID: ", sam1[1,"qName"], "\n", 
+			file=logFile, append=appendLogFile)
+	cat( "Analyzing single reads, ID: ", sam1[1,"qName"], "\n")
 
 ######
 ######!!!
