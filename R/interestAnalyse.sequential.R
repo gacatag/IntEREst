@@ -117,10 +117,14 @@ function(
 	resPair<-rep(0, nrow(reference)*length(method))
 	resSingle<-rep(0, nrow(reference)*length(method))
 
-	if(isPaired)
+	if(isPaired & (length(resTmpPair)>0)){
+		resTmpPair[sapply(resTmpPair, is.null)] <- NULL
 		resPair<-Reduce("+", resTmpPair)
-
-	resSingle<-Reduce("+", resTmpSingle)
+	}
+	if(length(resTmpSingle)>0){
+		resTmpSingle[sapply(resTmpSingle, is.null)] <- NULL
+		resSingle<-Reduce("+", resTmpSingle)
+	}
 
 	res<- resPair+resSingle
 
