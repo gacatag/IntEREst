@@ -14,6 +14,11 @@
 			\code{BamFile()} function of \code{Rsamtools} package e.g. 
 			"qnamePrefixEnd" and "qnameSuffixStart".
 
+			\item \code{annotateU12()} can return the PWM match scores (if 
+			requested). The hybrid AT-AG and GT-AC U12 types can be set to be
+			ignored. The introns/exons coordinates can be filtered according 
+			to their map to another set of coordinates.
+
 		}
 	}
 

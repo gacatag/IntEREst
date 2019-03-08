@@ -12,7 +12,8 @@ the sequences.  }
 annotateU12(pwmU12U2=c(), pwmSsIndex=c(), referenceChr, referenceBegin, 
 	referenceEnd, referenceIntronExon, intronExon='intron', 
 	matchWindowRelativeUpstreamPos=c() , matchWindowRelativeDownstreamPos=c(), 
-	minMatchScore='80\%', refGenome='', setNaAs='U2', annotateU12Subtype=TRUE)
+	minMatchScore='80\%', refGenome='', setNaAs='U2', annotateU12Subtype=TRUE, 
+	includeMatchScores=FALSE, ignoreHybrid=TRUE, filterReference)
 }
 \arguments{
 \item{pwmU12U2}{
@@ -92,12 +93,26 @@ NA or nan or 'U12/U2'.}
 
 \item{annotateU12Subtype}{Whether annotate the subtypes of the U12 type 
 Introns. The value is \code{TRUE} by default.}
+
+\item{includeMatchScores}{If set as TRUE the final data frame result includes
+the PWM match scores (FALSE by default).}
+
+\item{ignoreHybrid}{Whether ignore the U12 hybrid subtypes, i.e. GT-AC and 
+AT-AG (TRUE by default).}
+
+\item{filterReference}{Optional parameter that can be defined either as a 
+GRanges or SummarizedExperiment object. If defined as the latter, the first 3 
+columns of the rowData must be: chr name, start and end of the coordinates.
+If the parameter is defined the introns/exon coordinates will be mapped against
+it and the intron type of all those that do not match will be set as NA. }
+
 }
 \value{
  Data frame containing 3 columns representing (in order): intron type (U12, U2 
 or none), strand match indicating whether the PWM matches to the sequence 
 (+ strand) or the reverese complement of the sequence (- strand) or none (NA), 
-and the U12 subtype (GT-AG or AT-AC).
+and the U12 subtype (GT-AG or AT-AC). If includeMatchScores is set as TRUE 
+further columns that include the PWM match scores will also be included.
 }
 \seealso{
   \code{\link{buildSsTypePwms}}.

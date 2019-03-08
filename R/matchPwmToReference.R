@@ -74,9 +74,20 @@ information."
 		matchInd= lapply(seqIntEx, function(tmp) { 
 			test=Biostrings::matchPWM(pwm, tmp, min.score=minMatchScore,
 				with.score=TRUE)
-			return( length(GenomicRanges::ranges(test)))
+			return( list(len=length(GenomicRanges::ranges(test)), 
+				score=max(S4Vectors::mcols(test)$score)) )
 			})
-		lenMatchInd=matchInd
+
+		lenMatchInd<- 
+			as.vector(unlist(sapply(matchInd, function(tmp) return(tmp$len))))
+		matchScore<- rep(0,length(lenMatchInd))
+		matchScoreTmp<-as.vector(unlist(sapply(matchInd, function(tmp) 
+			return(tmp$score))))
+		validInd<- which(!is.na(matchScoreTmp)& !is.infinite(matchScoreTmp) & 
+					!is.null(matchScoreTmp))
+		if(length(which(lenMatchInd>0))>0)
+			matchScore[which(lenMatchInd>0)]<- matchScoreTmp[validInd]
+
 
 	} else if (as.character(class(refGenome)) == "DNAStringSet"){
 
@@ -161,9 +172,19 @@ information."
 		matchInd= lapply(seqIntEx, function(tmp) { 
 			test=Biostrings::matchPWM(pwm, tmp, min.score=minMatchScore,
 				with.score=TRUE)
-			return( length(GenomicRanges::ranges(test)))
+			return( list(len=length(GenomicRanges::ranges(test)), 
+				score=S4Vectors::mcols(test)$score) )
 			}) 
-		lenMatchInd=matchInd
+
+		lenMatchInd<- 
+			as.vector(unlist(sapply(matchInd, function(tmp) return(tmp$len))))
+		matchScore<- rep(0,length(lenMatchInd))
+		matchScoreTmp<-as.vector(unlist(sapply(matchInd, function(tmp) 
+			return(tmp$score))))
+		validInd<- which(!is.na(matchScoreTmp)& !is.infinite(matchScoreTmp) & 
+					!is.null(matchScoreTmp))
+		if(length(which(lenMatchInd>0))>0)
+			matchScore[which(lenMatchInd>0)]<- matchScoreTmp[validInd]
 
 
 	} else if (file.exists(refGenome)) {
@@ -237,9 +258,20 @@ information."
 		matchInd= lapply(seqIntEx, function(tmp) { 
 			test=Biostrings::matchPWM(pwm, tmp, min.score=minMatchScore, 
 				with.score=TRUE)
-			return( length(GenomicRanges::ranges(test)))
+			return( list(len=length(GenomicRanges::ranges(test)), 
+				score=S4Vectors::mcols(test)$score) )
 			}) 
-		lenMatchInd=matchInd
+
+		lenMatchInd<- 
+			as.vector(unlist(sapply(matchInd, function(tmp) return(tmp$len))))
+		matchScore<- rep(0,length(lenMatchInd))
+		matchScoreTmp<-as.vector(unlist(sapply(matchInd, function(tmp) 
+			return(tmp$score))))
+		validInd<- which(!is.na(matchScoreTmp)& !is.infinite(matchScoreTmp) & 
+					!is.null(matchScoreTmp))
+		if(length(which(lenMatchInd>0))>0)
+			matchScore[which(lenMatchInd>0)]<- matchScoreTmp[validInd]
+
 
 
 	}
@@ -247,13 +279,7 @@ information."
 
 	pwmMatchBool=lenMatchInd>0
 
-	pwmMatchScore=unlist(sapply(matchInd, function(tmp) 
-		if(length(tmp)>0){
-			return(tmp[1])
-		} else {
-			return(0)
-		}))
-	res=data.frame(pwmMatchBool=pwmMatchBool, pwmMatchScore=pwmMatchScore)
+	res=data.frame(pwmMatchBool=pwmMatchBool, pwmMatchScore=matchScore)
 	return(res)
 
 }
