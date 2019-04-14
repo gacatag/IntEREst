@@ -10,7 +10,8 @@ annotateU12<-function(
 
 	if(!missing(filterReference)){
 		if(as.character(class(filterReference))=="SummarizedExperiment"){
-			filterReference<- SummarizedExperiment::rowData(query)[,1:3]
+			filterReference<- 
+				SummarizedExperiment::rowData(filterReference)[,1:3]
 			filterReference<- 
 				GenomicRanges::GRanges (as.character(filterReference[,1]), 
 					IRanges::IRanges(as.numeric(filterReference[,2]), 

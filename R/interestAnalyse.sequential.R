@@ -15,7 +15,8 @@ function(
 	isSingleReadDuplicate,
 	...)
 {
-
+	resTmpPair<-c()
+	resTmpSingle<- c()
 #Paralle running impelementation
 	if(logFile!=""){
 		cat( "InERESt:interestAnalyse: Begins ...\n", file=logFile, 
