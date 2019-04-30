@@ -9,7 +9,7 @@ psi<- function(x, y, intCol, exCol, pseudoCnt=0){
 		counts(y)[,
 			exCol]
 
-	psiRes<- (xCnt)/(xCnt+yCnt+pseudoCnt)
+	psiRes<- (xCnt)/(xCnt+(yCnt*2)+pseudoCnt)
 	return (psiRes)
 
 }

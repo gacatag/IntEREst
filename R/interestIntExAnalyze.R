@@ -181,7 +181,7 @@ interestIntExAnalysePair <- function(
 	
 		}	
 		methodNo=which(method=="IntRet")
-		if(length(methodNo)>0){
+		if((length(methodNo)>0) & (! junctionReadsOnly)){
 
 			ref=reference[which(referenceIntronExon=="intron"),]
 			readGRanges=GenomicRanges::GRanges( seqnames=chrVec, 
@@ -205,14 +205,6 @@ interestIntExAnalysePair <- function(
 					S4Vectors::queryHits(hitsFilter))))
 				hits=hits[filtInd,]
 			}
-			# Filter reads mapped completely to Either introns or exons
-			if(junctionReadsOnly){
-				hitsFilter= GenomicRanges::findOverlaps(readGRanges, 
-					refGRanges, type= "within")
-				filtInd=which(is.na(match(S4Vectors::queryHits(hits), 
-					S4Vectors::queryHits(hitsFilter))))
-				hits=hits[filtInd,]
-			}
 			refRes= rep(0,nrow(ref))
 			if(length(S4Vectors::queryHits(hits))>0){
 				hitsApply=tapply(noVec[S4Vectors::queryHits(hits)], 
@@ -223,6 +215,55 @@ interestIntExAnalysePair <- function(
 			intRetRes<- rep(0,nrow(reference))
 			intRetRes[which(referenceIntronExon=="intron")]<- refRes
 	
+		} else if ((length(methodNo)>0) & (junctionReadsOnly)) {
+			ref=reference[which(referenceIntronExon=="intron"),]
+			readGRanges=GenomicRanges::GRanges( seqnames=chrVec, 
+				IRanges::IRanges(start=begVec, end=endVec))
+			refEndGRanges= GenomicRanges::GRanges( seqnames=ref[,"chr"], 
+				IRanges::IRanges(start=ref[,"end"], end=ref[,"end"]))
+			refBegGRanges= GenomicRanges::GRanges( seqnames=ref[,"chr"], 
+				IRanges::IRanges(start=ref[,"begin"], end=ref[,"begin"]))
+			hitsEnd <- GenomicRanges::findOverlaps(refEndGRanges, readGRanges,
+				type= "within")
+			hitsBeg <- GenomicRanges::findOverlaps(refBegGRanges, readGRanges,
+				type= "within")
+			# Filter reads mapped to repeats regions if requested
+			if(length(repeatsTableToFilter)!=0){
+				repeatGRanges= GenomicRanges::GRanges( 
+					seqnames=repeatsTableToFilter[,"chr"], 
+					IRanges::IRanges(start=repeatsTableToFilter[,"begin"],
+						end=repeatsTableToFilter[,"end"], 
+						width=repeatsTableToFilter[,"end"]-
+							repeatsTableToFilter[,"begin"]+1))
+				hitsFilter= GenomicRanges::findOverlaps(readGRanges, 
+					repeatGRanges, type= "any")
+				filtEndInd= which(is.na(match(S4Vectors::subjectHits(hitsEnd), 
+					S4Vectors::queryHits(hitsFilter))))
+				filtBegInd= which(is.na(match(S4Vectors::subjectHits(hitsBeg), 
+					S4Vectors::queryHits(hitsFilter))))
+				hitsEnd=hitsEnd[filtEndInd,]
+				hitsBeg=hitsBeg[filtBegInd,]
+			}
+
+			refRes= rep(0,nrow(ref))
+			refResBeg= refRes
+			refResEnd= refRes
+			if( (length(S4Vectors::subjectHits(hitsBeg))>0) | 
+				(length(S4Vectors::subjectHits(hitsEnd))>0) ){
+				hitsEndApply=tapply(noVec[S4Vectors::subjectHits(hitsEnd)], 
+					S4Vectors::queryHits(hitsEnd), 
+					function(tmp) return(length(unique(tmp))) )
+				hitsBegApply=tapply(noVec[S4Vectors::subjectHits(hitsBeg)], 
+					S4Vectors::queryHits(hitsBeg), 
+					function(tmp) return(length(unique(tmp))) )
+				refResBeg[as.numeric(names(hitsBegApply))]= 
+					as.numeric(hitsBegApply)
+				refResEnd[as.numeric(names(hitsEndApply))]= 
+					as.numeric(hitsEndApply)
+				refRes=refResBeg+refResEnd
+			}
+			intRetRes<- rep(0,nrow(reference))
+			intRetRes[which(referenceIntronExon=="intron")]<- refRes
 		}
 ########
 ########!!!
@@ -551,7 +592,7 @@ interestIntExAnalyseSingle <- function(
 	
 		}
 		methodNo=which(method=="IntRet")
-		if(length(methodNo)>0){
+		if((length(methodNo)>0) & (! junctionReadsOnly)){
 	
 			ref=reference[which(referenceIntronExon=="intron"),]
 			readGRanges=GenomicRanges::GRanges( seqnames=chrVec, 
@@ -576,13 +617,6 @@ interestIntExAnalyseSingle <- function(
 				hits=hits[filtInd,]
 			}
 			# Filter reads mapped completely to Either introns or exons
-			if(junctionReadsOnly){
-				hitsFilter= GenomicRanges::findOverlaps(readGRanges, 
-					refGRanges, type= "within")
-				filtInd=which(is.na(match(S4Vectors::queryHits(hits), 
-					S4Vectors::queryHits(hitsFilter))))
-				hits=hits[filtInd,]
-			}
 			refRes= rep(0,nrow(ref))
 			if(length(S4Vectors::queryHits(hits))>0){
 				hitsApply=tapply(noVec[S4Vectors::queryHits(hits)], 
@@ -593,6 +627,55 @@ interestIntExAnalyseSingle <- function(
 			intRetRes<- rep(0,nrow(reference))
 			intRetRes[which(referenceIntronExon=="intron")]<- refRes
 	
+		} else if ((length(methodNo)>0) & (junctionReadsOnly)) {
+			ref=reference[which(referenceIntronExon=="intron"),]
+			readGRanges=GenomicRanges::GRanges( seqnames=chrVec, 
+				IRanges::IRanges(start=begVec, end=endVec))
+			refEndGRanges= GenomicRanges::GRanges( seqnames=ref[,"chr"], 
+				IRanges::IRanges(start=ref[,"end"], end=ref[,"end"]))
+			refBegGRanges= GenomicRanges::GRanges( seqnames=ref[,"chr"], 
+				IRanges::IRanges(start=ref[,"begin"], end=ref[,"begin"]))
+			hitsEnd <- GenomicRanges::findOverlaps(refEndGRanges, readGRanges,
+				type= "within")
+			hitsBeg <- GenomicRanges::findOverlaps(refBegGRanges, readGRanges,
+				type= "within")
+			# Filter reads mapped to repeats regions if requested
+			if(length(repeatsTableToFilter)!=0){
+				repeatGRanges= GenomicRanges::GRanges( 
+					seqnames=repeatsTableToFilter[,"chr"], 
+					IRanges::IRanges(start=repeatsTableToFilter[,"begin"],
+						end=repeatsTableToFilter[,"end"], 
+						width=repeatsTableToFilter[,"end"]-
+							repeatsTableToFilter[,"begin"]+1))
+				hitsFilter= GenomicRanges::findOverlaps(readGRanges, 
+					repeatGRanges, type= "any")
+				filtEndInd= which(is.na(match(S4Vectors::subjectHits(hitsEnd), 
+					S4Vectors::queryHits(hitsFilter))))
+				filtBegInd= which(is.na(match(S4Vectors::subjectHits(hitsBeg), 
+					S4Vectors::queryHits(hitsFilter))))
+				hitsEnd=hitsEnd[filtEndInd,]
+				hitsBeg=hitsBeg[filtBegInd,]
+			}
+
+			refRes= rep(0,nrow(ref))
+			refResBeg= refRes
+			refResEnd= refRes
+			if( (length(S4Vectors::subjectHits(hitsBeg))>0) | 
+				(length(S4Vectors::subjectHits(hitsEnd))>0) ){
+				hitsEndApply=tapply(noVec[S4Vectors::subjectHits(hitsEnd)], 
+					S4Vectors::queryHits(hitsEnd), 
+					function(tmp) return(length(unique(tmp))) )
+				hitsBegApply=tapply(noVec[S4Vectors::subjectHits(hitsBeg)], 
+					S4Vectors::queryHits(hitsBeg), 
+					function(tmp) return(length(unique(tmp))) )
+				refResBeg[as.numeric(names(hitsBegApply))]= 
+					as.numeric(hitsBegApply)
+				refResEnd[as.numeric(names(hitsEndApply))]= 
+					as.numeric(hitsEndApply)
+				refRes=refResBeg+refResEnd
+			}
+			intRetRes<- rep(0,nrow(reference))
+			intRetRes[which(referenceIntronExon=="intron")]<- refRes
 		}
 ########
 ########!!!

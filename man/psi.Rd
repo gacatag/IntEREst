@@ -4,8 +4,10 @@
 	Psi values estimation
 }
 \description{
-Calculating Psi values (percentage spliced in) base on two count matrices from 
-a single or two separate objects.  
+Calculating the relative inclusion level of intron or Psi values base on two 
+count matrices from a single or two separate objects. The values for each 
+intron is in the range of [0,1], where 0 means complete splicing or no 
+retention of the intron and 1 represnet complete 100% retention of the intron.
 }
 \usage{
 psi (x, y, intCol, exCol, pseudoCnt=0)
