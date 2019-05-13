@@ -617,16 +617,15 @@ the U12-type introns are higher compared to the U2-type.
 ## Our recommended pipeline for differential intron retention analysis {#difanalysis}
 After building the reference as described in the test scripts 
 [above](#readSum), we recommend running `interest()` (or 
-`interest.sequential()`) twice: once in intron retention mode with 
-`method="IntRet"` and `junctionReadsOnly= FALSE` parameter settings; and 
-subsequentlay in intron spanning mode with `method="IntSpan"` setting (as 
-IntEREst now support counting of Intron-spanning reads). Two example 
-`SummarizedExperiment` objects that were resulted from Intron-retention and 
-Intron-spanning modes of `interest()` test runs are mdsChr22Obj and 
-mdsChr22ExObj. These two objects are limited to genes on chr22 that feature at 
-least one U12 type intron. As shown in the scripts we recommend merging the 
-intron-retention and intron-spanning objects and running the `deseqIntEREst()` 
-as shown:
+`interest.sequential()`) twice: once on the reference with uncollapsed exons 
+and with `method="IntSpan"` setting (whcih results to the intron-spanning 
+object). and subsequently on the reference with collapsed exons and 
+with `method="IntRet"` parameter setting. Next, use 
+`applyOverlap(query, subject, type="within", replaceValues=TRUE, FUN=sum)` to 
+map the reference with collpased exon to the reference with uncollapsed exon 
+and sum the read-count levels accordingly (whcih results to the intron-mapping 
+object). cbind the 2 objects and continue as the exmple shown below to detect 
+the significantly differential retained introns.
 
 ```{r downstreamExample, echo = TRUE, eval=TRUE, message = FALSE, fig.width=6, fig.height=4, fig.align="center"}
 mdsChr22RefIntRetSpObj<- cbind(mdsChr22Obj, mdsChr22IntSpObj)
@@ -657,5 +656,14 @@ table(rowData(mdsChr22RefIntRetSpIntFilObj)$intron_type[mdsChr22UpIntInd])
 100*table(rowData(mdsChr22RefIntRetSpIntFilObj)$intron_type[mdsChr22UpIntInd])/
 	table(rowData(mdsChr22RefIntRetSpIntFilObj)$intron_type)
 ```
+
+Note that the two `SummarizedExperiment` objects mentioned above (i.e. 
+`mdsChr22Obj` and `mdsChr22ExObj`) were the results of running interest() in 
+"IntRet" and "IntSpan" modes on the exon-collapsed reference. As the names 
+suggest these two objects are limited to the U12 intron containing genes on 
+chr22. The described pipeline, analyzes the variation of the intron mapping 
+reads relative to the variation of the intron spanning reads  across the 
+studied conditions whilst excluding the reads that map to exons that overlap 
+the studying intronic regions. 
 
 ## References

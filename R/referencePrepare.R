@@ -307,8 +307,8 @@ function( outFileTranscriptsAnnotation="",
 #end else
 	}
 
-	if(sourceBuild=="biomaRt")
-		matOut[,"chr"]=paste("chr",matOut[,"chr"],sep="")
+	#if(sourceBuild=="biomaRt")
+	#	matOut[,"chr"]=paste("chr",matOut[,"chr"],sep="")
 
 	if( ( (length(u12IntronsChr)>0 & length(u12IntronsBeg)>0 & 
 		length(u12IntronsEnd)>0)|(!missing(u12IntronsRef)) ) ){

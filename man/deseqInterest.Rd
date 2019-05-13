@@ -18,7 +18,7 @@ deseqInterest (x, design, pAdjustMethod = "BH",
 Formula specifying the design of the experiment. It must specify an interaction
 term between variables from column names of \code{sampleData(x)}.}
 \item{pAdjustMethod}{
-What adjustment method to be sed on the p-values. See \code{\link{p.adjust}} 
+What adjustment method to be sed on the p-values. See \link[stats]{p.adjust} 
 for more information.}
 \item{sizeFactor}{
 Numeric vector with the same size as the clolumn size of the count matrix in 
@@ -32,7 +32,7 @@ information.
 parallel back-end to be used. If not defined the function will run 
 sequentially (on a single computing core).}
 \item{...}{
-Other parameter settings for the \code{\link[DESeq2]{results}} function 
+Other parameter settings for the \link[DESeq2]{results} function 
 in the \code{DESeq2} package.
 }
 }
