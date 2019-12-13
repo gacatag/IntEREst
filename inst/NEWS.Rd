@@ -2,6 +2,28 @@
 \title{IntEREst News}
 \encoding{UTF-8}
 
+\section{CHANGES IN VERSION 1.10.0}{
+
+	\subsection{NEW FEATURES}{
+
+		\itemize{
+
+			\item \code{applyOverlap()} Apply a function on counts of a 
+			\code{SummarizedExperiment} basd on the overlaps of its genome 
+			coordinates to with another \code{SummarizedExperiment}.
+		}
+	}
+
+	\subsection{BUG FIXES}{
+
+		\itemize{
+
+			\item \code{referencePrepare()} stopped from modifying chromosome 
+			names.I doesn't add "chr" to the beginning of chromosome names.
+
+		}
+	}
+}
 
 \section{CHANGES IN VERSION 1.8.0}{
 
