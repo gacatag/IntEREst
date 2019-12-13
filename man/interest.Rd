@@ -88,8 +88,8 @@ A vector constructed of TRUE/FALSE values, same size as the
 intron/exons should be scaled to the sum of retention levels (i.e. mapped 
 fragments) over the genes.}
 \item{...}{
-Other parameter settings specific to \code{\link[Rsamtools]{BamFile}} function 
-in the \code{Rsamtools} package. Parameters \code{qnamePrefixEnd} and 
+Other parameter settings specific to \code{\link[Rsamtools]{BamFile-class}} 
+function in the \code{Rsamtools} package. Parameters \code{qnamePrefixEnd} and 
 \code{qnameSuffixStart} are in particular useful to modify qnames in the BAM 
 files.}
 }

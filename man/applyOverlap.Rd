@@ -33,7 +33,7 @@ SummarizedExperiment objects resulted by \code{interest()},
 
 \item{type}{
 The type of overlap. By default it considers any overlap. See
-\link[IRanges]{findOverlaps} for more info.}
+\link[IRanges]{findOverlaps-methods} for more info.}
 
 \item{replaceValues}{
 Whether return a 'SummarizedExperiment' object with new counts (resulted by 
