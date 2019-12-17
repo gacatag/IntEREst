@@ -4,6 +4,7 @@ date: "`r Sys.Date()`"
 author: "Ali Oghabian"
 contact: "ali.oghabian@helsinki.fi"
 output: rmarkdown::html_vignette
+bibliography: ref.bib
 vignette: >
   %\VignetteIndexEntry{IntEREst, Intron Exon Retention Estimator}
   %\VignetteEngine{knitr::rmarkdown}
