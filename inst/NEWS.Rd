@@ -8,7 +8,7 @@
 
                 \itemize{
 
-                        \item Replacing \code{class( x ) == "foo"} with \code{is( x , "foo")â} .
+                        \item Replacing \code{class( x ) == "foo"} with \code{is( x , "foo")} .
 
                 }
         }
