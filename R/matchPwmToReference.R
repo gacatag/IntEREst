@@ -3,7 +3,7 @@ matchPwmToReference<-function(pwm, pwmSsIndex=11, referenceChr, referencePos,
 	minMatchScore="80%", refGenome=""){
 
 	# Check if reference genome sequence is of BSgenome type
-	if (as.character(class(refGenome)) == "BSgenome"){
+	if (is(refGenome, "BSgenome")){
 
 		# Check if only intron sequences should be checked for U12 annotation 
 		if(length(intronExon)==1){
@@ -89,7 +89,7 @@ information."
 			matchScore[which(lenMatchInd>0)]<- matchScoreTmp[validInd]
 
 
-	} else if (as.character(class(refGenome)) == "DNAStringSet"){
+	} else if (is(refGenome, "DNAStringSet")){
 
 		# Check if only intron sequences should be checked for U12 annotation 
 		if(length(intronExon)==1){

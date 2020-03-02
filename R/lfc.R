@@ -3,7 +3,7 @@ lfc<-function(x, fcType="edgeR", sampleAnnoCol=c(), sampleAnnotation=c(),
 	log2=TRUE, ... )
 {
 	object=x
-	if(as.character(class(object))=="SummarizedExperiment"){
+	if(is(object,"SummarizedExperiment")){
 		if(fcType=="edgeR"){
 			testRes=exactTestInterest(x=object, sampleAnnoCol=sampleAnnoCol, 
 				sampleAnnotation=sampleAnnotation, silent=TRUE, group=group,

@@ -9,14 +9,14 @@ annotateU12<-function(
 {
 
 	if(!missing(filterReference)){
-		if(as.character(class(filterReference))=="SummarizedExperiment"){
+		if(is(filterReference,"SummarizedExperiment")){
 			filterReference<- 
 				SummarizedExperiment::rowData(filterReference)[,1:3]
 			filterReference<- 
 				GenomicRanges::GRanges (as.character(filterReference[,1]), 
 					IRanges::IRanges(as.numeric(filterReference[,2]), 
 						as.numeric(filterReference[,3])))
-		} else if (as.character(class(filterReference))!="GRanges"){
+		} else if (is(filterReference,"GRanges")){
 			stop(paste("The filterReference parameter should be either of",
 				"'SummarizedExperiment' or 'GRanges' type. For the former,", 
 				"i.e. SummarizedExperiment, the first 3 columns of the", 
@@ -168,7 +168,7 @@ annotateU12<-function(
 		accNegSeq<- rep(NA, nrow(res))
 		donNegSeqTmp<- rep(NA, nrow(res))
 		accNegSeqTmp<- rep(NA, nrow(res))
-		if (as.character(class(refGenome)) == "BSgenome"){
+		if (is(refGenome, "BSgenome")){
 			if(length(which(res[,2]=="+"))>0){
 				donPosSeq= Biostrings::getSeq(refGenome, 
 					names=referenceChr[which(!is.na(res[,1])&
@@ -217,7 +217,7 @@ annotateU12<-function(
 							res[,1]=="U12"&	res[,2]=="-")]+ 1,
 					as.character=TRUE)
 			}
-		} else if (as.character(class(refGenome)) == "DNAStringSet"){
+		} else if (is(refGenome, "DNAStringSet")){
 
 			if(length(which(res[,2]=="+"))>0){
 				tmpGr<- GenomicRanges::GRanges (

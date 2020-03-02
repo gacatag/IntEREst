@@ -18,7 +18,8 @@ function( outFileTranscriptsAnnotation="",
 {
 
 	if(circSeqs[1]=="")
-		circSeqs=GenomicFeatures::DEFAULT_CIRC_SEQS
+		circSeqs<- NULL
+#		circSeqs=GenomicFeatures::DEFAULT_CIRC_SEQS
 
 	if(sourceBuild=="UCSC"){
 		human.txdb <- GenomicFeatures::makeTxDbFromUCSC(genome=ucscGenome,

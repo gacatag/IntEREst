@@ -14,7 +14,7 @@ applyOverlap<- function(
 	...
 )
 {
-	if(as.character(class(query))=="SummarizedExperiment"){
+	if(is(query,"SummarizedExperiment")){
 		dfQue<- SummarizedExperiment::rowData(query)
 		indQue<- which(dfQue[,intExCol]%in%intronExon)
 		dfQue<- dfQue[indQue,]

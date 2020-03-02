@@ -2,6 +2,18 @@
 \title{IntEREst News}
 \encoding{UTF-8}
 
+\section{CHANGES IN VERSION 1.12.0}{
+
+        \subsection{BUG FIXES}{
+
+                \itemize{
+
+                        \item Replacing \code{class( x ) == "foo"} with \code{is( x , "foo")â} .
+
+                }
+        }
+}
+
 \section{CHANGES IN VERSION 1.10.0}{
 
 	\subsection{NEW FEATURES}{

@@ -26,7 +26,7 @@ function(
 	}
 	cat( "InERESt:interestAnalyse: Begins ...\n")
 
-	if(as.character(class(reference))=="GRanges"){
+	if(is(reference,"GRanges")){
 		if(length(names(reference))>0){
 			tmpReference=data.frame(
 				chr=as.character(GenomicRanges::seqnames(reference)), 
