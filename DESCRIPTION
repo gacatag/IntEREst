@@ -1,6 +1,8 @@
 Package: IntEREst
 Title: Intron-Exon Retention Estimator
+
 Version: 1.11.4
+
 Date: 2016-12-15
 Author: Ali Oghabian <Ali.Oghabian@Helsinki.Fi>, Dario Greco
         <dario.greco@helsinki.fi>, Mikko Frilander
@@ -11,7 +13,7 @@ Description: This package performs Intron-Exon Retention analysis on
         RNA-seq data (.bam files).
 Depends: R (>= 3.4), GenomicRanges, Rsamtools, SummarizedExperiment,
         edgeR, S4Vectors
-Imports: seqLogo, Biostrings, GenomicFeatures, IRanges, seqinr,
+Imports: seqLogo, Biostrings, GenomicFeatures (>= 1.39.4), IRanges, seqinr,
         graphics, grDevices, stats, utils, grid, methods, DBI, RMySQL,
         GenomicAlignments, BiocParallel, BiocGenerics, DEXSeq, DESeq2
 Suggests: clinfun, knitr, BSgenome.Hsapiens.UCSC.hg19
