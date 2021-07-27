@@ -1,6 +1,6 @@
 Package: IntEREst
 Title: Intron-Exon Retention Estimator
-Version: 1.17.0
+Version: 1.17.1
 Date: 2016-12-15
 Author: Ali Oghabian <Ali.Oghabian@Helsinki.Fi>, Dario Greco
         <dario.greco@helsinki.fi>, Mikko Frilander
@@ -14,7 +14,7 @@ Depends: R (>= 3.4), GenomicRanges, Rsamtools, SummarizedExperiment,
 Imports: seqLogo, Biostrings, GenomicFeatures (>= 1.39.4), IRanges, seqinr,
         graphics, grDevices, stats, utils, grid, methods, DBI, RMySQL,
         GenomicAlignments, BiocParallel, BiocGenerics, DEXSeq, DESeq2
-Suggests: clinfun, knitr, BSgenome.Hsapiens.UCSC.hg19
+Suggests: clinfun, knitr, rmarkdown, BSgenome.Hsapiens.UCSC.hg19
 VignetteBuilder: knitr
 LazyData: true
 biocViews: Software, AlternativeSplicing, Coverage,
