@@ -30,7 +30,7 @@ buildSsTypePwms<-function(
 			"http://katahdin.mssm.edu/splice/out/9606_logo_file.23", 
 		U2_GT_AG_acceptor=
 			"http://katahdin.mssm.edu/splice/out/9606_logo_file.28"),
-	u12dbLink="ftp://genome.imim.es/pub/software/u12/u12db_v1_0.sql.gz",
+	u12dbLink="https://genome.crg.cat/pub/software/u12/u12db_v1_0.sql.gz",
 	u12dbDbName="u12db", u12dbDropDb=TRUE, pdfFileSeqLogos="",
 	removeTempFiles=TRUE, ...)
 {
