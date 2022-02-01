@@ -18,6 +18,7 @@ function(
 	sampleName=c(), 
 	scaleLength= c(TRUE,FALSE), 
 	scaleFragment= c(TRUE,TRUE),
+	limitRanges=GRanges(),
 	... ){
 	method=unique(method)
 	if(length(which( ! method %in% c("IntRet", "ExEx", "IntSpan")))!=0)
@@ -71,6 +72,7 @@ function(
 			junctionReadsOnly=junctionReadsOnly,
 			isPairedDuplicate=isPairedDuplicate, 
 			isSingleReadDuplicate=isSingleReadDuplicate,
+			limitRanges=limitRanges,
 			...)
 
 

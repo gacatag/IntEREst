@@ -2,6 +2,18 @@
 \title{IntEREst News}
 \encoding{UTF-8}
 
+\section{CHANGES IN VERSION 1.20.0}{
+
+	\subsection{NEW FEATURES}{
+
+		\itemize{
+
+			\item \code{limitRanges} parameter in \code{interest()} and \code{interest.sequential()} functions allow for targetted analysis. It only loads reads that map to the dfined coordinates.
+		}
+	}
+
+}
+
 \section{CHANGES IN VERSION 1.12.0}{
 
         \subsection{BUG FIXES}{

@@ -15,6 +15,7 @@ function(
 	isPairedDuplicate,
 	isSingleReadDuplicate,
 	bpparam,
+	limitRanges,
 	...)
 {
 	resTmpPair<-c()
@@ -56,11 +57,20 @@ function(
 		bf<- Rsamtools::BamFile(bamFile, yieldSize=yieldSize, 
 				asMates=TRUE, ... )
 		# Analyzing mapped paired reads together
-		scParam=Rsamtools::ScanBamParam(
-			what=Rsamtools::scanBamWhat()[c(1,
-				3,5,8,13,9, 10, 6, 4, 14, 15)], 
-			flag=Rsamtools::scanBamFlag(isPaired=TRUE,
-				isDuplicate=isPairedDuplicate))
+		if(length(limitRanges)==0){
+		  scParam=Rsamtools::ScanBamParam(
+		  	what=Rsamtools::scanBamWhat()[c(1,
+			  	3,5,8,13,9, 10, 6, 4, 14, 15)], 
+			  flag=Rsamtools::scanBamFlag(isPaired=TRUE,
+				  isDuplicate=isPairedDuplicate)) } else{
+				    scParam=Rsamtools::ScanBamParam(
+				      which=limitRanges,
+				      what=Rsamtools::scanBamWhat()[c(1,
+				                                      3,5,8,13,9, 10, 6, 4, 14, 15)], 
+				      flag=Rsamtools::scanBamFlag(isPaired=TRUE,
+				                                  isDuplicate=isPairedDuplicate))				    
+				  
+				}
 
 		# Initialize the iterator and combine with REDUCE:
 		ITER <- bamIterPair(bf, scParam=scParam)
@@ -76,12 +86,22 @@ function(
 			BPPARAM=bpparam)
 
 		# Analyzing single mapped reads
-		scParam=Rsamtools::ScanBamParam(
-			what=Rsamtools::scanBamWhat()[c(1,
-				3,5,8,13,9, 10, 6, 4, 14, 15)], 
-			flag=Rsamtools::scanBamFlag(hasUnmappedMate=TRUE,
-				isPaired=TRUE, 
-				isDuplicate=isSingleReadDuplicate))
+		if(length(limitRanges)==0){
+		  scParam=Rsamtools::ScanBamParam(
+			  what=Rsamtools::scanBamWhat()[c(1,
+				  3,5,8,13,9, 10, 6, 4, 14, 15)], 
+			  flag=Rsamtools::scanBamFlag(hasUnmappedMate=TRUE,
+				  isPaired=TRUE, 
+				  isDuplicate=isSingleReadDuplicate))
+		} else{
+		  scParam=Rsamtools::ScanBamParam(
+		    which=limitRanges,
+		    what=Rsamtools::scanBamWhat()[c(1,
+		                                    3,5,8,13,9, 10, 6, 4, 14, 15)],
+		    flag=Rsamtools::scanBamFlag(hasUnmappedMate=TRUE,
+		                                isPaired=TRUE,
+		                                isDuplicate=isSingleReadDuplicate))		  
+		}
 		ITER <- bamIterSingle(bf, scParam=scParam)
 		resTmpSingle<- BiocParallel::bpiterate(ITER, 
 			interestIntExAnalyseSingle, 
@@ -98,12 +118,24 @@ function(
 		# Defining connection to bam file
 		bf<- Rsamtools::BamFile(bamFile, yieldSize=yieldSize, ...)
 		#Analyzing unpaired sequencing data
+#
+		if(length(limitRanges)==0){
 		scParam=Rsamtools::ScanBamParam(
 			what=Rsamtools::scanBamWhat()[c(1,
 				3,5,8,13,9, 10, 6, 4, 14, 15)], 
 			flag=Rsamtools::scanBamFlag(
 				isPaired=NA, 
 				isDuplicate=isSingleReadDuplicate))
+		} else{
+		  scParam=Rsamtools::ScanBamParam(
+		    which=limitRanges,
+		    what=Rsamtools::scanBamWhat()[c(1,
+		                                    3,5,8,13,9, 10, 6, 4, 14, 15)],
+		    flag=Rsamtools::scanBamFlag(
+		      isPaired=NA, 
+		      isDuplicate=isSingleReadDuplicate))		  
+		  
+		}
 
 		ITER <- bamIterSingle(bf, scParam=scParam)
 		resTmpSingle<- BiocParallel::bpiterate(ITER, 

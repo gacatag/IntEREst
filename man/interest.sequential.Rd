@@ -13,7 +13,8 @@ interest.sequential( bamFileYieldSize=1000000, bamFile, isPaired,
 	junctionReadsOnly=FALSE, outFile, logFile="", 
 	returnObj= FALSE, method=c("IntRet", "ExEx", "IntSpan"), 
 	appendLogFile=FALSE, sampleName="",
-	scaleLength= c(TRUE,FALSE), scaleFragment= c(TRUE,TRUE), ...)
+	scaleLength= c(TRUE,FALSE), scaleFragment= c(TRUE,TRUE), 
+	limitRanges=GRanges(), ...)
 }
 \arguments{
 \item{bamFileYieldSize}{ 
@@ -83,6 +84,10 @@ A vector constructed of TRUE/FALSE values, same size as the
 \code{method} argument. It indcates whether the retention levels of the 
 intron/exons should be scaled to the sum of retention levels (i.e. mapped 
 fragments) over the genes.}
+\item{limitRanges}{ A GRanges object. If defined it only loads sequencing read 
+if they fall in the defined coordinates. It is similar to \code{which} 
+parameter in \code{\link[Rsamtools]{ScanBamParam}}. NOTE! that if defined,
+the bamFileYieldSize parameter would be ignored (if that is defined as well).}
 \item{...}{
 Other parameter settings specific to \code{\link[Rsamtools]{BamFile-class}} 
 function in the \code{Rsamtools} package. Parameters \code{qnamePrefixEnd} and 
