@@ -16,6 +16,8 @@ function(
 	isSingleReadDuplicate,
 	bpparam,
 	limitRanges,
+	excludeFusionReads,
+	loadLimitRangesReads,
 	...)
 {
 	resTmpPair<-c()
@@ -57,12 +59,12 @@ function(
 		bf<- Rsamtools::BamFile(bamFile, yieldSize=yieldSize, 
 				asMates=TRUE, ... )
 		# Analyzing mapped paired reads together
-		if(length(limitRanges)==0){
+		if(length(limitRanges)==0 | (!loadLimitRangesReads)){
 		  scParam=Rsamtools::ScanBamParam(
 		  	what=Rsamtools::scanBamWhat()[c(1,
 			  	3,5,8,13,9, 10, 6, 4, 14, 15)], 
 			  flag=Rsamtools::scanBamFlag(isPaired=TRUE,
-				  isDuplicate=isPairedDuplicate)) } else{
+				  isDuplicate=isPairedDuplicate)) } else {
 				    scParam=Rsamtools::ScanBamParam(
 				      which=limitRanges,
 				      what=Rsamtools::scanBamWhat()[c(1,
@@ -83,10 +85,18 @@ function(
 			repeatsTableToFilter=repeatsTableToFilter,
 			referenceIntronExon=referenceIntronExon,
 			junctionReadsOnly=junctionReadsOnly,
+			limitRanges=limitRanges,
+			excludeFusionReads=excludeFusionReads,
 			BPPARAM=bpparam)
 
+		
+		if(logFile!="")
+		  cat( "BETWEEN SINGLE AND PAIRED N1 \n", 
+		       file=logFile, append=appendLogFile)
+		cat( "BETWEEN SINGLE AND PAIRED N1\n")
+		
 		# Analyzing single mapped reads
-		if(length(limitRanges)==0){
+		if(length(limitRanges)==0 | (!loadLimitRangesReads)){
 		  scParam=Rsamtools::ScanBamParam(
 			  what=Rsamtools::scanBamWhat()[c(1,
 				  3,5,8,13,9, 10, 6, 4, 14, 15)], 
@@ -102,7 +112,19 @@ function(
 		                                isPaired=TRUE,
 		                                isDuplicate=isSingleReadDuplicate))		  
 		}
+		
+		if(logFile!="")
+		  cat( "BETWEEN SINGLE AND PAIRED N2 \n", 
+		       file=logFile, append=appendLogFile)
+		cat( "BETWEEN SINGLE AND PAIRED N2 \n")	
+		
 		ITER <- bamIterSingle(bf, scParam=scParam)
+		
+		if(logFile!="")
+		  cat( "BETWEEN SINGLE AND PAIRED N3 \n", 
+		       file=logFile, append=appendLogFile)
+		cat( "BETWEEN SINGLE AND PAIRED N3\n")
+		
 		resTmpSingle<- BiocParallel::bpiterate(ITER, 
 			interestIntExAnalyseSingle, 
 			reference=reference,
@@ -113,13 +135,20 @@ function(
 			repeatsTableToFilter=repeatsTableToFilter,
 			referenceIntronExon=referenceIntronExon,
 			junctionReadsOnly=junctionReadsOnly,
+			limitRanges=limitRanges,
+			excludeFusionReads=excludeFusionReads,
 			BPPARAM=bpparam)
+		
+		if(logFile!="")
+		  cat( "BETWEEN SINGLE AND PAIRED N4 \n", 
+		       file=logFile, append=appendLogFile)
+		cat( "BETWEEN SINGLE AND PAIRED N4\n")
 	} else {
 		# Defining connection to bam file
 		bf<- Rsamtools::BamFile(bamFile, yieldSize=yieldSize, ...)
 		#Analyzing unpaired sequencing data
 #
-		if(length(limitRanges)==0){
+		if(length(limitRanges)==0 | (!loadLimitRangesReads)){
 		scParam=Rsamtools::ScanBamParam(
 			what=Rsamtools::scanBamWhat()[c(1,
 				3,5,8,13,9, 10, 6, 4, 14, 15)], 
@@ -148,6 +177,8 @@ function(
 			repeatsTableToFilter=repeatsTableToFilter,
 			referenceIntronExon=referenceIntronExon,
 			junctionReadsOnly=junctionReadsOnly,
+			limitRanges=limitRanges,
+			excludeFusionReads=excludeFusionReads,
 			BPPARAM=bpparam)
 	}
 	resPair<-rep(0, nrow(reference)*length(method))

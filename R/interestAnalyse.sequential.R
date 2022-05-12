@@ -14,6 +14,8 @@ function(
 	isPairedDuplicate,
 	isSingleReadDuplicate,
 	limitRanges,
+	excludeFusionReads=excludeFusionReads,
+	loadLimitRangesReads,
 	...)
 {
 	resTmpPair<-c()
@@ -55,7 +57,7 @@ function(
 		bf<- Rsamtools::BamFile(bamFile, yieldSize=yieldSize, 
 				asMates=TRUE, ...)
 		# Analyzing mapped paired reads together
-		if(length(limitRanges)==0){
+		if(length(limitRanges)==0 | (!loadLimitRangesReads)){
 		scParam=Rsamtools::ScanBamParam(
 			what=Rsamtools::scanBamWhat()[c(1,
 				3,5,8,13,9, 10, 6, 4, 14, 15)], 
@@ -80,10 +82,12 @@ function(
 			repeatsTableToFilter=repeatsTableToFilter,
 			referenceIntronExon=referenceIntronExon,
 			junctionReadsOnly=junctionReadsOnly,
+			limitRanges=limitRanges,
+			excludeFusionReads=excludeFusionReads,
 			BPPARAM=bpparam)
 
 		# Analyzing single mapped reads
-		if(length(limitRanges)==0){
+		if(length(limitRanges)==0 | (!loadLimitRangesReads)){
 		  scParam=Rsamtools::ScanBamParam(
 			  what=Rsamtools::scanBamWhat()[c(1,
 				  3,5,8,13,9, 10, 6, 4, 14, 15)], 
@@ -110,12 +114,14 @@ function(
 			repeatsTableToFilter=repeatsTableToFilter,
 			referenceIntronExon=referenceIntronExon,
 			junctionReadsOnly=junctionReadsOnly,
+			limitRanges=limitRanges,
+			excludeFusionReads=excludeFusionReads,
 			BPPARAM=bpparam)
 	} else {
 		#Defining connecting to bam file
 		bf<- Rsamtools::BamFile(bamFile, yieldSize=yieldSize, ...)
 		#Analyzing unpaired sequencing data
-		if(length(limitRanges)==0){
+		if(length(limitRanges)==0 |(!loadLimitRangesReads)){
 	  	scParam=Rsamtools::ScanBamParam(
 		  	what=Rsamtools::scanBamWhat()[c(1,
 			  	3,5,8,13,9, 10, 6, 4, 14, 15)], 
@@ -143,6 +149,8 @@ function(
 			repeatsTableToFilter=repeatsTableToFilter,
 			referenceIntronExon=referenceIntronExon,
 			junctionReadsOnly=junctionReadsOnly,
+			limitRanges=limitRanges,
+			excludeFusionReads=excludeFusionReads,
 			BPPARAM=bpparam)
 	}
 	

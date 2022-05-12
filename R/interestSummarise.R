@@ -73,7 +73,7 @@ interestSummarise <-function(
 	reference,
 	referenceIntronExon,
 	inAnRes,
-	method=c("IntRet","ExEx", "IntSpan"),
+	method=c("ExEx", "IntRet", "IntSpan", "ExSkip"),
 	referenceGeneNames,
 	outFile,
 	logFile="",
@@ -107,58 +107,31 @@ interestSummarise <-function(
 
 	res=reference
 	writeResults=FALSE
-	intExInd=which(method=="IntRet")
 	exExInd=which(method=="ExEx")
+	intExInd=which(method=="IntRet")
 	intSpanInd=which(method=="IntSpan")
+	exSkipInd=which(method=="ExSkip")
 
 	inAnMat<- matrix(inAnRes, 
-		ncol=length(which(c(length(intExInd)>0, length(exExInd)>0, 
-			length(intSpanInd)>0))), 
+		ncol=length(which(c(length(exExInd)>0, length(intExInd)>0,
+			length(intSpanInd)>0, length(exSkipInd)>0))), 
 			byrow=FALSE)
 
-	if(length(intExInd)>0){
-		ref=reference[which(referenceIntronExon=="intron"),]
-
-		# Calculate the corrected length
-		
-		lenRef=correctLengthRepeat(ref, repeatsTableToFilter)
-		writeResults=TRUE
-		res<- cbind(res, inAnMat[ , intExInd])
-		colnames(res)[ncol(res)]="IntRet_frequency"
-		msg<-
-"IntERESt:interestSummarise: Normalizing intron retention read levels.\n"
-		if(logFile!="")
-			cat( msg, file=logFile, append=TRUE)
-		cat(msg)
-		frq<- inAnMat[ which(referenceIntronExon=="intron"), intExInd]
-		referenceGeneNamesTmp<- as.character(referenceGeneNames[
-			referenceIntronExon=="intron"])
-		geneCnt<- tapply(frq,referenceGeneNamesTmp,sum)
-		FPKM=frq
-		if(scaleFragment[intExInd])
-			FPKM=((10^6)*frq)/(as.numeric(geneCnt[referenceGeneNamesTmp])+1)
-		if(scaleLength[intExInd])
-			FPKM=((10^3)*FPKM)/lenRef
-
-		resTmp=rep(0,nrow(reference))
-		resTmp[referenceIntronExon=="intron"]=as.numeric(FPKM)
-		res=cbind(res, resTmp)
-		colnames(res)[ncol(res)]="IntRet_genewide_scaled"
-	} 
 	if(length(exExInd)>0) {
 		ref=reference[referenceIntronExon=="exon",]
 		# Calculate the corrected length
 		lenRef=correctLengthRepeat(ref, repeatsTableToFilter)
-
+		indFrq<- 1
 		writeResults=TRUE
-		res<- cbind(res, inAnMat[ , exExInd])
+		res<- cbind(res, inAnMat[ , indFrq])
 		colnames(res)[ncol(res)]="ExEx_frequency"
 		msg<-
 "IntERESt:interestSummarise: Normalizing exon-exon junction read levels.\n"
 		if(logFile!="")
 			cat( msg, file=logFile, append=TRUE)
 		cat( msg)
-		frq<- inAnMat[ which(referenceIntronExon=="exon"), exExInd]
+
+		frq<- inAnMat[ which(referenceIntronExon=="exon"), indFrq]
 		referenceGeneNamesTmp=as.character(referenceGeneNames[
 			which(referenceIntronExon=="exon")])
 		geneCnt=tapply(frq,referenceGeneNamesTmp,sum)
@@ -173,21 +146,56 @@ interestSummarise <-function(
 		res=cbind(res, resTmp)
 		colnames(res)[ncol(res)]="ExEx_genewide_scaled"
 	}
+	
+	if(length(intExInd)>0){
+	  ref=reference[which(referenceIntronExon=="intron"),]
+	    indFrq<- 2
+	    if(length(exExInd)==0)
+	      indFrq<- 1
+	  # Calculate the corrected length
+	  
+	  lenRef=correctLengthRepeat(ref, repeatsTableToFilter)
+	  writeResults=TRUE
+	  res<- cbind(res, inAnMat[ , indFrq])
+	  colnames(res)[ncol(res)]="IntRet_frequency"
+	  msg<-
+	    "IntERESt:interestSummarise: Normalizing intron retention read levels.\n"
+	  if(logFile!="")
+	    cat( msg, file=logFile, append=TRUE)
+	  cat(msg)
+	  frq<- inAnMat[ which(referenceIntronExon=="intron"), indFrq]
+	  referenceGeneNamesTmp<- as.character(referenceGeneNames[
+	    referenceIntronExon=="intron"])
+	  geneCnt<- tapply(frq,referenceGeneNamesTmp,sum)
+	  FPKM=frq
+	  if(scaleFragment[intExInd])
+	    FPKM=((10^6)*frq)/(as.numeric(geneCnt[referenceGeneNamesTmp])+1)
+	  if(scaleLength[intExInd])
+	    FPKM=((10^3)*FPKM)/lenRef
+	  
+	  resTmp=rep(0,nrow(reference))
+	  resTmp[referenceIntronExon=="intron"]=as.numeric(FPKM)
+	  res=cbind(res, resTmp)
+	  colnames(res)[ncol(res)]="IntRet_genewide_scaled"
+	} 
+	
 	if(length(intSpanInd)>0){
 		ref=reference[which(referenceIntronExon=="intron"),]
-
+		cntMet<-length(which(c("ExEx", "IntRet")%in%method))
+		#indFrq<- 2*cntMet+1
+		indFrq<- cntMet+1
 		# Calculate the corrected length
 		
 		lenRef=correctLengthRepeat(ref, repeatsTableToFilter)
 		writeResults=TRUE
-		res<- cbind(res, inAnMat[ , intSpanInd])
+		res<- cbind(res, inAnMat[ , indFrq])
 		colnames(res)[ncol(res)]="IntSpan_frequency"
 		msg<-
 "IntERESt:interestSummarise: Normalizing intron retention read levels.\n"
 		if(logFile!="")
 			cat( msg, file=logFile, append=TRUE)
 		cat(msg)
-		frq<- inAnMat[ which(referenceIntronExon=="intron"), intSpanInd]
+		frq<- inAnMat[ which(referenceIntronExon=="intron"), indFrq]
 		referenceGeneNamesTmp<- as.character(referenceGeneNames[
 			referenceIntronExon=="intron"])
 		geneCnt<- tapply(frq,referenceGeneNamesTmp,sum)
@@ -203,6 +211,37 @@ interestSummarise <-function(
 		colnames(res)[ncol(res)]="IntSpan_genewide_scaled"
 	} 
 
+	if(length(exSkipInd)>0) {
+	  ref=reference[referenceIntronExon=="exon",]
+	  cntMet<-length(which(c("ExEx", "IntRet", "IntSpan")%in%method))
+	  indFrq<- cntMet+1
+	  # Calculate the corrected length
+	  lenRef=correctLengthRepeat(ref, repeatsTableToFilter)
+	  # indFrq<- 1
+	  writeResults=TRUE
+	  res<- cbind(res, inAnMat[ , indFrq])
+	  colnames(res)[ncol(res)]="ExSkip_frequency"
+	  msg<-
+	    "IntERESt:interestSummarise: Normalizing exon-exon junction read levels.\n"
+	  if(logFile!="")
+	    cat( msg, file=logFile, append=TRUE)
+	  cat( msg)
+	  
+	  frq<- inAnMat[ which(referenceIntronExon=="exon"), indFrq]
+	  referenceGeneNamesTmp=as.character(referenceGeneNames[
+	    which(referenceIntronExon=="exon")])
+	  geneCnt=tapply(frq,referenceGeneNamesTmp,sum)
+	  FPKM=frq
+	  if(scaleFragment[exSkipInd])
+	    FPKM=((10^6)*FPKM)/(as.numeric(geneCnt[referenceGeneNamesTmp])+1)
+	  if(scaleLength[exSkipInd])
+	    FPKM=((10^3)*FPKM)/lenRef
+	  
+	  resTmp=rep(0,nrow(reference))
+	  resTmp[referenceIntronExon=="exon"]=as.numeric(FPKM)
+	  res=cbind(res, resTmp)
+	  colnames(res)[ncol(res)]="ExSkip_genewide_scaled"
+	}
 
 
 	if(writeResults){

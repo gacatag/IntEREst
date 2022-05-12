@@ -8,18 +8,21 @@ function(
 	reference, referenceGeneNames,
 	referenceIntronExon, repeatsTableToFilter=c(),
 	junctionReadsOnly=FALSE, outFile, logFile="",
-	returnObj=FALSE, method=c("IntRet", "ExEx", "IntSpan"),	clusterNo=NULL, 
+	returnObj=FALSE, method=c("ExEx", "IntRet", "IntSpan", "ExSkip"),	clusterNo=NULL, 
 	bpparam, appendLogFile=FALSE, sampleName="", 
 	scaleLength= c(TRUE,FALSE), scaleFragment= c(TRUE,TRUE), 
-	limitRanges=GRanges(), ...)
+	limitRanges=GRanges(), 
+	excludeFusionReads=FALSE,
+	loadLimitRangesReads=FALSE,
+	...)
   
 {
 
 
 	method=unique(method)
-	if(length(which( ! method %in% c("IntRet", "ExEx", "IntSpan")))!=0)
+	if(length(which( ! method %in% c("ExEx", "IntRet", "IntSpan", "ExSkip")))!=0)
 		stop(paste("Unknown method:", 
-			method[! method %in% c("IntRet", "ExEx", "IntSpan")], sep=" "))
+			method[! method %in% c("ExEx", "IntRet", "IntSpan", "ExSkip")], sep=" "))
 	time1=Sys.time()
 	if(logFile!=""){
 		cat( "Log info: Running interest in Parallel mode.\n", file=logFile, 
@@ -69,7 +72,10 @@ function(
 			isPairedDuplicate=isPairedDuplicate, 
 			isSingleReadDuplicate=isSingleReadDuplicate,
 			bpparam=bpparam, 
-			limitRanges=limitRanges, ...)
+			limitRanges=limitRanges, 
+			excludeFusionReads=excludeFusionReads,
+			loadLimitRangesReads=loadLimitRangesReads,
+			...)
 	} else {
 		inAnRes<- interestAnalyse(
 			reference=reference,
@@ -87,6 +93,8 @@ function(
 			isPairedDuplicate=isPairedDuplicate, 
 			isSingleReadDuplicate=isSingleReadDuplicate, 
 			limitRanges=limitRanges,
+			excludeFusionReads=excludeFusionReads,
+			loadLimitRangesReads=loadLimitRangesReads,
 			...)
 
 	} 
@@ -127,25 +135,26 @@ function(
 
 
 	} else if (returnObj & length(method)>1 & 
-		length(which( ! method %in% c("IntRet", "ExEx", "IntSpan")))==0){
+		length(which( ! method %in% c("ExEx", "IntRet", "IntSpan", "ExSkip")))==0){
 		resObj<- list()
 		if("IntRet" %in% method){
-
+		  indFrq<- 3
+		  if(!("ExEx"%in%method))
+		    indFrq<- 1
+		  
 			tmpDat<- read.table(outFile, header=TRUE, stringsAsFactors=FALSE)
 			
 			resObj<- c(resObj, list(
 				IntRet=InterestResult(resultFiles=outFile, 
-					counts=matrix(tmpDat[,(ncol(reference)+1)], ncol=1), 
-					scaledRetention=matrix(tmpDat[,(ncol(reference)+2)], ncol=1), 
+					counts=matrix(tmpDat[,(ncol(reference)+indFrq)], ncol=1), 
+					scaledRetention=matrix(tmpDat[,(ncol(reference)+indFrq+1)], ncol=1), 
 					scaleLength=scaleLength[method=="IntRet"], 
 					scaleFragment=scaleFragment[method=="IntRet"], 
 					rowData=tmpDat[, 1:ncol(reference)]) 
 			))
 		}
 		if("ExEx" %in% method){
-			indFrq<- 3
-			if(!"IntRet"%in%method)
-				indFrq<- 1
+			indFrq<- 1
 			tmpDat<- read.table(outFile, header=TRUE, stringsAsFactors=FALSE)
 			resObj<- c(resObj, list(
 				ExEx=InterestResult(resultFiles=outFile, 
@@ -158,9 +167,8 @@ function(
 			))
 		}		
 		if("IntSpan" %in% method){
-			indFrq<- 3
-			if(length(method)==3)
-				indFrq<-5
+		  cntMet<-length(which(c("ExEx", "IntRet")%in%method))
+			indFrq<- 2*cntMet+1
 			tmpDat<- read.table(outFile, header=TRUE, stringsAsFactors=FALSE)
 			resObj<- c(resObj, list(
 				IntSpan=InterestResult(resultFiles=outFile, 
@@ -172,7 +180,20 @@ function(
 					rowData=tmpDat[, 1:ncol(reference)]) 
 			))
 		}
-
+		if("ExSkip" %in% method){
+		  cntMet<-length(which(c("ExEx", "IntRet", "IntSpan")%in%method))
+		  indFrq<- 2*cntMet+1
+		  tmpDat<- read.table(outFile, header=TRUE, stringsAsFactors=FALSE)
+		  resObj<- c(resObj, list(
+		    ExSkip=InterestResult(resultFiles=outFile, 
+		                           counts=matrix(tmpDat[,(ncol(reference)+indFrq)], ncol=1), 
+		                           scaledRetention=
+		                             matrix(tmpDat[,(ncol(reference)+indFrq+1)], ncol=1), 
+		                           scaleLength=scaleLength[method=="Exskip"], 
+		                           scaleFragment=scaleFragment[method=="Exskip"], 
+		                           rowData=tmpDat[, 1:ncol(reference)]) 
+		  ))
+		}
 	}
 	time2=Sys.time()
 	runTime=difftime(time2,time1, units="secs")

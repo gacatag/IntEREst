@@ -11,10 +11,12 @@ interest.sequential( bamFileYieldSize=1000000, bamFile, isPaired,
 	reference, referenceGeneNames, 
 	referenceIntronExon, repeatsTableToFilter=c(), 
 	junctionReadsOnly=FALSE, outFile, logFile="", 
-	returnObj= FALSE, method=c("IntRet", "ExEx", "IntSpan"), 
+	returnObj= FALSE, method=c("ExEx", "IntRet", "IntSpan", "ExSkip"), 
 	appendLogFile=FALSE, sampleName="",
 	scaleLength= c(TRUE,FALSE), scaleFragment= c(TRUE,TRUE), 
-	limitRanges=GRanges(), ...)
+	limitRanges=GRanges(), 
+	excludeFusionReads=FALSE,
+	loadLimitRangesReads=FALSE, ...)
 }
 \arguments{
 \item{bamFileYieldSize}{ 
@@ -65,10 +67,11 @@ would also be returned as an object of class \code{SummarizedExperiment}.}
 \item{method}{
 A vector describing the summarization methods to use; i.e. whether count reads 
 mapping to the introns (\code{IntRet}), reads mapping to the exons 
-(\code{ExEx}), or reads spanning the introns (\code{IntSpan}). In 
-\code{IntSpan} mode the introns in the reference are taken into account only; 
-while in \code{IntRet} the introns and their spanning exons, and in \code{ExEx}
-mode only the exons in the reference are taken into account.}
+(\code{ExEx}), reads spanning the introns (\code{IntSpan}), or reads that skip
+the exons (\code{ExSkip}). In \code{IntSpan} mode the introns in the reference
+are taken into account only; whilst in \code{IntRet} the introns and their 
+spanning exons, and in \code{ExEx} and \code{ExSkip} mode only the exons in the
+reference are taken into account.}
 \item{appendLogFile}{
 Whether log information should be appended to the \code{logFile}. It is 
 \code{FALSE} by default.}
@@ -86,8 +89,17 @@ intron/exons should be scaled to the sum of retention levels (i.e. mapped
 fragments) over the genes.}
 \item{limitRanges}{ A GRanges object. If defined it only loads sequencing read 
 if they fall in the defined coordinates. It is similar to \code{which} 
-parameter in \code{\link[Rsamtools]{ScanBamParam}}. NOTE! that if defined,
-the bamFileYieldSize parameter would be ignored (if that is defined as well).}
+parameter in \code{\link[Rsamtools]{ScanBamParam}}.}
+\item{excludeFusionReads}{Only valid if limitRanges is defined. It filters the
+defined by \code{limitRanges}. It also filters the read pairs if each read pair
+maps reads pairs where one of the reads either do not fall into one of the 
+regions to a different region defined in {limitRanges}. It is useful to ignore 
+analyzing the chimeric reads and fusion reads, i.e. reads that map to fusion 
+genes. To filter properly, \code{limitRanges} must include coordinates of all
+genes. }
+\item{loadLimitRangesReads}{ Boolean (TRUE/FALSE) variable. If set as 
+\code{TRUE} only the reads in the limitRanges are loaded from bam file (and 
+\code{bamFileYieldSize} parameter will be ignored).}
 \item{...}{
 Other parameter settings specific to \code{\link[Rsamtools]{BamFile-class}} 
 function in the \code{Rsamtools} package. Parameters \code{qnamePrefixEnd} and 
