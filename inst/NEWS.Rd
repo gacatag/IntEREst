@@ -2,6 +2,21 @@
 \title{IntEREst News}
 \encoding{UTF-8}
 
+
+\section{CHANGES IN VERSION 1.22.0}{
+
+	\subsection{NEW FEATURES}{
+
+		\itemize{
+			
+			\item \code{method} parameter in \code{interest()} and \code{interest.sequential()} functions now support 
+\code{"ExSkip"}. For each exon, the fucntions can now count the number of reads that skip over the exons.
+
+		}
+	}
+
+}
+
 \section{CHANGES IN VERSION 1.20.0}{
 
 	\subsection{NEW FEATURES}{
@@ -10,8 +25,6 @@
 
 			\item \code{limitRanges} parameter in \code{interest()} and \code{interest.sequential()} functions allow for targetted analysis. It only loads reads that map to the dfined coordinates.
 			
-			\item \code{method} parameter in \code{interest()} and \code{interest.sequential()} functions now support 
-\code{"ExSkip"}. For each exon, the fucntions can now count the number of reads that skip over the exons.
 		}
 	}
 
