@@ -9,6 +9,9 @@
 		\itemize{
 
 			\item \code{limitRanges} parameter in \code{interest()} and \code{interest.sequential()} functions allow for targetted analysis. It only loads reads that map to the dfined coordinates.
+			
+			\item \code{method} parameter in \code{interest()} and \code{interest.sequential()} functions now support 
+\code{"ExSkip"}. For each exon, the fucntions can now count the number of reads that skip over the exons.
 		}
 	}
 
