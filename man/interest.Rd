@@ -11,7 +11,7 @@ interest( bamFileYieldSize=1000000, bamFile, isPaired,
 	referenceGeneNames, referenceIntronExon, repeatsTableToFilter=c(),
 	junctionReadsOnly=FALSE, outFile, logFile="", 
 	returnObj= FALSE, method=c("ExEx", "IntRet", "IntSpan", "ExSkip"), 
-	clusterNo=NULL, bpparam, appendLogFile=FALSE, sampleName="",
+	bpparam, appendLogFile=FALSE, sampleName="",
 	scaleLength= c(TRUE,FALSE), scaleFragment= c(TRUE,TRUE), 
 	limitRanges=GRanges(),
 	excludeFusionReads=FALSE,
@@ -71,9 +71,6 @@ the exons (\code{ExSkip}). In \code{IntSpan} mode the introns in the reference
 are taken into account only; whilst in \code{IntRet} the introns and their 
 spanning exons, and in \code{ExEx} and \code{ExSkip} mode only the exons in the
 reference are taken into account.}
-\item{clusterNo}{
-Number of parallel cluster nodes. As default (clusterNo=NULL) the total number 
-of CPUs that are available in the cluster would be used.}
 \item{bpparam}{An optional \code{BiocParallelParam} instance defining the 
 parallel back-end to be used.}
 \item{appendLogFile}{
@@ -153,7 +150,6 @@ test= interest(
 	    "log.txt", sep="/"),
 	method=c("IntRet", "IntSpan"),
 	junctionReadsOnly=FALSE,
-	clusterNo=1,
 	returnObj=TRUE, 
 	scaleLength= c(TRUE,FALSE), 
 	scaleFragment= c(TRUE,TRUE)

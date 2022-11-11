@@ -11,6 +11,13 @@ interestIntExAnalysePair <- function(
 	limitRanges,
 	excludeFusionReads)
 {
+  qNam<- as.data.frame(GenomicAlignments::first(readTmp))[1,"qname"]
+  if(logFile!="")
+  	cat( "start ", 
+  	   qNam, "\n",
+  		file=logFile, append=appendLogFile)
+  cat( "start ", 
+       qNam, "\n")
 
   if(length(limitRanges)>0){
     r1Map<- GenomicRanges::findOverlaps(
@@ -47,10 +54,10 @@ interestIntExAnalysePair <- function(
 		"cigar")
 	colnames(sam2)<- c("qName","rName","strand","pos","qual",
 		"cigar")
-	if(logFile!="")
-		cat( "Analyzing paired reads, ID: ", sam1[1,"qName"], "\n", 
-			file=logFile, append=appendLogFile)
-	cat( "Analyzing paired reads, ID: ", sam1[1,"qName"], "\n")
+	# if(logFile!="")
+	# 	cat( "Analyzing paired reads, ID: ", sam1[1,"qName"], "\n", 
+	# 		file=logFile, append=appendLogFile)
+	# cat( "Analyzing paired reads, ID: ", sam1[1,"qName"], "\n")
 ######
 ######!!!
 	exExRes<- c()
@@ -160,12 +167,33 @@ interestIntExAnalysePair <- function(
   			refGRanges= GenomicRanges::GRanges( seqnames=ref[,"chr"], 
   				IRanges::IRanges(start=ref[,"begin"], end=ref[,"end"], 
   					width=ref[,"end"]-ref[,"begin"]+1))
+  			
+  			if(logFile!="")
+  			  cat( "Part1 ",qNam, "\n", 
+  			       file=logFile, append=appendLogFile)
+  			
+  			
   			hits1 <- GenomicRanges::findOverlaps(readGRanges, refGRanges, 
   				type= "start")
+  			
+  			if(logFile!="")
+  			  cat( "Part2 ",qNam, "\n",
+  			       file=logFile, append=appendLogFile)
+  			
   			hits2 <- GenomicRanges::findOverlaps(readGRanges, refGRanges, 
   				type= "end")
+  			
+  			if(logFile!="")
+  			  cat( "Part3 ",qNam, "\n",
+  			       file=logFile, append=appendLogFile)
+  			
   			hits3 <- GenomicRanges::findOverlaps(readGRanges, refGRanges, 
   				type= "equal")
+  			
+  			if(logFile!="")
+  			  cat( "Part4 ",qNam, "\n", 
+  			       file=logFile, append=appendLogFile)
+  			
   			hitsSubject<- c()
   			hitsQuery<- c()
   			# Filter reads mapped to repeats regions if requested
@@ -199,16 +227,30 @@ interestIntExAnalysePair <- function(
   		
   			hitsSubject=c(hitsSubject, S4Vectors::subjectHits(hits1),
   				S4Vectors::subjectHits(hits2),S4Vectors::subjectHits(hits3))
+  			
+  			if(logFile!="")
+  			  cat( "Part5 ",qNam, "\n", 
+  			       file=logFile, append=appendLogFile)
+  			
   			hitsQuery=c(hitsQuery, S4Vectors::queryHits(hits1), 
   				S4Vectors::queryHits(hits2), S4Vectors::queryHits(hits3))
+  			
+  			if(logFile!="")
+  			  cat( "Part6 ",qNam, "\n",
+  			       file=logFile, append=appendLogFile)
+  			
   			refRes= rep(0,nrow(ref))
   			if(length(hitsQuery)>0){
   				hitsApply= tapply(noVec[hitsQuery], hitsSubject, function(tmp)
   					return(length(unique(tmp))) )
   				refRes[as.numeric(names(hitsApply))]= as.vector(hitsApply)
   			}
+  			if(logFile!="")
+  			  cat( "Part7 ",qNam, "\n", 
+  			       file=logFile, append=appendLogFile)
   			exExRes<-rep(0, nrow(reference))
   			exExRes[which(referenceIntronExon=="exon")]<- refRes
+  			rm("refRes")
   	
   		}	
   		methodNo=which(method=="IntRet")
@@ -245,6 +287,7 @@ interestIntExAnalysePair <- function(
   			}
   			intRetRes<- rep(0,nrow(reference))
   			intRetRes[which(referenceIntronExon=="intron")]<- refRes
+  			rm("refRes")
   	
   		} else if ((length(methodNo)>0) & (junctionReadsOnly)) {
   			ref=reference[which(referenceIntronExon=="intron"),]
@@ -292,9 +335,11 @@ interestIntExAnalysePair <- function(
   				refResEnd[as.numeric(names(hitsEndApply))]= 
   					as.numeric(hitsEndApply)
   				refRes=refResBeg+refResEnd
+  				rm("refResBeg","refResEnd")
   			}
   			intRetRes<- rep(0,nrow(reference))
   			intRetRes[which(referenceIntronExon=="intron")]<- refRes
+  			rm("refRes")
   		}
   ########
   ########!!!
@@ -441,6 +486,7 @@ interestIntExAnalysePair <- function(
   			}
   			intSpanRes<- rep(0,nrow(reference))
   			intSpanRes[which(referenceIntronExon=="intron")]<- refRes
+  			rm("refRes")
   	}
   
   	####
@@ -634,6 +680,7 @@ interestIntExAnalysePair <- function(
   	  }
   	  exSkipRes<- rep(0,nrow(reference))
   	  exSkipRes[which(referenceIntronExon=="exon")]<- refRes
+  	  rm("refRes")
   	}
   }
 ########!!!
@@ -654,37 +701,41 @@ interestIntExAnalysePair <- function(
 
 	if(length(exSkipRes)==0)
 	  exSkipRes<- rep(0,nrow(reference))
-	
-	if(logFile!="")
-	  cat( "Paired intRetRes: ", length(intRetRes), "\n", 
-	       file=logFile, append=appendLogFile)
-	cat( "Paired intRetRes: ", length(intRetRes), "\n")
-	
-	if(logFile!="")
-	  cat( "Paired exExRes: ", length(exExRes), "\n", 
-	       file=logFile, append=appendLogFile)
-	cat( "Paired exExRes: ", length(exExRes), "\n")
 
 #	if(length(intRetRes)>0)
 	if("IntRet" %in% method)
 		finalRes<-c(finalRes, intRetRes)
+	rm("intRetRes")
 	
 #	if(length(exExRes)>0){
 	if("ExEx" %in% method)
 		finalRes<-c(finalRes, exExRes)
+	rm("exExRes")
 
 ########
 ########!!!
 #	if(length(intSpanRes)>0)
 	if("IntSpan" %in% method)
 		finalRes<-c(finalRes, intSpanRes)
+	rm("intSpanRes")
 	
 #	if(length(exSkipRes)>0)
 	if("ExSkip" %in% method)
 	  finalRes<-c(finalRes, exSkipRes)
+	rm("exSkipRes")
 ########!!!
 ########
+	if(logFile!="")
+	  cat( "end ", 
+	       qNam, " ", length(finalRes), "\n",
+	       file=logFile, append=appendLogFile)
+	cat( "end ", 
+	     qNam, " ", length(finalRes), "\n")	
+	# if(is.null(finalRes))
+	#   finalRes<- rep(0, 
+	#     length(which(method%in%c("ExEx", "IntRet", "IntSpan", "ExSkip"))))
 	return(finalRes)
+	rm("finalRes")
 #End of defining function for paired-mapped reads that runs on parallel cores 
 } 
 	
@@ -703,7 +754,14 @@ interestIntExAnalyseSingle <- function(
 	limitRanges,
 	excludeFusionReads)
 {
-
+  qNam<- as.data.frame(readTmp)[1, "qname"]
+  if(logFile!="")
+    cat( "Singlestart ", 
+         qNam, "\n",
+         file=logFile, append=appendLogFile)
+  cat( "Singlestart ", 
+       qNam, "\n")
+  
 # Filtering readTmp based on number of mapping targets for each read
 	lenTmp<- unlist(sapply(readTmp, length))
 	readTmpFil<- readTmp[which(lenTmp<= maxNoMappedReads)]
@@ -725,10 +783,10 @@ interestIntExAnalyseSingle <- function(
 		"cigar")
 	sam2= NA
 
-	if(logFile!="")
-		cat( "Analyzing single reads, ID: ", sam1[1,"qName"], "\n", 
-			file=logFile, append=appendLogFile)
-	cat( "Analyzing single reads, ID: ", sam1[1,"qName"], "\n")
+	# if(logFile!="")
+	# 	cat( "Analyzing single reads, ID: ", sam1[1,"qName"], "\n", 
+	# 		file=logFile, append=appendLogFile)
+	# cat( "Analyzing single reads, ID: ", sam1[1,"qName"], "\n")
 
 ######
 ######!!!
@@ -813,10 +871,19 @@ interestIntExAnalyseSingle <- function(
   					width=ref[,"end"]-ref[,"begin"]+1))
   			hits1 <- GenomicRanges::findOverlaps(readGRanges, refGRanges, 
   				type= "start")
+  			if(logFile!="")
+  			  cat( "Part8 ",qNam, "\n",
+  			       file=logFile, append=appendLogFile)
   			hits2 <- GenomicRanges::findOverlaps(readGRanges, refGRanges, 
   				type= "end")
+  			if(logFile!="")
+  			  cat( "Part9 ",qNam, "\n", 
+  			       file=logFile, append=appendLogFile)
   			hits3 <- GenomicRanges::findOverlaps(readGRanges, refGRanges, 
   				type= "equal")
+  			if(logFile!="")
+  			  cat( "Part10 ",qNam, "\n", 
+  			       file=logFile, append=appendLogFile)
   			hitsSubject<- c()
   			hitsQuery<- c()
   			# Filter reads mapped to repeats regions if requested
@@ -850,6 +917,9 @@ interestIntExAnalyseSingle <- function(
   		
   			hitsSubject=c(hitsSubject, S4Vectors::subjectHits(hits1),
   				S4Vectors::subjectHits(hits2),S4Vectors::subjectHits(hits3))
+  			if(logFile!="")
+  			  cat( "Part11 ",qNam, "\n", 
+  			       file=logFile, append=appendLogFile)
   			hitsQuery=c(hitsQuery, S4Vectors::queryHits(hits1), 
   				S4Vectors::queryHits(hits2), S4Vectors::queryHits(hits3))
   			refRes= rep(0,nrow(ref))
@@ -858,8 +928,13 @@ interestIntExAnalyseSingle <- function(
   					return(length(unique(tmp))) )
   				refRes[as.numeric(names(hitsApply))]= as.vector(hitsApply)
   			}
+  			if(logFile!="")
+  			  cat( "Part12 ",qNam, "\n", 
+  			       file=logFile, append=appendLogFile)
   			exExRes<-rep(0, nrow(reference))
   			exExRes[which(referenceIntronExon=="exon")]<- refRes
+
+  			rm("refRes")
   	
   		}
   		methodNo=which(method=="IntRet")
@@ -897,6 +972,8 @@ interestIntExAnalyseSingle <- function(
   			}
   			intRetRes<- rep(0,nrow(reference))
   			intRetRes[which(referenceIntronExon=="intron")]<- refRes
+  			
+  			rm("refRes")
   	
   		} else if ((length(methodNo)>0) & (junctionReadsOnly)) {
   			ref=reference[which(referenceIntronExon=="intron"),]
@@ -944,9 +1021,12 @@ interestIntExAnalyseSingle <- function(
   				refResEnd[as.numeric(names(hitsEndApply))]= 
   					as.numeric(hitsEndApply)
   				refRes=refResBeg+refResEnd
+  				rm("refResBeg","refResEnd")
   			}
   			intRetRes<- rep(0,nrow(reference))
   			intRetRes[which(referenceIntronExon=="intron")]<- refRes
+  			
+  			rm("refRes")
   		}
   ########
   ########!!!
@@ -1065,6 +1145,8 @@ interestIntExAnalyseSingle <- function(
   			}
   			intSpanRes<- rep(0,nrow(reference))
   			intSpanRes[which(referenceIntronExon=="intron")]<- refRes
+  			
+  			rm("refRes")
   	}
   
   ####
@@ -1209,6 +1291,8 @@ interestIntExAnalyseSingle <- function(
   	  }
   	  exSkipRes<- rep(0,nrow(reference))
   	  exSkipRes[which(referenceIntronExon=="exon")]<- refRes
+  	  
+  	  rm("refRes")
   	}
   }
 ########!!!
@@ -1230,34 +1314,36 @@ interestIntExAnalyseSingle <- function(
 	#	if(length(intRetRes)>0)
 	if("IntRet" %in% method)
 	  finalRes<-c(finalRes, intRetRes)
+	rm("intRetRes")
 	
 	#	if(length(exExRes)>0){
 	if("ExEx" %in% method)
 	  finalRes<-c(finalRes, exExRes)
-	
+	rm("exExRes")
 	########
 	########!!!
 	#	if(length(intSpanRes)>0)
 	if("IntSpan" %in% method)
 	  finalRes<-c(finalRes, intSpanRes)
+	rm("intSpanRes")
 	
 	#	if(length(exSkipRes)>0)
 	if("ExSkip" %in% method)
 	  finalRes<-c(finalRes, exSkipRes)
+	rm("exSkipRes")
 ########!!!
 ########
-	
 	if(logFile!="")
-	  cat( "Single intRetRes: ", length(intRetRes), "\n", 
+	  cat( "Singleend ", 
+	       qNam, " ", length(finalRes), "\n",
 	       file=logFile, append=appendLogFile)
-	cat( "Single intRetRes: ", length(intRetRes), "\n")
-	
-	if(logFile!="")
-	  cat( "Single exExRes: ", length(exExRes), "\n", 
-	       file=logFile, append=appendLogFile)
-	cat( " Single exExRes: ", length(exExRes), "\n")
-	
+	cat( "Singleend ", 
+	     qNam, " ", length(finalRes), "\n")
+	# if(is.null(finalRes) | (length(finalRes)==0))
+	#   finalRes<- rep(0, 
+	#     length(which(method%in%c("ExEx", "IntRet", "IntSpan", "ExSkip"))))
 	return(finalRes)
+	rm("finalRes")
 #End of defining function for single mapped reads that runs on parallel cores
 } 
 	

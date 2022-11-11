@@ -10,7 +10,10 @@ deseqInterest<- function(x, design,
 		colData = colData(x), design = design)
 	if(length(sizeFactor)>0)
 		DESeq2::sizeFactors(dds)=sizeFactor
-	dds<- DESeq2::DESeq(dds)
+	dds<- DESeq2::DESeq(dds, BPPARAM = bpparam)
+	cat("\nResult names that can be used for contrasts are:\n")
+	cat(DESeq2::resultsNames(dds))
+	cat("\n")
 	ddsDiff<- DESeq2::results(dds, 
 	contrast=contrast, pAdjustMethod=pAdjustMethod, parallel = parallel, 
 	BPPARAM = bpparam, ...)

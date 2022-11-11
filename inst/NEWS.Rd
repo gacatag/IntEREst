@@ -2,6 +2,20 @@
 \title{IntEREst News}
 \encoding{UTF-8}
 
+\section{CHANGES IN VERSION 1.24.0}{
+
+	\subsection{SIGNIFICANT USER-VISIBLE CHANGES}{
+
+		\itemize{
+
+			\item \code{GenomicFiles::reduceByYield} function is now used instead of 
+			\code{BiocParallel::bpiterat} for improved efficiency and readability. 
+			This relates to how analysis related to different pieces of the alignment 
+			data is distributed over the parallel cores and the results are sumarized.
+
+		}
+	}
+}
 
 \section{CHANGES IN VERSION 1.22.0}{
 

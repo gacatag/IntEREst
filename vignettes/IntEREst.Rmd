@@ -221,7 +221,7 @@ testInterest<- interest(
 	junctionReadsOnly=FALSE,
 	bamFile=bamF,
 	isPaired=TRUE,
-	isPairedDuplicate=FALSE,
+	isPairedDuplicate=NA,
 	isSingleReadDuplicate=NA,
 	reference=ref,
 	referenceGeneNames=ref[,"ens_gene_id"],
@@ -232,7 +232,6 @@ testInterest<- interest(
 	logFile=paste(outDir,
 		"log.txt", sep="/"),
 	method="IntRet",
-	clusterNo=1,
 	returnObj=FALSE,
 	scaleLength= TRUE,
 	scaleFragment= TRUE
@@ -268,7 +267,6 @@ testInterest<- interest(
 	logFile=paste(outDir,
 		"log.txt", sep="/"),
 	method="IntSpan",
-	clusterNo=1,
 	returnObj=FALSE,
 	scaleLength= TRUE,
 	scaleFragment= TRUE
@@ -304,7 +302,6 @@ testInterest<- interest(
 	logFile=paste(outDir,
 		"log.txt", sep="/"),
 	method="ExEx",
-	clusterNo=1,
 	returnObj=FALSE,
 	scaleLength= TRUE,
 	scaleFragment= TRUE
