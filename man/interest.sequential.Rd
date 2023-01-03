@@ -12,7 +12,7 @@ interest.sequential( bamFileYieldSize=1000000, bamFile, isPaired,
 	referenceIntronExon, repeatsTableToFilter=c(), 
 	junctionReadsOnly=FALSE, outFile, logFile="", 
 	returnObj= FALSE, method=c("ExEx", "IntRet", "IntSpan", "ExSkip"), 
-	appendLogFile=FALSE, sampleName="",
+	strandSpecific, appendLogFile=FALSE, sampleName="",
 	scaleLength= c(TRUE,FALSE), scaleFragment= c(TRUE,TRUE), 
 	limitRanges=GRanges(), 
 	excludeFusionReads=FALSE,
@@ -72,6 +72,13 @@ the exons (\code{ExSkip}). In \code{IntSpan} mode the introns in the reference
 are taken into account only; whilst in \code{IntRet} the introns and their 
 spanning exons, and in \code{ExEx} and \code{ExSkip} mode only the exons in the
 reference are taken into account.}
+\item{strandSpecific}{The description for strand specificity of the RNAseq data.
+The values are either "unstranded", "stranded", or "reverse".If the reads are 
+not strand specific or directional use "unstranded". If the first read in 
+paired-read sequencing or the reads single-read sequencing is in the same 
+direction as the the transcript strand use "stranded". If the first read in 
+paired-read sequencing or the reads in single-read sequencing is in the oposite
+direction to the transcript strand use "reverse".}
 \item{appendLogFile}{
 Whether log information should be appended to the \code{logFile}. It is 
 \code{FALSE} by default.}
@@ -149,6 +156,7 @@ test= interest.sequential(
 	logFile=paste(outDir, 
 	    "log.txt", sep="/"),
 	method=c("IntRet","IntSpan"),
+	strandSpecific="unstranded",
 	returnObj=TRUE, 
 	scaleLength= c(TRUE,FALSE), 
 	scaleFragment= c(TRUE,TRUE)

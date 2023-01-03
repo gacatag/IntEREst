@@ -7,6 +7,7 @@ function(
 	maxNoMappedReads,
 	logFile,
 	method,
+	strandSpecific,
 	appendLogFile=TRUE,
 	repeatsTableToFilter,
 	referenceIntronExon,
@@ -93,21 +94,41 @@ function(
 		  return(yld)
 		  
 		}
-		resPair<- GenomicFiles::reduceByYield(bf, YIELD= YIELD, 
-		  MAP=interestIntExAnalysePair,
-			reference=reference,
-			maxNoMappedReads=maxNoMappedReads,
-			logFile=logFile,
-			method=method,
-			appendLogFile=appendLogFile,
-			repeatsTableToFilter=repeatsTableToFilter,
-			referenceIntronExon=referenceIntronExon,
-			junctionReadsOnly=junctionReadsOnly,
-			limitRanges=limitRanges,
-			excludeFusionReads=excludeFusionReads,
-			#BPPARAM=bpparam, 
-			REDUCE = `+`, parallel=parallel, iterate = TRUE, 
-			init=rep(0, nrow(reference)))
+		
+		if(strandSpecific=="unstranded"){
+  		resPair<- GenomicFiles::reduceByYield(bf, YIELD= YIELD, 
+  		  MAP=interestIntExAnalysePairUnstranded,
+  			reference=reference,
+  			maxNoMappedReads=maxNoMappedReads,
+  			logFile=logFile,
+  			method=method,
+  			appendLogFile=appendLogFile,
+  			repeatsTableToFilter=repeatsTableToFilter,
+  			referenceIntronExon=referenceIntronExon,
+  			junctionReadsOnly=junctionReadsOnly,
+  			limitRanges=limitRanges,
+  			excludeFusionReads=excludeFusionReads,
+  			#BPPARAM=bpparam, 
+  			REDUCE = `+`, parallel=parallel, iterate = TRUE, 
+  			init=rep(0, nrow(reference)))
+  		} else{
+  		resPair<- GenomicFiles::reduceByYield(bf, YIELD= YIELD, 
+  			MAP=interestIntExAnalysePairStranded,
+  			reference=reference,
+  			maxNoMappedReads=maxNoMappedReads,
+  			logFile=logFile,
+  			method=method,
+  			appendLogFile=appendLogFile,
+  			repeatsTableToFilter=repeatsTableToFilter,
+  			referenceIntronExon=referenceIntronExon,
+  			junctionReadsOnly=junctionReadsOnly,
+  			limitRanges=limitRanges,
+  			strandSpecific=strandSpecific,
+  			excludeFusionReads=excludeFusionReads,
+  			#BPPARAM=bpparam, 
+  			REDUCE = `+`, parallel=parallel, iterate = TRUE, 
+  			init=rep(0, nrow(reference)))  			  
+  			}
 
 		
 		if(logFile!="")
@@ -119,7 +140,7 @@ function(
 		if(length(limitRanges)==0 | (!loadLimitRangesReads)){
 		  scParam2=Rsamtools::ScanBamParam(
 			  what=Rsamtools::scanBamWhat()[c(1,
-				  3,5,8,13,9, 10, 6, 4, 14, 15)], 
+				  3,5,8,13,9, 10, 6, 4, 14, 15,2)], 
 			  flag=Rsamtools::scanBamFlag(hasUnmappedMate=TRUE,
 				  isPaired=TRUE, 
 				  isDuplicate=isSingleReadDuplicate))
@@ -127,7 +148,7 @@ function(
 		  scParam2=Rsamtools::ScanBamParam(
 		    which=limitRanges,
 		    what=Rsamtools::scanBamWhat()[c(1,
-		                                    3,5,8,13,9, 10, 6, 4, 14, 15)],
+		                                    3,5,8,13,9, 10, 6, 4, 14, 15,2)],
 		    flag=Rsamtools::scanBamFlag(hasUnmappedMate=TRUE,
 		                                isPaired=TRUE,
 		                                isDuplicate=isSingleReadDuplicate))		  
@@ -153,21 +174,40 @@ function(
 		  return(yld)
 		  
 		}
-		resSingle<- GenomicFiles::reduceByYield(bf, YIELD= YIELD2,
-		  MAP=interestIntExAnalyseSingle, 
-			reference=reference,
-			maxNoMappedReads=maxNoMappedReads,
-			logFile=logFile,
-			method=method,
-			appendLogFile=appendLogFile,
-			repeatsTableToFilter=repeatsTableToFilter,
-			referenceIntronExon=referenceIntronExon,
-			junctionReadsOnly=junctionReadsOnly,
-			limitRanges=limitRanges,
-			excludeFusionReads=excludeFusionReads,
-			# BPPARAM=bpparam,
-			REDUCE = `+`, parallel=parallel, iterate = TRUE, 
-			init=rep(0, nrow(reference)))
+		if(strandSpecific=="unstranded"){
+  		resSingle<- GenomicFiles::reduceByYield(bf, YIELD= YIELD2,
+  		  MAP=interestIntExAnalyseSingleUnstranded, 
+  			reference=reference,
+  			maxNoMappedReads=maxNoMappedReads,
+  			logFile=logFile,
+  			method=method,
+  			appendLogFile=appendLogFile,
+  			repeatsTableToFilter=repeatsTableToFilter,
+  			referenceIntronExon=referenceIntronExon,
+  			junctionReadsOnly=junctionReadsOnly,
+  			limitRanges=limitRanges,
+  			excludeFusionReads=excludeFusionReads,
+  			# BPPARAM=bpparam,
+  			REDUCE = `+`, parallel=parallel, iterate = TRUE, 
+  			init=rep(0, nrow(reference)))
+		} else{
+		  resSingle<- GenomicFiles::reduceByYield(bf, YIELD= YIELD2,
+		    MAP=interestIntExAnalyseSingleStranded, 
+		    reference=reference,
+		    maxNoMappedReads=maxNoMappedReads,
+		    logFile=logFile,
+		    method=method,
+		    appendLogFile=appendLogFile,
+		    repeatsTableToFilter=repeatsTableToFilter,
+		    referenceIntronExon=referenceIntronExon,
+		    junctionReadsOnly=junctionReadsOnly,
+		    limitRanges=limitRanges,
+		    strandSpecific=strandSpecific,
+		    excludeFusionReads=excludeFusionReads,
+		    # BPPARAM=bpparam,
+		    REDUCE = `+`, parallel=parallel, iterate = TRUE, 
+		    init=rep(0, nrow(reference)))		  
+		}
 		
 		if(logFile!="")
 		  cat( "BETWEEN SINGLE AND PAIRED N4 \n", 
@@ -181,7 +221,7 @@ function(
 		if(length(limitRanges)==0 | (!loadLimitRangesReads)){
 		scParam3=Rsamtools::ScanBamParam(
 			what=Rsamtools::scanBamWhat()[c(1,
-				3,5,8,13,9, 10, 6, 4, 14, 15)], 
+				3,5,8,13,9, 10, 6, 4, 14, 15,2)], 
 			flag=Rsamtools::scanBamFlag(
 				isPaired=NA, 
 				isDuplicate=isSingleReadDuplicate))
@@ -189,7 +229,7 @@ function(
 		  scParam3=Rsamtools::ScanBamParam(
 		    which=limitRanges,
 		    what=Rsamtools::scanBamWhat()[c(1,
-		                                    3,5,8,13,9, 10, 6, 4, 14, 15)],
+		                                    3,5,8,13,9, 10, 6, 4, 14, 15,2)],
 		    flag=Rsamtools::scanBamFlag(
 		      isPaired=NA, 
 		      isDuplicate=isSingleReadDuplicate))		  
@@ -205,23 +245,43 @@ function(
 		  return(yld)
 		  
 		}
-		resSingle<-GenomicFiles::reduceByYield(bf, 
-      YIELD= YIELD3,
-		  MAP=interestIntExAnalyseSingle, 
-			reference=reference,
-			maxNoMappedReads=maxNoMappedReads,
-			logFile=logFile,
-			method=method,
-			appendLogFile=appendLogFile,
-			repeatsTableToFilter=repeatsTableToFilter,
-			referenceIntronExon=referenceIntronExon,
-			junctionReadsOnly=junctionReadsOnly,
-			limitRanges=limitRanges,
-			excludeFusionReads=excludeFusionReads,
-#			BPPARAM=bpparam, 
-			REDUCE = `+`, parallel=parallel, iterate = TRUE, 
-      init=rep(0, nrow(reference)))
-		resPair<-rep(0, nrow(reference)*length(method))
+		if(strandSpecific=="unstranded"){
+  		resSingle<-GenomicFiles::reduceByYield(bf, 
+        YIELD= YIELD3,
+  		  MAP=interestIntExAnalyseSingleUnstranded, 
+  			reference=reference,
+  			maxNoMappedReads=maxNoMappedReads,
+  			logFile=logFile,
+  			method=method,
+  			appendLogFile=appendLogFile,
+  			repeatsTableToFilter=repeatsTableToFilter,
+  			referenceIntronExon=referenceIntronExon,
+  			junctionReadsOnly=junctionReadsOnly,
+  			limitRanges=limitRanges,
+  			excludeFusionReads=excludeFusionReads,
+  #			BPPARAM=bpparam, 
+  			REDUCE = `+`, parallel=parallel, iterate = TRUE, 
+        init=rep(0, nrow(reference)))
+		} else{
+		  resSingle<-GenomicFiles::reduceByYield(bf, 
+		    YIELD= YIELD3,
+		    MAP=interestIntExAnalyseSingleStranded, 
+		    reference=reference,
+		    maxNoMappedReads=maxNoMappedReads,
+		    logFile=logFile,
+		    method=method,
+		    appendLogFile=appendLogFile,
+		    repeatsTableToFilter=repeatsTableToFilter,
+		    referenceIntronExon=referenceIntronExon,
+		    junctionReadsOnly=junctionReadsOnly,
+		    limitRanges=limitRanges,
+		    strandSpecific=strandSpecific,
+		    excludeFusionReads=excludeFusionReads,
+		    #			BPPARAM=bpparam, 
+		    REDUCE = `+`, parallel=parallel, iterate = TRUE, 
+		    init=rep(0, nrow(reference)))		  
+		}
+  	resPair<-rep(0, nrow(reference)*length(method))
 	}
 	# resPair<-rep(0, nrow(reference)*length(method))
 	# resSingle<-rep(0, nrow(reference)*length(method))

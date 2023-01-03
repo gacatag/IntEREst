@@ -234,7 +234,8 @@ testInterest<- interest(
 	method="IntRet",
 	returnObj=FALSE,
 	scaleLength= TRUE,
-	scaleFragment= TRUE
+	scaleFragment= TRUE,
+	strandSpecific="unstranded"
 )
 
 testIntRetObj<- readInterestResults(
@@ -269,7 +270,8 @@ testInterest<- interest(
 	method="IntSpan",
 	returnObj=FALSE,
 	scaleLength= TRUE,
-	scaleFragment= TRUE
+	scaleFragment= TRUE,
+	strandSpecific="unstranded"
 )
 
 testIntSpanObj<- readInterestResults(
@@ -304,7 +306,8 @@ testInterest<- interest(
 	method="ExEx",
 	returnObj=FALSE,
 	scaleLength= TRUE,
-	scaleFragment= TRUE
+	scaleFragment= TRUE,
+	strandSpecific="unstranded"
 )
 
 testExExObj<- readInterestResults(

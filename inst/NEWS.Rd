@@ -4,6 +4,16 @@
 
 \section{CHANGES IN VERSION 1.24.0}{
 
+        \subsection{NEW FEATURES}{
+
+                \itemize{
+
+                        \item \code{strandSpecific} is a new parameter added to \code{interest()} and \code{interest.sequential()}. It indicates that
+IntEREst is now strand-aware. All analysis can be run whilst taking into account (or ignoring) the strand specificity of the sequencing reads. 
+
+                }
+        }
+
 	\subsection{SIGNIFICANT USER-VISIBLE CHANGES}{
 
 		\itemize{
