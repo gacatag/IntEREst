@@ -313,7 +313,8 @@ interestIntExAnalysePairStranded <- function(
   					S4Vectors::queryHits(hitsFilter))))
   				
   				hitsFilter= GenomicRanges::findOverlaps(read2GRanges, 
-  				                                        repeatGRanges, type= "any", ignore.strand=TRUE)
+  				                                        repeatGRanges, type= "any", 
+  				                                        ignore.strand=TRUE)
   				
   				filtInd2_1= which(is.na(match(S4Vectors::queryHits(hits2_1), 
   				                              S4Vectors::queryHits(hitsFilter))))
@@ -863,7 +864,8 @@ interestIntExAnalysePairStranded <- function(
   	    IRanges::IRanges(start=begRead2, end=endRead2), strand=strAdj2)
   	  
   	  refGRanges= GenomicRanges::GRanges( seqnames=ref[,"chr"], 
-  	    IRanges::IRanges(start=ref[,"begin"], end=ref[,"end"]))
+  	    IRanges::IRanges(start=ref[,"begin"], end=ref[,"end"]), 
+  	    strand=ref[,"strand"])
   	  
   	  hitsAllEx1 <- GenomicRanges::findOverlaps(refGRanges, 
   	                                           read1GRanges, type= "within",
@@ -963,11 +965,11 @@ interestIntExAnalysePairStranded <- function(
 ########
 	finalRes<-c()
 	
+	if(length(exExRes)==0)
+	  exExRes<- rep(0,nrow(reference))	
+	
 	if(length(intRetRes)==0)
 	  intRetRes<- rep(0,nrow(reference))
-
-	if(length(exExRes)==0)
-	  exExRes<- rep(0,nrow(reference))
 	  
 	if(length(intSpanRes)==0)
 	  intSpanRes<- rep(0,nrow(reference))
@@ -975,15 +977,16 @@ interestIntExAnalysePairStranded <- function(
 	if(length(exSkipRes)==0)
 	  exSkipRes<- rep(0,nrow(reference))
 
+	
+	#	if(length(exExRes)>0){
+	if("ExEx" %in% method)
+	  finalRes<-c(finalRes, exExRes)
+	rm("exExRes")	
+	
 #	if(length(intRetRes)>0)
 	if("IntRet" %in% method)
 		finalRes<-c(finalRes, intRetRes)
 	rm("intRetRes")
-	
-#	if(length(exExRes)>0){
-	if("ExEx" %in% method)
-		finalRes<-c(finalRes, exExRes)
-	rm("exExRes")
 
 ########
 ########!!!
@@ -1679,28 +1682,33 @@ interestIntExAnalyseSingleStranded <- function(
 ########!!!
 ########
 	finalRes<-c()
-	
-	if(length(intRetRes)==0)
-	  intRetRes<- rep(0,nrow(reference))
+
 	
 	if(length(exExRes)==0)
-	  exExRes<- rep(0,nrow(reference))
+	  exExRes<- rep(0,nrow(reference))	
+		
+	if(length(intRetRes)==0)
+	  intRetRes<- rep(0,nrow(reference))
+
 	
 	if(length(intSpanRes)==0)
 	  intSpanRes<- rep(0,nrow(reference))
 	
 	if(length(exSkipRes)==0)
 	  exSkipRes<- rep(0,nrow(reference))
+
 	
+	#	if(length(exExRes)>0){
+	if("ExEx" %in% method)
+	  finalRes<-c(finalRes, exExRes)
+	rm("exExRes")	
+		
 	#	if(length(intRetRes)>0)
 	if("IntRet" %in% method)
 	  finalRes<-c(finalRes, intRetRes)
 	rm("intRetRes")
 	
-	#	if(length(exExRes)>0){
-	if("ExEx" %in% method)
-	  finalRes<-c(finalRes, exExRes)
-	rm("exExRes")
+
 	########
 	########!!!
 	#	if(length(intSpanRes)>0)

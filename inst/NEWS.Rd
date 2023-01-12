@@ -25,6 +25,17 @@ IntEREst is now strand-aware. All analysis can be run whilst taking into account
 
 		}
 	}
+	\subsection{BUG FIXES}{
+
+      \itemize{
+
+              \item In \code{interest()} and and \code{interest.sequential()} 
+              The oredr of the results of the different methods in the result 
+              matrix is corrected. Correct running of analyses using multiple 
+              methods with a single command is now possible.
+
+      }
+ }
 }
 
 \section{CHANGES IN VERSION 1.22.0}{

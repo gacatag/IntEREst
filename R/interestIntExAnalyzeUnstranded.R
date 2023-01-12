@@ -690,11 +690,11 @@ interestIntExAnalysePairUnstranded <- function(
 ########
 	finalRes<-c()
 	
-	if(length(intRetRes)==0)
-	  intRetRes<- rep(0,nrow(reference))
-
 	if(length(exExRes)==0)
 	  exExRes<- rep(0,nrow(reference))
+	
+	if(length(intRetRes)==0)
+	  intRetRes<- rep(0,nrow(reference))
 	  
 	if(length(intSpanRes)==0)
 	  intSpanRes<- rep(0,nrow(reference))
@@ -702,15 +702,15 @@ interestIntExAnalysePairUnstranded <- function(
 	if(length(exSkipRes)==0)
 	  exSkipRes<- rep(0,nrow(reference))
 
+	#	if(length(exExRes)>0){
+	if("ExEx" %in% method)
+	  finalRes<-c(finalRes, exExRes)
+	rm("exExRes")
+	
 #	if(length(intRetRes)>0)
 	if("IntRet" %in% method)
 		finalRes<-c(finalRes, intRetRes)
 	rm("intRetRes")
-	
-#	if(length(exExRes)>0){
-	if("ExEx" %in% method)
-		finalRes<-c(finalRes, exExRes)
-	rm("exExRes")
 
 ########
 ########!!!
@@ -1299,27 +1299,28 @@ interestIntExAnalyseSingleUnstranded <- function(
 ########
 	finalRes<-c()
 	
-	if(length(intRetRes)==0)
-	  intRetRes<- rep(0,nrow(reference))
-	
 	if(length(exExRes)==0)
 	  exExRes<- rep(0,nrow(reference))
+	
+	if(length(intRetRes)==0)
+	  intRetRes<- rep(0,nrow(reference))
 	
 	if(length(intSpanRes)==0)
 	  intSpanRes<- rep(0,nrow(reference))
 	
 	if(length(exSkipRes)==0)
 	  exSkipRes<- rep(0,nrow(reference))
-	
+
+	#	if(length(exExRes)>0){
+	if("ExEx" %in% method)
+	  finalRes<-c(finalRes, exExRes)
+	rm("exExRes")	
+		
 	#	if(length(intRetRes)>0)
 	if("IntRet" %in% method)
 	  finalRes<-c(finalRes, intRetRes)
 	rm("intRetRes")
 	
-	#	if(length(exExRes)>0){
-	if("ExEx" %in% method)
-	  finalRes<-c(finalRes, exExRes)
-	rm("exExRes")
 	########
 	########!!!
 	#	if(length(intSpanRes)>0)
