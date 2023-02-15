@@ -1052,25 +1052,26 @@ interestIntExAnalyseSingleStranded <- function(
 	readMate<- rep(1,nrow(sam1FlagMat))
 	readMate[which(sam1FlagMat[,"isSecondMateRead"]==1)]<- 2
 
-	if(length(limitRanges)>0 & length(readTmpFil)>0){
-	  
-	  readTmpFirst<- readTmpFil 
-	  if(strandSpecific=="stranded"){
-	    if(length(which(readMate==1))>0)
-	      GenomicRanges::strand(readTmpFirst)[which(readMate==1)]<- 
-	        as.character(GenomicRanges::strand(readTmpFirst)[which(readMate==1)])
-	    if(length(which(readMate==2))>0)
-	      GenomicRanges::strand(readTmpFirst)[which(readMate==2)]<- 
-	        as.character(revStr[as.character(GenomicRanges::strand(readTmpFirst))][which(readMate==2)])
-	  } else if (strandSpecific=="reverse"){
-	    if(length(which(readMate==2))>0)
-	      GenomicRanges::strand(readTmpFirst)[which(readMate==2)]<- 
-	        as.character(GenomicRanges::strand(readTmpFirst)[which(readMate==2)])
-	    if(length(which(readMate==1))>0)
-	      GenomicRanges::strand(readTmpFirst)[which(readMate==1)]<- 
-	        as.character(revStr[as.character(GenomicRanges::strand(readTmpFirst))][which(readMate==1)])
-	  }
-	  
+	
+	readTmpFirst<- unlist(readTmpFil) 
+	if(strandSpecific=="stranded"){
+	  if(length(which(readMate==1))>0)
+	    GenomicRanges::strand(readTmpFirst)[which(readMate==1)]<- 
+	      as.character(GenomicRanges::strand(readTmpFirst)[which(readMate==1)])
+	  if(length(which(readMate==2))>0)
+	    GenomicRanges::strand(readTmpFirst)[which(readMate==2)]<- 
+	      as.character(revStr[as.character(GenomicRanges::strand(readTmpFirst))][which(readMate==2)])
+	} else if (strandSpecific=="reverse"){
+	  if(length(which(readMate==2))>0)
+	    GenomicRanges::strand(readTmpFirst)[which(readMate==2)]<- 
+	      as.character(GenomicRanges::strand(readTmpFirst)[which(readMate==2)])
+	  if(length(which(readMate==1))>0)
+	    GenomicRanges::strand(readTmpFirst)[which(readMate==1)]<- 
+	      as.character(revStr[as.character(GenomicRanges::strand(readTmpFirst))][which(readMate==1)])
+	}
+	
+	if(length(limitRanges)>0 & length(readTmpFirst)>0){
+
 	  r1Map<- GenomicRanges::findOverlaps(
 	    readTmpFirst, 
 	    limitRanges,
@@ -1078,13 +1079,11 @@ interestIntExAnalyseSingleStranded <- function(
 	    ignore.strand= FALSE)
 	  
 	  filLimInd<- sort(unique(S4Vectors::queryHits(r1Map)), decreasing=FALSE)
-	  readTmpFil<- readTmpFil[filLimInd,]
+	  readTmpFirst<- readTmpFirst[filLimInd,]
 	}
-
-
 	
 #Extract information of the mapped pieces of the reads
-	sam1<- as.data.frame(readTmpFil)[, c("qname", "rname", "strand", 
+	sam1<- as.data.frame(readTmpFirst)[, c("qname", "rname", "strand", 
 		"pos", "qual", "cigar")]
 	colnames(sam1)<- c("qName","rName","strand","pos","qual",
 		"cigar")
