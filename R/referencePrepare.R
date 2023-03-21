@@ -60,15 +60,22 @@ function( outFileTranscriptsAnnotation="",
 
 	time1=Sys.time()
 
-	exonsGR=GenomicRanges::GRanges( 
-		seqnames=as.character(GenomicRanges::seqnames(unlist(exons))), 
-		IRanges::IRanges(
-			start=as.numeric(GenomicRanges::start(unlist(exons))) , 
-			end=as.numeric(GenomicRanges::end(unlist(exons))) ))
-
 	if(!ignore.strand){
-		strandsEx=as.character(GenomicRanges::strand(unlist(exons)))
+	  strandsEx=as.character(GenomicRanges::strand(unlist(exons)))
+	  exonsGR=GenomicRanges::GRanges( 
+	    seqnames=as.character(GenomicRanges::seqnames(unlist(exons))), 
+	    IRanges::IRanges(
+	      start=as.numeric(GenomicRanges::start(unlist(exons))) , 
+	      end=as.numeric(GenomicRanges::end(unlist(exons))) ),
+	    strand=strandsEx)
+	} else {
+	  exonsGR=GenomicRanges::GRanges( 
+	    seqnames=as.character(GenomicRanges::seqnames(unlist(exons))), 
+	    IRanges::IRanges(
+	      start=as.numeric(GenomicRanges::start(unlist(exons))) , 
+	      end=as.numeric(GenomicRanges::end(unlist(exons))) ))
 	}
+	
 	if (collapseExons){
 		genMat=matrix(as.vector(unlist(sapply(exons,function(tmp)
 			return(  c((as.character(GenomicRanges::seqnames(tmp)))[1], 
@@ -89,15 +96,15 @@ function( outFileTranscriptsAnnotation="",
 		genGr=GenomicRanges::GRanges( seqnames=genMat[,1], 
 			IRanges::IRanges(start=genBegs , end=genEnds ))
 	
-		reduceExGr=GenomicRanges::reduce(exonsGR)
+		reduceExGr=GenomicRanges::reduce(exonsGR, ignore.strand=ignore.strand)
 		intronsGr=GenomicRanges::gaps(reduceExGr)
 
-		reduceGenGr=GenomicRanges::reduce(genGr)
+		reduceGenGr=GenomicRanges::reduce(genGr, ignore.strand=ignore.strand)
 	
 		hitsEx= GenomicRanges::findOverlaps(reduceExGr, reduceGenGr, 
-			type="any")
+			type="any", ignore.strand=ignore.strand)
 		hitsInt= GenomicRanges::findOverlaps(intronsGr, reduceGenGr, 
-			type="any")
+			type="any", ignore.strand=ignore.strand)
 
 		genesExMap=tapply(S4Vectors::queryHits(hitsEx), 
 			S4Vectors::subjectHits(hitsEx), unique)
@@ -335,10 +342,13 @@ function( outFileTranscriptsAnnotation="",
 				IRanges::IRanges(start=tapply(as.numeric(matOut[,"begin"]),
 					matOut[,"collapsed_transcripts_id"],min) ,
 					end=tapply(as.numeric(matOut[,"end"]),
-						matOut[,"collapsed_transcripts_id"],max) ))
+						matOut[,"collapsed_transcripts_id"],max) ), 
+				strand= tapply(as.character(
+				  matOut[,"strand"]),
+				  matOut[,"collapsed_transcripts_id"],head, n=1))
 			namesMatOutTrGr=unique(matOut[,"collapsed_transcripts_id"])
 		hitsExMat= GenomicRanges::findOverlaps(exonsGR, matOutTrGr, 
-			type="any")
+			type="any", ignore.strand=ignore.strand)
 		strTmp=tapply(strandsEx[S4Vectors::queryHits(hitsExMat)], 
 			namesMatOutTrGr[S4Vectors::subjectHits(hitsExMat)], unique)
 		strTmpVec=sapply(strTmp, function(tmp){

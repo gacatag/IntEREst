@@ -11,6 +11,8 @@
                         \item \code{strandSpecific} is a new parameter added to \code{interest()} and \code{interest.sequential()}. It indicates that
 IntEREst is now strand-aware. All analysis can be run whilst taking into account (or ignoring) the strand specificity of the sequencing reads. 
 
+                        \item \code{referencePrepare} can create references (with collapsed exons) that does not ignore the strand information.
+
                 }
         }
 
@@ -58,7 +60,7 @@ IntEREst is now strand-aware. All analysis can be run whilst taking into account
 
 		\itemize{
 
-			\item \code{limitRanges} parameter in \code{interest()} and \code{interest.sequential()} functions allow for targetted analysis. It only loads reads that map to the dfined coordinates.
+			\item \code{limitRanges} parameter in \code{interest()} and \code{interest.sequential()} functions allow for targetted analysis. It only loads reads that map to the defined coordinates.
 			
 		}
 	}
