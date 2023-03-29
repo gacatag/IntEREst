@@ -94,7 +94,7 @@ function( outFileTranscriptsAnnotation="",
 			as.numeric(genMat[genMat[,6]=="-",3])-1
 	
 		genGr=GenomicRanges::GRanges( seqnames=genMat[,1], 
-			IRanges::IRanges(start=genBegs , end=genEnds ))
+			IRanges::IRanges(start=genBegs , end=genEnds ), strand=genMat[,6])
 	
 		reduceExGr=GenomicRanges::reduce(exonsGR, ignore.strand=ignore.strand)
 		intronsGr=GenomicRanges::gaps(reduceExGr)
@@ -179,7 +179,7 @@ function( outFileTranscriptsAnnotation="",
 			stringsAsFactors=FALSE)
 
 		hitsGenToColl= GenomicRanges::findOverlaps(genGr,reduceGenGr, 
-			type="any")
+			type="any", ignore.strand=FALSE)
 #Annotate collapsed transcripts
 		trAnnoCollList=lapply(
 			as.numeric(unique(matOut[,"collapsed_transcripts_id"])), 
