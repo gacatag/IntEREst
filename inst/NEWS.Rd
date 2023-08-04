@@ -2,6 +2,25 @@
 \title{IntEREst News}
 \encoding{UTF-8}
 
+
+\section{CHANGES IN VERSION 1.26.0}{
+\subsection{SIGNIFICANT USER-VISIBLE CHANGES}{
+
+		\itemize{
+
+			\item \code{IntSpan} method is changed to count reads that span the whole 
+			intron precisely. Previous these were counted separayted for 5' end and 
+			3' end of the introns.
+			
+			\item \code{repeatsTableToFilter} is ignored for IntSpana nd ExSkip as 
+			the skipped regions of the reads (denoted by N or sometimes D in the 
+			CIGAR of bam/sam file ) are taken into count for these benchmarks (not 
+			the mapped regions which are  dentoed with Ms in the cigar).
+
+		}
+	}
+}
+
 \section{CHANGES IN VERSION 1.24.0}{
 
         \subsection{NEW FEATURES}{

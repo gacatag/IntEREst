@@ -529,190 +529,272 @@ interestIntExAnalysePairStranded <- function(
   	methodNo=which(method=="IntSpan")
   	if(length(methodNo)>0){
   
-  		sam1IndSp<- grep("N",sam1$cigar)
-  		sam2IndSp<- grep("N",sam2$cigar)
-  
-  		lenRead1= unlist(lapply(sam1$cigar[sam1IndSp], function(tmp) {
-  			frqEvent=as.numeric(unlist(strsplit(tmp,split="[A-Z]")))
-  			names(frqEvent)=unlist(strsplit(tmp,split=""))[grep('[A-Z]',
-  				unlist(strsplit(tmp,split="")))]
-  			return(sum(frqEvent[grep("[N|M|D]",names(frqEvent))]))		
-  		}))
-  		lenRead2= unlist(lapply(sam2$cigar[sam2IndSp], function(tmp) {
-  			frqEvent=as.numeric(unlist(strsplit(tmp,split="[A-Z]")))
-  			names(frqEvent)=unlist(strsplit(tmp,split=""))[grep('[A-Z]',
-  				unlist(strsplit(tmp,split="")))]
-  			return(sum(frqEvent[grep("[N|M|D]",names(frqEvent))]))
-  		}))
-  		locRead1=sam1[,"pos"]
-  		chrRead1=sam1[,"rName"]
-  		strRead1=sam1[,"strand"]
-  		chrRead2=sam2[,"rName"]
-  		locRead2=sam2[,"pos"]
-  		strRead2=sam2[,"strand"]
-  		
-  		frqEventRead1<- lapply(sam1IndSp, function (tmp) {
-  			frqEventTmp= as.numeric(unlist(strsplit(sam1$cigar[tmp],
-  				split="[A-Z]")))
-  			names(frqEventTmp)= unlist(strsplit(sam1$cigar[tmp], 
-  				split=""))[grep('[A-Z]', unlist(strsplit(sam1$cigar[tmp]
-  					,split="")))]
-  			frqEventTmp=frqEventTmp[!is.na(match(names(frqEventTmp),
-  				c("N","D","M")))]
-  	# Finding start and end of the mapped pieces of the reads using cigar 
-  			eventTmp<- c(locRead1[tmp], locRead1[tmp]+
-  				cumsum(as.numeric(frqEventTmp)))
-  			begEventTmp<-eventTmp[-length(eventTmp)]
-  			endEventTmp<- begEventTmp+as.numeric(frqEventTmp)-1
-  
-  			frqEventTmpM=frqEventTmp[!is.na(match(names(frqEventTmp),
-  				"M"))]
-  			begEventTmpM=begEventTmp[!is.na(match(names(frqEventTmp),
-  				"M"))]
-  			endEventTmpM=endEventTmp[!is.na(match(names(frqEventTmp),
-  				"M"))]
-  			return( list(readNo=rep(tmp,length(frqEventTmpM)), 
-  				chr=rep(chrRead1[tmp],length(frqEventTmpM)), 
-  				frqEventTmpM, begEventTmpM, endEventTmpM,
-  				strand=rep(strRead1[tmp],length(frqEventTmpM))))
-  	
-  		})
-  
-  		frqEventRead2<- lapply(sam2IndSp, function (tmp) {
-  			frqEventTmp= as.numeric(unlist(strsplit(sam2$cigar[tmp],
-  				split="[A-Z]")))
-  			names(frqEventTmp)= unlist(strsplit(sam2$cigar[tmp], 
-  				split=""))[grep('[A-Z]', unlist(strsplit(sam2$cigar[tmp]
-  				, split="")))]
-  			frqEventTmp= frqEventTmp[!is.na(match(names(frqEventTmp),
-  				c("N","D","M")))]
-  	# Finding start and end of the mapped pieces of the reads using cigar 
-  			eventTmp<- c(locRead2[tmp], locRead2[tmp]+
-  				cumsum(as.numeric(frqEventTmp)))
-  			begEventTmp<-eventTmp[-length(eventTmp)]
-  			endEventTmp<- begEventTmp+as.numeric(frqEventTmp)-1
-  
-  			frqEventTmpM=frqEventTmp[!is.na(match(names(frqEventTmp),
-  				"M"))]
-  			begEventTmpM=begEventTmp[!is.na(match(names(frqEventTmp),
-  				"M"))]
-  			endEventTmpM=endEventTmp[!is.na(match(names(frqEventTmp),
-  				"M"))]
-  			return(list(readNo=rep(tmp,length(frqEventTmpM)), 
-  				chr=rep(chrRead2[tmp],length(frqEventTmpM)), 
-  				frqEventTmpM, begEventTmpM, endEventTmpM,
-  				strand=rep(strRead2[tmp],length(frqEventTmpM))))
-  		})
-  
-  		noRead1= as.vector(unlist(sapply(frqEventRead1, function(tmp)
-  			unlist(tmp[[1]]))))
-  		chrRead1= as.vector(unlist(sapply(frqEventRead1, function(tmp)
-  			as.character(unlist(tmp[[2]])))))
-  		begRead1= as.vector(unlist(sapply(frqEventRead1, function(tmp)
-  			unlist(tmp[[4]]))))
-  		endRead1= as.vector(unlist(sapply(frqEventRead1, function(tmp)
-  			unlist(tmp[[5]]))))
-  		strRead1=as.vector(unlist(sapply(frqEventRead1, function(tmp)
-  		  as.character(unlist(tmp[[6]])))))
-  		noRead2= as.vector(unlist(sapply(frqEventRead2, function(tmp)
-  			unlist(tmp[[1]]))))
-  		chrRead2= as.vector(unlist(sapply(frqEventRead2, function(tmp)
-  			as.character(unlist(tmp[[2]])))))
-  		begRead2= as.vector(unlist(sapply(frqEventRead2, function(tmp)
-  			unlist(tmp[[4]]))))
-  		endRead2= as.vector(unlist(sapply(frqEventRead2, function(tmp)
-  			unlist(tmp[[5]]))))
-  		strRead2=as.vector(unlist(sapply(frqEventRead2, function(tmp)
-  		  as.character(unlist(tmp[[6]])))))
-  		noVec=c(noRead1,noRead2)
-  		chrVec=c(as.character(chrRead1),
-  			as.character(chrRead2))
-  		begVec=c(begRead1,begRead2)
-  		endVec=c(endRead1,endRead2)
-  		
-  		if(strandSpecific=="stranded"){
-  		  strAdj1<- as.character(strRead1)
-  		  strAdj2<- as.character(revStr[strRead2])
-  		} else if (strandSpecific=="reverse"){
-  		  strAdj2<- as.character(strRead2)
-  		  strAdj1<- as.character(revStr[strRead1])
-  		}
-  
+  	  sam1IndSp<- grep("N",sam1$cigar)
+  	  sam2IndSp<- grep("N",sam2$cigar)
+  	  
+  	  lenRead1= unlist(lapply(sam1$cigar[sam1IndSp], function(tmp) {
+  	    frqEvent=as.numeric(unlist(strsplit(tmp,split="[A-Z]")))
+  	    names(frqEvent)=unlist(strsplit(tmp,split=""))[grep('[A-Z]',
+  	                                                        unlist(strsplit(tmp,split="")))]
+  	    return(sum(frqEvent[grep("[N|M|D]",names(frqEvent))]))		
+  	  }))
+  	  
+  	  lenRead2= unlist(lapply(sam2$cigar[sam2IndSp], function(tmp) {
+  	    frqEvent=as.numeric(unlist(strsplit(tmp,split="[A-Z]")))
+  	    names(frqEvent)=unlist(strsplit(tmp,split=""))[grep('[A-Z]',
+  	                                                        unlist(strsplit(tmp,split="")))]
+  	    return(sum(frqEvent[grep("[N|M|D]",names(frqEvent))]))		
+  	  }))
+  	  
+  	  locRead1=sam1[,"pos"]
+  	  chrRead1=sam1[,"rName"]
+  	  strRead1=sam1[,"strand"]
+  	  chrRead2=sam2[,"rName"]
+  	  locRead2=sam2[,"pos"]
+  	  strRead2=sam2[,"strand"]
+  	  
+  	  
+  	  frqEventRead1 =lapply(sam1IndSp, function (tmp) {
+  	    frqEventTmp= as.numeric(unlist(strsplit(sam1$cigar[tmp],
+  	                                            split="[A-Z]")))
+  	    names(frqEventTmp)= unlist(strsplit(sam1$cigar[tmp], 
+  	                                        split=""))[grep('[A-Z]', unlist(strsplit(sam1$cigar[tmp]
+  	                                                                                 , split="")))]
+  	    frqEventTmp= frqEventTmp[!is.na(match(names(frqEventTmp),
+  	                                          c("N","D","M")))]
+  	    
+  	    # Finding start and end of the mapped pieces of the reads using cigar 
+  	    eventTmp<- c(locRead1[tmp], locRead1[tmp]+
+  	                   cumsum(as.numeric(frqEventTmp)))
+  	    begEventTmp<-eventTmp[-length(eventTmp)]
+  	    endEventTmp<- begEventTmp+as.numeric(frqEventTmp)-1
+  	    frqEventTmpM=frqEventTmp[!is.na(match(names(frqEventTmp),
+  	                                          "M"))]
+  	    begEventTmpM=begEventTmp[!is.na(match(names(frqEventTmp),
+  	                                          "M"))]
+  	    endEventTmpM=endEventTmp[!is.na(match(names(frqEventTmp),
+  	                                          "M"))]	    
+  	    frqEventTmpN=frqEventTmp[!is.na(match(names(frqEventTmp),
+  	                                          "N"))]
+  	    begEventTmpN=begEventTmp[!is.na(match(names(frqEventTmp),
+  	                                          "N"))]
+  	    endEventTmpN=endEventTmp[!is.na(match(names(frqEventTmp),
+  	                                          "N"))]
+  	    return( list(readNo=rep(tmp,length(frqEventTmpN)), 
+  	                 chr=rep(chrRead1[tmp],length(frqEventTmpN)), 
+  	                 frqEventTmpN, begEventTmpN, endEventTmpN,
+  	                 frqEventTmpM, begEventTmpM, endEventTmpM,
+  	                 readNoM=rep(tmp,length(frqEventTmpM)),
+  	                 strand=rep(strRead1[tmp],length(frqEventTmpN)) ))
+  	    
+  	  })
+  	  
+  	  
+  	  frqEventRead2= lapply(sam2IndSp, function (tmp) {
+  	    frqEventTmp= as.numeric(unlist(strsplit(sam2$cigar[tmp],
+  	                                            split="[A-Z]")))
+  	    names(frqEventTmp)= unlist(strsplit(sam2$cigar[tmp], 
+  	                                        split=""))[grep('[A-Z]', unlist(strsplit(sam2$cigar[tmp]
+  	                                                                                 , split="")))]
+  	    frqEventTmp= frqEventTmp[!is.na(match(names(frqEventTmp),
+  	                                          c("N","D","M")))]
+  	    
+  	    # Finding start and end of the mapped pieces of the reads using cigar 
+  	    eventTmp<- c(locRead2[tmp], locRead2[tmp]+
+  	                   cumsum(as.numeric(frqEventTmp)))
+  	    begEventTmp<-eventTmp[-length(eventTmp)]
+  	    endEventTmp<- begEventTmp+as.numeric(frqEventTmp)-1
+  	    frqEventTmpM=frqEventTmp[!is.na(match(names(frqEventTmp),
+  	                                          "M"))]
+  	    begEventTmpM=begEventTmp[!is.na(match(names(frqEventTmp),
+  	                                          "M"))]
+  	    endEventTmpM=endEventTmp[!is.na(match(names(frqEventTmp),
+  	                                          "M"))]	    
+  	    frqEventTmpN=frqEventTmp[!is.na(match(names(frqEventTmp),
+  	                                          "N"))]
+  	    begEventTmpN=begEventTmp[!is.na(match(names(frqEventTmp),
+  	                                          "N"))]
+  	    endEventTmpN=endEventTmp[!is.na(match(names(frqEventTmp),
+  	                                          "N"))]
+  	    return( list(readNo=rep(tmp,length(frqEventTmpN)), 
+  	                 chr=rep(chrRead1[tmp],length(frqEventTmpN)), 
+  	                 frqEventTmpN, begEventTmpN, endEventTmpN,
+  	                 frqEventTmpM, begEventTmpM, endEventTmpM,
+  	                 readNoM=rep(tmp,length(frqEventTmpM)),
+  	                 strand=rep(strRead2[tmp],length(frqEventTmpN) )))
+  	    
+  	  })
+  	  
+  	  noRead1= as.vector(unlist(sapply(frqEventRead1, function(tmp)
+  	    unlist(tmp[[1]]))))
+  	  chrRead1= as.vector(unlist(sapply(frqEventRead1, function(tmp)
+  	    unlist(tmp[[2]]))))
+  	  begRead1= as.vector(unlist(sapply(frqEventRead1, function(tmp)
+  	    unlist(tmp[[4]]))))
+  	  endRead1= as.vector(unlist(sapply(frqEventRead1, function(tmp)
+  	    unlist(tmp[[5]]))))
+  	  strRead1=as.vector(unlist(sapply(frqEventRead1, function(tmp)
+  	    as.character(unlist(tmp[[10]])))))
+  	  
+  	  noRead2= as.vector(unlist(sapply(frqEventRead2, function(tmp)
+  	    unlist(tmp[[1]]))))
+  	  chrRead2= as.vector(unlist(sapply(frqEventRead2, function(tmp)
+  	    unlist(tmp[[2]]))))
+  	  begRead2= as.vector(unlist(sapply(frqEventRead2, function(tmp)
+  	    unlist(tmp[[4]]))))
+  	  endRead2= as.vector(unlist(sapply(frqEventRead2, function(tmp)
+  	    unlist(tmp[[5]]))))
+  	  strRead2=as.vector(unlist(sapply(frqEventRead2, function(tmp)
+  	    as.character(unlist(tmp[[10]])))))
+  	  
+  	  if(strandSpecific=="stranded"){
+  	    strAdj1<- as.character(strRead1)
+  	    strAdj2<- as.character(revStr[strRead2])
+  	  } else if (strandSpecific=="reverse"){
+  	    strAdj2<- as.character(strRead2)
+  	    strAdj1<- as.character(revStr[strRead1])
+  	  }
+  	  
+  	  # analyzing reads
+  	  noVec=c(noRead1,noRead2)
+  	  chrVec=c(as.character(chrRead1),
+  	           as.character(chrRead2))
+  	  begVec=c(begRead1,begRead2)
+  	  endVec=c(endRead1,endRead2)
+  	  strVec<- c(strAdj1,strAdj2)
+  	  
   		ref=reference[which(referenceIntronExon=="intron"),]
   		read1GRanges=GenomicRanges::GRanges( seqnames=chrRead1, 
   		  IRanges::IRanges(start=begRead1, end=endRead1), strand=strAdj1)
   		read2GRanges=GenomicRanges::GRanges( seqnames=chrRead2, 
   		  IRanges::IRanges(start=begRead2, end=endRead2), strand=strAdj2)
   
-  		refIntBegGRanges= GenomicRanges::GRanges( seqnames=ref[,"chr"], 
-  			IRanges::IRanges(start=ref[,"begin"]-1, end=ref[,"begin"]-1), 
-  			strand=ref[,"strand"])
-  		refIntEndGRanges= GenomicRanges::GRanges( seqnames=ref[,"chr"], 
-  			IRanges::IRanges(start=ref[,"end"]+1, end=ref[,"end"]+1),
-  			strand=ref[,"strand"])
+  		# refIntBegGRanges= GenomicRanges::GRanges( seqnames=ref[,"chr"], 
+  		# 	IRanges::IRanges(start=ref[,"begin"]-1, end=ref[,"begin"]-1), 
+  		# 	strand=ref[,"strand"])
+  		# refIntEndGRanges= GenomicRanges::GRanges( seqnames=ref[,"chr"], 
+  		# 	IRanges::IRanges(start=ref[,"end"]+1, end=ref[,"end"]+1),
+  		# 	strand=ref[,"strand"])
   
-  		hitsBegInt1 <- GenomicRanges::findOverlaps(read1GRanges, 
-  			refIntBegGRanges, type= "end", ignore.strand=FALSE)
-  		hitsEndInt1 <- GenomicRanges::findOverlaps(read1GRanges, 
-  			refIntEndGRanges, type= "start", ignore.strand=FALSE)
+  		refIntGRanges= GenomicRanges::GRanges( seqnames=ref[,"chr"], 
+  		  IRanges::IRanges(start=ref[,"begin"], end=ref[,"end"]), 
+  		  strand=ref[,"strand"])
   		
-  		hitsBegInt2 <- GenomicRanges::findOverlaps(read2GRanges, 
-  		  refIntBegGRanges, type= "end", ignore.strand=FALSE)
-  		hitsEndInt2 <- GenomicRanges::findOverlaps(read2GRanges, 
-  		  refIntEndGRanges, type= "start", ignore.strand=FALSE)
+  		### !!!
+  		### THIS IS NOT THE BEST WAY. WHY SEPARATE ON BEGIN AND END ?
+  		###WHY NOT 	hitsBegInt <- GenomicRanges::findOverlaps(readGRanges, 
+  		###    refIntGRanges, type= "equal")
+  		
+  		# hitsBegInt1 <- GenomicRanges::findOverlaps(read1GRanges, 
+  		# 	refIntBegGRanges, type= "end", ignore.strand=FALSE)
+  		# hitsEndInt1 <- GenomicRanges::findOverlaps(read1GRanges, 
+  		# 	refIntEndGRanges, type= "start", ignore.strand=FALSE)
+  		
+  		# hitsBegInt2 <- GenomicRanges::findOverlaps(read2GRanges, 
+  		#   refIntBegGRanges, type= "end", ignore.strand=FALSE)
+  		# hitsEndInt2 <- GenomicRanges::findOverlaps(read2GRanges, 
+  		#   refIntEndGRanges, type= "start", ignore.strand=FALSE)
+  		
+  		
+  		hitsInt1 <- GenomicRanges::findOverlaps(read1GRanges, 
+  		  refIntGRanges, type= "equal", ignore.strand=FALSE)
+  		
+  		hitsInt2 <- GenomicRanges::findOverlaps(read2GRanges,
+        refIntGRanges, type= "equal", ignore.strand=FALSE)
+  		
   			# Filter reads mapped to repeats regions if requested
-  			if(length(repeatsTableToFilter)!=0){
-  				repeatGRanges= GenomicRanges::GRanges( 
-  					seqnames=repeatsTableToFilter[,"chr"], 
-  					IRanges::IRanges(start=repeatsTableToFilter[,"begin"],
-  						end=repeatsTableToFilter[,"end"], 
-  						width=repeatsTableToFilter[,"end"]-
-  							repeatsTableToFilter[,"begin"]+1))
-  				hitsFilter1= GenomicRanges::findOverlaps(read1GRanges, 
-  					repeatGRanges, type= "any", ignore.strand=TRUE)
-  				hitsFilter2= GenomicRanges::findOverlaps(read2GRanges, 
-  				  repeatGRanges, type= "any", ignore.strand=TRUE)
-  				
-  				noFilQuHits<- 
-  				  intersect(noRead1[queryHits(hitsFilter1)], 
-  				            noRead2[queryHits(hitsFilter2)])
-  				
-  				filtEndInd1= which(! noRead1[S4Vectors::subjectHits(hitsEndInt1)] %in% 
-  				  noFilQuHits)
-  				filtBegInd1= which(! noRead1[S4Vectors::subjectHits(hitsBegInt1)] %in% 
-  				  noFilQuHits)
-  				
-  				filtEndInd2= which(! noRead2[S4Vectors::subjectHits(hitsEndInt2)] %in% 
-  				  noFilQuHits)
-  				filtBegInd2= which(! noRead2[S4Vectors::subjectHits(hitsBegInt2)] %in% 
-  				  noFilQuHits)
-  				
-  				
-  				hitsBegInt1=hitsBegInt1[filtBegInd1,]
-  				hitsEndInt1=hitsEndInt1[filtEndInd1,]
-  				hitsBegInt2=hitsBegInt2[filtBegInd2,]
-  				hitsEndInt2=hitsEndInt2[filtEndInd2,]
-  			}
+  			# if(length(repeatsTableToFilter)!=0){
+  			# 	repeatGRanges= GenomicRanges::GRanges( 
+  			# 		seqnames=repeatsTableToFilter[,"chr"], 
+  			# 		IRanges::IRanges(start=repeatsTableToFilter[,"begin"],
+  			# 			end=repeatsTableToFilter[,"end"], 
+  			# 			width=repeatsTableToFilter[,"end"]-
+  			# 				repeatsTableToFilter[,"begin"]+1))
+  			# 	hitsFilter1= GenomicRanges::findOverlaps(read1GRanges, 
+  			# 		repeatGRanges, type= "any", ignore.strand=TRUE)
+  			# 	hitsFilter2= GenomicRanges::findOverlaps(read2GRanges, 
+  			# 	  repeatGRanges, type= "any", ignore.strand=TRUE)
+  			# 	
+  			# 	noFilQuHits<- 
+  			# 	  intersect(noRead1[queryHits(hitsFilter1)], 
+  			# 	            noRead2[queryHits(hitsFilter2)])
+  			# 	
+  			# 	filtEndInd1= which(! noRead1[S4Vectors::subjectHits(hitsEndInt1)] %in% 
+  			# 	  noFilQuHits)
+  			# 	filtBegInd1= which(! noRead1[S4Vectors::subjectHits(hitsBegInt1)] %in% 
+  			# 	  noFilQuHits)
+  			# 	
+  			# 	filtEndInd2= which(! noRead2[S4Vectors::subjectHits(hitsEndInt2)] %in% 
+  			# 	  noFilQuHits)
+  			# 	filtBegInd2= which(! noRead2[S4Vectors::subjectHits(hitsBegInt2)] %in% 
+  			# 	  noFilQuHits)
+  			# 	
+  			# 	
+  			# 	hitsBegInt1=hitsBegInt1[filtBegInd1,]
+  			# 	hitsEndInt1=hitsEndInt1[filtEndInd1,]
+  			# 	hitsBegInt2=hitsBegInt2[filtBegInd2,]
+  			# 	hitsEndInt2=hitsEndInt2[filtEndInd2,]
+  			# }
+
   		
+  		# if(length(repeatsTableToFilter)!=0){
+  		#   repeatGRanges= GenomicRanges::GRanges( 
+  		#     seqnames=repeatsTableToFilter[,"chr"], 
+  		#     IRanges::IRanges(start=repeatsTableToFilter[,"begin"],
+  		#                      end=repeatsTableToFilter[,"end"], 
+  		#                      width=repeatsTableToFilter[,"end"]-
+  		#                        repeatsTableToFilter[,"begin"]+1))
+  		#   hitsFilter1= GenomicRanges::findOverlaps(read1GRanges, 
+  		#                                            repeatGRanges, type= "equal", ignore.strand=TRUE)
+  		#   hitsFilter2= GenomicRanges::findOverlaps(read2GRanges, 
+  		#                                            repeatGRanges, type= "equal", ignore.strand=TRUE)
+  		#   
+  		#   noFilQuHits<- 
+  		#     intersect(noRead1[queryHits(hitsFilter1)], 
+  		#               noRead2[queryHits(hitsFilter2)])
+  		#   
+  		#   filtInd1= which(! noRead1[S4Vectors::subjectHits(hitsInt1)] %in% 
+  		#                        noFilQuHits)
+  		#   
+  		#   filtEndInd2= which(! noRead2[S4Vectors::subjectHits(hitsInt2)] %in% 
+  		#                        noFilQuHits)
+  		# 
+  		#   hitsInt1=hitsInt1[filtInd1,]
+  		#   hitsInt2=hitsInt2[filtInd2,]
+  		# }
+  		  		
   			# Filter reads mapped completely to Either introns or exons
   
   			refRes= rep(0,nrow(ref))
-  			if(length(c(S4Vectors::queryHits(hitsBegInt1), 
-  				S4Vectors::queryHits(hitsEndInt1)))>0 |
-  				length(c(S4Vectors::queryHits(hitsBegInt2), 
-  				S4Vectors::queryHits(hitsEndInt2)))>0){
-  				hitsApply=tapply(
-  					c(noRead1[c(S4Vectors::queryHits(hitsBegInt1), 
-  						  S4Vectors::queryHits(hitsEndInt1))], 
-  						noRead2[c(S4Vectors::queryHits(hitsBegInt2), 
-  						  S4Vectors::queryHits(hitsEndInt2))]), 
-  					c(S4Vectors::subjectHits(hitsBegInt1), 
-  						S4Vectors::subjectHits(hitsEndInt1),
-  						S4Vectors::subjectHits(hitsBegInt2), 
-  						S4Vectors::subjectHits(hitsEndInt2)),
-  					function(tmp) return(length(unique(tmp))) )
-  				refRes[as.numeric(names(hitsApply))]= as.vector(hitsApply)
+  			# if(length(c(S4Vectors::queryHits(hitsBegInt1), 
+  			# 	S4Vectors::queryHits(hitsEndInt1)))>0 |
+  			# 	length(c(S4Vectors::queryHits(hitsBegInt2), 
+  			# 	S4Vectors::queryHits(hitsEndInt2)))>0){
+  			# 	hitsApply=tapply(
+  			# 		c(noRead1[c(S4Vectors::queryHits(hitsBegInt1), 
+  			# 			  S4Vectors::queryHits(hitsEndInt1))], 
+  			# 			noRead2[c(S4Vectors::queryHits(hitsBegInt2), 
+  			# 			  S4Vectors::queryHits(hitsEndInt2))]), 
+  			# 		c(S4Vectors::subjectHits(hitsBegInt1), 
+  			# 			S4Vectors::subjectHits(hitsEndInt1),
+  			# 			S4Vectors::subjectHits(hitsBegInt2), 
+  			# 			S4Vectors::subjectHits(hitsEndInt2)),
+  			# 		function(tmp) return(length(unique(tmp))) )
+  			# 	refRes[as.numeric(names(hitsApply))]= as.vector(hitsApply)
+  			# }
+  			
+  			if(length(S4Vectors::queryHits(hitsInt1))>0 |
+  			   length(S4Vectors::queryHits(hitsInt2))>0){
+  			  hitsApply=tapply(
+  			    c(noRead1[S4Vectors::queryHits(hitsInt1)], 
+  			      noRead2[S4Vectors::queryHits(hitsInt2)]), 
+  			    c(S4Vectors::subjectHits(hitsInt1), 
+  			      S4Vectors::subjectHits(hitsInt2)),
+  			    function(tmp) return(length(unique(tmp))) )
+  			  refRes[as.numeric(names(hitsApply))]= as.vector(hitsApply)
   			}
+  			
+  			
   			intSpanRes<- rep(0,nrow(reference))
   			intSpanRes[which(referenceIntronExon=="intron")]<- refRes
   			rm("refRes")
@@ -877,68 +959,68 @@ interestIntExAnalysePairStranded <- function(
 
   	  
   	  # Filter reads mapped to repeats regions if requested
-  	  if(length(repeatsTableToFilter)!=0){
-  	    noRead1M= as.vector(unlist(sapply(frqEventRead1, function(tmp)
-  	      unlist(tmp[[9]]))))
-  	    chrRead1M= as.vector(unlist(sapply(frqEventRead1, function(tmp)
-  	      unlist(tmp[[2]]))))
-  	    begRead1M= as.vector(unlist(sapply(frqEventRead1, function(tmp)
-  	      unlist(tmp[[7]]))))
-  	    endRead1M= as.vector(unlist(sapply(frqEventRead1, function(tmp)
-  	      unlist(tmp[[8]]))))
-  
-  	    noRead2M= as.vector(unlist(sapply(frqEventRead2, function(tmp)
-  	      unlist(tmp[[9]]))))
-  	    chrRead2M= as.vector(unlist(sapply(frqEventRead2, function(tmp)
-  	      unlist(tmp[[2]]))))
-  	    begRead2M= as.vector(unlist(sapply(frqEventRead2, function(tmp)
-  	      unlist(tmp[[7]]))))
-  	    endRead2M= as.vector(unlist(sapply(frqEventRead2, function(tmp)
-  	      unlist(tmp[[8]]))))
-  	    
-  	    # analyzing reads
-  	    noVecM=c(noRead1M,noRead2M)
-  	    chrVecM=c(as.character(chrRead1M),
-  	              as.character(chrRead2M))
-  	    begVecM=c(begRead1M,begRead2M)
-  	    endVecM=c(endRead1M,endRead2M)
-  	    
-  	    readGRangesM1=GenomicRanges::GRanges( seqnames=chrRead1M, 
-  	      IRanges::IRanges(start=begRead1M, end=endRead1M))
-  	    repeatGRanges= GenomicRanges::GRanges( 
-  	      seqnames=repeatsTableToFilter[,"chr"], 
-  	      IRanges::IRanges(start=repeatsTableToFilter[,"begin"],
-  	                       end=repeatsTableToFilter[,"end"], 
-  	                       width=repeatsTableToFilter[,"end"]-
-  	                         repeatsTableToFilter[,"begin"]+1))
-  	    hitsFilter1= GenomicRanges::findOverlaps(readGRangesM1, 
-  	      repeatGRanges, type= "any", ignore.strand=TRUE)
-  	    hitsFilter2= GenomicRanges::findOverlaps(readGRangesM2, 
-  	      repeatGRanges, type= "any", ignore.strand=TRUE)
-
-  	    # noVecFil<- unique(noVecM[queryHits(hitsFilter)])
-  	    # filthitsAllExInd<- which(!subjectHits(hitsAllEx) %in% 
-  	    #                            subjectHits(hitsAllEx)[
-  	    #                              which(noVec[subjectHits(hitsAllEx)]
-  	    #                                    %in% noVecFil)])
-  	    # hitsAllEx=hitsAllEx[filthitsAllExInd,]
-  	    noFilQuHits<- 
-  	      intersect(noRead1[queryHits(hitsFilter1)], 
-  	                noRead2[queryHits(hitsFilter2)])
-     
-  	    filtAllInd1= which(! noRead1[S4Vectors::subjectHits(hitsAllEx1)] %in% 
-  	                         noFilQuHits)
-  	    filtAllInd2= which(! noRead1[S4Vectors::subjectHits(hitsAllEx2)] %in% 
-  	                         noFilQuHits)
-  	    
-
-  	    
-  	    hitsAllEx1=hitsAllEx1[filtAllInd1,]
-  	    hitsAllEx2=hitsAllEx2[filtAllInd2,]
-  	    # hitsBegInt2=hitsBegInt2[filtBegInd2,]
-  	    # hitsEndInt2=hitsEndInt2[filtEndInd2,]
-  	    
-  	  }
+  	  # if(length(repeatsTableToFilter)!=0){
+  	  #   noRead1M= as.vector(unlist(sapply(frqEventRead1, function(tmp)
+  	  #     unlist(tmp[[9]]))))
+  	  #   chrRead1M= as.vector(unlist(sapply(frqEventRead1, function(tmp)
+  	  #     unlist(tmp[[2]]))))
+  	  #   begRead1M= as.vector(unlist(sapply(frqEventRead1, function(tmp)
+  	  #     unlist(tmp[[7]]))))
+  	  #   endRead1M= as.vector(unlist(sapply(frqEventRead1, function(tmp)
+  	  #     unlist(tmp[[8]]))))
+  	  # 
+  	  #   noRead2M= as.vector(unlist(sapply(frqEventRead2, function(tmp)
+  	  #     unlist(tmp[[9]]))))
+  	  #   chrRead2M= as.vector(unlist(sapply(frqEventRead2, function(tmp)
+  	  #     unlist(tmp[[2]]))))
+  	  #   begRead2M= as.vector(unlist(sapply(frqEventRead2, function(tmp)
+  	  #     unlist(tmp[[7]]))))
+  	  #   endRead2M= as.vector(unlist(sapply(frqEventRead2, function(tmp)
+  	  #     unlist(tmp[[8]]))))
+  	  #   
+  	  #   # analyzing reads
+  	  #   noVecM=c(noRead1M,noRead2M)
+  	  #   chrVecM=c(as.character(chrRead1M),
+  	  #             as.character(chrRead2M))
+  	  #   begVecM=c(begRead1M,begRead2M)
+  	  #   endVecM=c(endRead1M,endRead2M)
+  	  #   
+  	  #   readGRangesM1=GenomicRanges::GRanges( seqnames=chrRead1M, 
+  	  #     IRanges::IRanges(start=begRead1M, end=endRead1M))
+  	  #   repeatGRanges= GenomicRanges::GRanges( 
+  	  #     seqnames=repeatsTableToFilter[,"chr"], 
+  	  #     IRanges::IRanges(start=repeatsTableToFilter[,"begin"],
+  	  #                      end=repeatsTableToFilter[,"end"], 
+  	  #                      width=repeatsTableToFilter[,"end"]-
+  	  #                        repeatsTableToFilter[,"begin"]+1))
+  	  #   hitsFilter1= GenomicRanges::findOverlaps(readGRangesM1, 
+  	  #     repeatGRanges, type= "any", ignore.strand=TRUE)
+  	  #   hitsFilter2= GenomicRanges::findOverlaps(readGRangesM2, 
+  	  #     repeatGRanges, type= "any", ignore.strand=TRUE)
+  	  # 
+  	  #   # noVecFil<- unique(noVecM[queryHits(hitsFilter)])
+  	  #   # filthitsAllExInd<- which(!subjectHits(hitsAllEx) %in% 
+  	  #   #                            subjectHits(hitsAllEx)[
+  	  #   #                              which(noVec[subjectHits(hitsAllEx)]
+  	  #   #                                    %in% noVecFil)])
+  	  #   # hitsAllEx=hitsAllEx[filthitsAllExInd,]
+  	  #   noFilQuHits<- 
+  	  #     intersect(noRead1[queryHits(hitsFilter1)], 
+  	  #               noRead2[queryHits(hitsFilter2)])
+  	  # 
+  	  #   filtAllInd1= which(! noRead1[S4Vectors::subjectHits(hitsAllEx1)] %in% 
+  	  #                        noFilQuHits)
+  	  #   filtAllInd2= which(! noRead1[S4Vectors::subjectHits(hitsAllEx2)] %in% 
+  	  #                        noFilQuHits)
+  	  #   
+  	  # 
+  	  #   
+  	  #   hitsAllEx1=hitsAllEx1[filtAllInd1,]
+  	  #   hitsAllEx2=hitsAllEx2[filtAllInd2,]
+  	  #   # hitsBegInt2=hitsBegInt2[filtBegInd2,]
+  	  #   # hitsEndInt2=hitsEndInt2[filtEndInd2,]
+  	  #   
+  	  # }
   	  
   	  # Filter reads mapped completely to Either introns or exons
   	  
@@ -1374,136 +1456,166 @@ interestIntExAnalyseSingleStranded <- function(
   	methodNo=which(method=="IntSpan")
   	if(length(methodNo)>0){
   
-  		sam1IndSp<- grep("N",sam1$cigar)
-  		sam2IndSp<- c()
-  
-  		lenRead1= unlist(lapply(sam1$cigar[sam1IndSp], function(tmp) {
-  			frqEvent=as.numeric(unlist(strsplit(tmp,split="[A-Z]")))
-  			names(frqEvent)=unlist(strsplit(tmp,split=""))[grep('[A-Z]',
-  				unlist(strsplit(tmp,split="")))]
-  			return(sum(frqEvent[grep("[N|M|D]",names(frqEvent))]))		
-  		}))
-  
-  		locRead1= sam1[,"pos"]
-  		chrRead1= sam1[,"rName"]
-  		chrRead2= c()
-  		lenRead2=0
-  		strRead1=sam1[,"strand"]
-  		strRead2=0
-  		
-  		if(strandSpecific=="stranded"){
-  		  if(length(which(readMate==2))>0)
-  		    strRead1[which(readMate==2)]<- 
-  		      as.character(revStr[which(readMate==2)]) 
-  		} else if (strandSpecific=="reverse"){
-  		  strRead1[which(readMate==1)]<- 
-  		    as.character(revStr[strRead1[which(readMate==1)]])
-  		}  
-
-  		frqEventRead1 =lapply(sam1IndSp, function (tmp) {
-  			frqEventTmp= as.numeric(unlist(strsplit(sam1$cigar[tmp],
-  				split="[A-Z]")))
-  			names(frqEventTmp)= unlist(strsplit(sam1$cigar[tmp], 
-  				split=""))[grep('[A-Z]', unlist(strsplit(sam1$cigar[tmp]
-  					, split="")))]
-  			frqEventTmp= frqEventTmp[!is.na(match(names(frqEventTmp),
-  				c("N","D","M")))]
-  
-  	# Finding start and end of the mapped pieces of the reads using cigar 
-  			eventTmp<- c(locRead1[tmp], locRead1[tmp]+
-  				cumsum(as.numeric(frqEventTmp)))
-  			begEventTmp<-eventTmp[-length(eventTmp)]
-  			endEventTmp<- begEventTmp+as.numeric(frqEventTmp)-1
-  
-  			frqEventTmpM=frqEventTmp[!is.na(match(names(frqEventTmp),
-  				"M"))]
-  			begEventTmpM=begEventTmp[!is.na(match(names(frqEventTmp),
-  				"M"))]
-  			endEventTmpM=endEventTmp[!is.na(match(names(frqEventTmp),
-  				"M"))]
-  			return( list(readNo=rep(tmp,length(frqEventTmpM)), 
-  				chr=rep(chrRead1[tmp],length(frqEventTmpM)), 
-  				frqEventTmpM, begEventTmpM, endEventTmpM, 
-  				strand=rep(strRead1[tmp],length(frqEventTmpM)),
-  				mate=rep(readMate[tmp],length(frqEventTmpM)))) 
-  
-  		})
-  
-  
-  		frqEventRead2=NA
-  
-  		noRead1= as.vector(unlist(sapply(frqEventRead1, function(tmp)
-  			unlist(tmp[[1]]))))
-  		chrRead1= as.vector(unlist(sapply(frqEventRead1, function(tmp)
-  			unlist(tmp[[2]]))))
-  		begRead1= as.vector(unlist(sapply(frqEventRead1, function(tmp)
-  			unlist(tmp[[4]]))))
-  		endRead1= as.vector(unlist(sapply(frqEventRead1, function(tmp)
-  			unlist(tmp[[5]]))))
-  		strRead1=as.vector(unlist(sapply(frqEventRead1, function(tmp)
-  		  as.character(unlist(tmp[[6]])))))
-  		mateRead1=as.vector(unlist(sapply(frqEventRead1, function(tmp)
-  		  as.character(unlist(tmp[[7]])))))
-  		noRead2= c()
-  		chrRead2= c()
-  		begRead2= c()
-  		endRead2= c()
-  		strRead2= c()
-  		strAdj1<- strRead1
-  		strAdj2<- c()
-
-  # analyzing reads
-  		noVec=c(noRead1,noRead2)
-  		chrVec=c(as.character(chrRead1),
-  			as.character(chrRead2))
-  		begVec=c(begRead1,begRead2)
-  		endVec=c(endRead1,endRead2)
-  		strVec=c(as.character(strAdj1),
-  		         as.character(strAdj2))
+  	  sam1IndSp<- grep("N",sam1$cigar)
+  	  sam2IndSp<- c()
+  	  
+  	  lenRead1= unlist(lapply(sam1$cigar[sam1IndSp], function(tmp) {
+  	    frqEvent=as.numeric(unlist(strsplit(tmp,split="[A-Z]")))
+  	    names(frqEvent)=unlist(strsplit(tmp,split=""))[grep('[A-Z]',
+  	                                                        unlist(strsplit(tmp,split="")))]
+  	    return(sum(frqEvent[grep("[N|M|D]",names(frqEvent))]))		
+  	  }))
+  	  
+  	  locRead1= sam1[,"pos"]
+  	  chrRead1= sam1[,"rName"]
+  	  strRead1=sam1[,"strand"]
+  	  chrRead2= c()
+  	  strRead2=c()
+  	  locRead2=c()
+  	  
+  	  if(strandSpecific=="stranded"){
+  	    if(length(which(readMate==2))>0)
+  	      strRead1[which(readMate==2)]<- 
+  	        as.character(revStr[which(readMate==2)]) 
+  	  } else if (strandSpecific=="reverse"){
+  	    strRead1[which(readMate==1)]<- 
+  	      as.character(revStr[strRead1[which(readMate==1)]])
+  	  }  
+  	  
+  	  frqEventRead1 =lapply(sam1IndSp, function (tmp) {
+  	    frqEventTmp= as.numeric(unlist(strsplit(sam1$cigar[tmp],
+  	                                            split="[A-Z]")))
+  	    names(frqEventTmp)= unlist(strsplit(sam1$cigar[tmp], 
+  	                                        split=""))[grep('[A-Z]', unlist(strsplit(sam1$cigar[tmp]
+  	                                                                                 , split="")))]
+  	    frqEventTmp= frqEventTmp[!is.na(match(names(frqEventTmp),
+  	                                          c("N","D","M")))]
+  	    
+  	    # Finding start and end of the mapped pieces of the reads using cigar 
+  	    eventTmp<- c(locRead1[tmp], locRead1[tmp]+
+  	                   cumsum(as.numeric(frqEventTmp)))
+  	    begEventTmp<-eventTmp[-length(eventTmp)]
+  	    endEventTmp<- begEventTmp+as.numeric(frqEventTmp)-1
+  	    frqEventTmpM=frqEventTmp[!is.na(match(names(frqEventTmp),
+  	                                          "M"))]
+  	    begEventTmpM=begEventTmp[!is.na(match(names(frqEventTmp),
+  	                                          "M"))]
+  	    endEventTmpM=endEventTmp[!is.na(match(names(frqEventTmp),
+  	                                          "M"))]	    
+  	    frqEventTmpN=frqEventTmp[!is.na(match(names(frqEventTmp),
+  	                                          "N"))]
+  	    begEventTmpN=begEventTmp[!is.na(match(names(frqEventTmp),
+  	                                          "N"))]
+  	    endEventTmpN=endEventTmp[!is.na(match(names(frqEventTmp),
+  	                                          "N"))]
+  	    return( list(readNo=rep(tmp,length(frqEventTmpN)), 
+  	                 chr=rep(chrRead1[tmp],length(frqEventTmpN)), 
+  	                 frqEventTmpN, begEventTmpN, endEventTmpN,
+  	                 frqEventTmpM, begEventTmpM, endEventTmpM,
+  	                 readNoM=rep(tmp,length(frqEventTmpM)),
+  	                 strand=rep(strRead1[tmp],length(frqEventTmpN)),
+  	                 mate=rep(readMate[tmp],length(frqEventTmpN)),
+  	                 chrM=rep(chrRead1[tmp],length(frqEventTmpM))))
+  	    
+  	  })
+  	  
+  	  frqEventRead2=NA
+  	  
+  	  noRead1= as.vector(unlist(sapply(frqEventRead1, function(tmp)
+  	    unlist(tmp[[1]]))))
+  	  chrRead1= as.vector(unlist(sapply(frqEventRead1, function(tmp)
+  	    unlist(tmp[[2]]))))
+  	  begRead1= as.vector(unlist(sapply(frqEventRead1, function(tmp)
+  	    unlist(tmp[[4]]))))
+  	  endRead1= as.vector(unlist(sapply(frqEventRead1, function(tmp)
+  	    unlist(tmp[[5]]))))
+  	  strRead1=as.vector(unlist(sapply(frqEventRead1, function(tmp)
+  	    as.character(unlist(tmp[[10]])))))
+  	  mateRead1=as.vector(unlist(sapply(frqEventRead1, function(tmp)
+  	    as.character(unlist(tmp[[11]])))))
+  	  noRead2= c()
+  	  chrRead2= c()
+  	  begRead2= c()
+  	  endRead2= c()
+  	  strRead2=c()
+  	  strAdj1<- strRead1
+  	  
+  	  # analyzing reads
+  	  noVec=c(noRead1,noRead2)
+  	  chrVec=c(as.character(chrRead1),
+  	           as.character(chrRead2))
+  	  begVec=c(begRead1,begRead2)
+  	  endVec=c(endRead1,endRead2)
+  	  strVec=c(as.character(strAdj1),
+  	           as.character(strAdj2))
+  	  
   		ref=reference[which(referenceIntronExon=="intron"),]
   		readGRanges=GenomicRanges::GRanges( seqnames=chrVec, 
   			IRanges::IRanges(start=begVec, end=endVec), strand=strVec)
   
-  		refIntBegGRanges= GenomicRanges::GRanges( seqnames=ref[,"chr"], 
-  			IRanges::IRanges(start=ref[,"begin"]-1, end=ref[,"begin"]-1), 
-  			strand=ref[,"strand"])
-  		refIntEndGRanges= GenomicRanges::GRanges( seqnames=ref[,"chr"], 
-  			IRanges::IRanges(start=ref[,"end"]+1, end=ref[,"end"]+1), 
-  			strand=ref[,"strand"])
-  
-  		hitsBegInt <- GenomicRanges::findOverlaps(readGRanges, 
-  			refIntBegGRanges, type= "end", ignore.strand=FALSE)
-  		hitsEndInt <- GenomicRanges::findOverlaps(readGRanges, 
-  			refIntEndGRanges, type= "start", ignore.strand=FALSE)
+  		# refIntBegGRanges= GenomicRanges::GRanges( seqnames=ref[,"chr"], 
+  		# 	IRanges::IRanges(start=ref[,"begin"]-1, end=ref[,"begin"]-1), 
+  		# 	strand=ref[,"strand"])
+  		# refIntEndGRanges= GenomicRanges::GRanges( seqnames=ref[,"chr"], 
+  		# 	IRanges::IRanges(start=ref[,"end"]+1, end=ref[,"end"]+1), 
+  		# 	strand=ref[,"strand"])
+  		refIntGRanges= GenomicRanges::GRanges( seqnames=ref[,"chr"],
+  		  IRanges::IRanges(start=ref[,"begin"], end=ref[,"end"]),
+        strand=ref[,"strand"])
+
+  		### !!!
+  		### THIS IS NOT THE BEST WAY. WHY SEPARATE ON BEGIN AND END ?
+  		###WHY NOT 	hitsBegInt <- GenomicRanges::findOverlaps(readGRanges, 
+  		###    refIntGRanges, type= "equal")
+  		
+  		# hitsBegInt <- GenomicRanges::findOverlaps(readGRanges, 
+  		# 	refIntBegGRanges, type= "end", ignore.strand=FALSE)
+  		# hitsEndInt <- GenomicRanges::findOverlaps(readGRanges, 
+  		# 	refIntEndGRanges, type= "start", ignore.strand=FALSE)
+  		hitsInt <- GenomicRanges::findOverlaps(readGRanges, 
+        refIntGRanges, type= "equal", ignore.strand=FALSE)
+  		
   			# Filter reads mapped to repeats regions if requested
-  			if(length(repeatsTableToFilter)!=0){
-  				repeatGRanges= GenomicRanges::GRanges( 
-  					seqnames=repeatsTableToFilter[,"chr"], 
-  					IRanges::IRanges(start=repeatsTableToFilter[,"begin"],
-  						end=repeatsTableToFilter[,"end"], 
-  						width=repeatsTableToFilter[,"end"]-
-  							repeatsTableToFilter[,"begin"]+1))
-  				hitsFilter= GenomicRanges::findOverlaps(readGRanges, 
-  					repeatGRanges, type= "any", ignore.strand=TRUE)
-  				filtBegInd= which(is.na(match(S4Vectors::queryHits(hitsBegInt),
-  					S4Vectors::queryHits(hitsFilter))))
-  				hitsBegInt=hitsBegInt[filtBegInd,]
-  				filtEndInd= which(is.na(match(S4Vectors::queryHits(hitsEndInt),
-  					S4Vectors::queryHits(hitsFilter))))
-  				hitsEndInt=hitsEndInt[filtEndInd,]
-  			}
+  # 			if(length(repeatsTableToFilter)!=0){
+  # 				repeatGRanges= GenomicRanges::GRanges( 
+  # 					seqnames=repeatsTableToFilter[,"chr"], 
+  # 					IRanges::IRanges(start=repeatsTableToFilter[,"begin"],
+  # 						end=repeatsTableToFilter[,"end"], 
+  # 						width=repeatsTableToFilter[,"end"]-
+  # 							repeatsTableToFilter[,"begin"]+1))
+  # 				# hitsFilter= GenomicRanges::findOverlaps(readGRanges, 
+  # 				# 	repeatGRanges, type= "any", ignore.strand=TRUE)
+  # 				# filtBegInd= which(is.na(match(S4Vectors::queryHits(hitsBegInt),
+  # 				# 	S4Vectors::queryHits(hitsFilter))))
+  # 				# hitsBegInt=hitsBegInt[filtBegInd,]
+  # 				# filtEndInd= which(is.na(match(S4Vectors::queryHits(hitsEndInt),
+  # 				# 	S4Vectors::queryHits(hitsFilter))))
+  # 				# hitsEndInt=hitsEndInt[filtEndInd,]
+  # 				hitsFilter= GenomicRanges::findOverlaps(readGRanges, 
+  #           repeatGRanges, type= "equal", ignore.strand=TRUE)
+  # 				filtInd= which(is.na(match(S4Vectors::queryHits(hitsInt),
+  # 				                              S4Vectors::queryHits(hitsFilter))))
+  # 				hitsInt=hitsInt[filtInd,]
+  # 			}
   			# Filter reads mapped completely to Either introns or exons
   
   			refRes= rep(0,nrow(ref))
-  			if(length(c(S4Vectors::queryHits(hitsBegInt), 
-  				S4Vectors::queryHits(hitsEndInt)))>0){
-  				hitsApply=tapply(
-  					noVec[c(S4Vectors::queryHits(hitsBegInt), 
-  						S4Vectors::queryHits(hitsEndInt))], 
-  					c(S4Vectors::subjectHits(hitsBegInt), 
-  						S4Vectors::subjectHits(hitsEndInt)),
-  					function(tmp) return(length(unique(tmp))) )
-  				refRes[as.numeric(names(hitsApply))]= as.vector(hitsApply)
+  			# if(length(c(S4Vectors::queryHits(hitsBegInt), 
+  			# 	S4Vectors::queryHits(hitsEndInt)))>0){
+  			# 	hitsApply=tapply(
+  			# 		noVec[c(S4Vectors::queryHits(hitsBegInt), 
+  			# 			S4Vectors::queryHits(hitsEndInt))], 
+  			# 		c(S4Vectors::subjectHits(hitsBegInt), 
+  			# 			S4Vectors::subjectHits(hitsEndInt)),
+  			# 		function(tmp) return(length(unique(tmp))) )
+  			# 	refRes[as.numeric(names(hitsApply))]= as.vector(hitsApply)
+  			# }
+  			if(length(S4Vectors::queryHits(hitsInt))>0){
+  			  hitsApply=tapply(
+  			    noVec[S4Vectors::queryHits(hitsInt)], 
+  			    c(S4Vectors::subjectHits(hitsInt)),
+  			    function(tmp) return(length(unique(tmp))) )
+  			  refRes[as.numeric(names(hitsApply))]= as.vector(hitsApply)
   			}
   			intSpanRes<- rep(0,nrow(reference))
   			intSpanRes[which(referenceIntronExon=="intron")]<- refRes
@@ -1621,47 +1733,47 @@ interestIntExAnalyseSingleStranded <- function(
         readGRanges, type= "within", ignore.strand=FALSE)
   
   	  # Filter reads mapped to repeats regions if requested
-  	  if(length(repeatsTableToFilter)!=0){
-  	    noRead1M= as.vector(unlist(sapply(frqEventRead1, function(tmp)
-  	      unlist(tmp[[9]]))))
-  	    chrRead1M= as.vector(unlist(sapply(frqEventRead1, function(tmp)
-  	      unlist(tmp[[12]]))))
-  	    begRead1M= as.vector(unlist(sapply(frqEventRead1, function(tmp)
-  	      unlist(tmp[[7]]))))
-  	    endRead1M= as.vector(unlist(sapply(frqEventRead1, function(tmp)
-  	      unlist(tmp[[8]]))))
-  	    noRead2M= c()
-  	    chrRead2M= c()
-  	    begRead2M= c()
-  	    endRead2M= c()
-  	    
-  	    # analyzing reads
-  	    noVecM=c(noRead1M,noRead2M)
-  	    chrVecM=c(as.character(chrRead1M),
-  	             as.character(chrRead2M))
-  	    begVecM=c(begRead1M,begRead2M)
-  	    endVecM=c(endRead1M,endRead2M)
-  	    
-  	    readGRangesM=GenomicRanges::GRanges( seqnames=chrVecM, 
-          IRanges::IRanges(start=begVecM, end=endVecM))
-  	    repeatGRanges= GenomicRanges::GRanges( 
-  	      seqnames=repeatsTableToFilter[,"chr"], 
-  	      IRanges::IRanges(start=repeatsTableToFilter[,"begin"],
-  	                       end=repeatsTableToFilter[,"end"], 
-  	                       width=repeatsTableToFilter[,"end"]-
-  	                         repeatsTableToFilter[,"begin"]+1))
-  	    hitsFilter= GenomicRanges::findOverlaps(readGRangesM, 
-          repeatGRanges, type= "any", ignore.strand=TRUE)
-  	    # filthitsAllExInd= which(is.na(match(S4Vectors::subjectHits(hitsBegInt),
-  	    #                               S4Vectors::queryHits(hitsFilter))))
-  	    noVecFil<- unique(noVecM[queryHits(hitsFilter)])
-  	    filthitsAllExInd<- which(!subjectHits(hitsAllEx) %in% 
-  	                               subjectHits(hitsAllEx)[
-  	                                 which(noVec[subjectHits(hitsAllEx)]
-  	                                       %in% noVecFil)])
-  	    hitsAllEx=hitsAllEx[filthitsAllExInd,]
-  
-  	  }
+  # 	  if(length(repeatsTableToFilter)!=0){
+  # 	    noRead1M= as.vector(unlist(sapply(frqEventRead1, function(tmp)
+  # 	      unlist(tmp[[9]]))))
+  # 	    chrRead1M= as.vector(unlist(sapply(frqEventRead1, function(tmp)
+  # 	      unlist(tmp[[12]]))))
+  # 	    begRead1M= as.vector(unlist(sapply(frqEventRead1, function(tmp)
+  # 	      unlist(tmp[[7]]))))
+  # 	    endRead1M= as.vector(unlist(sapply(frqEventRead1, function(tmp)
+  # 	      unlist(tmp[[8]]))))
+  # 	    noRead2M= c()
+  # 	    chrRead2M= c()
+  # 	    begRead2M= c()
+  # 	    endRead2M= c()
+  # 	    
+  # 	    # analyzing reads
+  # 	    noVecM=c(noRead1M,noRead2M)
+  # 	    chrVecM=c(as.character(chrRead1M),
+  # 	             as.character(chrRead2M))
+  # 	    begVecM=c(begRead1M,begRead2M)
+  # 	    endVecM=c(endRead1M,endRead2M)
+  # 	    
+  # 	    readGRangesM=GenomicRanges::GRanges( seqnames=chrVecM, 
+  #         IRanges::IRanges(start=begVecM, end=endVecM))
+  # 	    repeatGRanges= GenomicRanges::GRanges( 
+  # 	      seqnames=repeatsTableToFilter[,"chr"], 
+  # 	      IRanges::IRanges(start=repeatsTableToFilter[,"begin"],
+  # 	                       end=repeatsTableToFilter[,"end"], 
+  # 	                       width=repeatsTableToFilter[,"end"]-
+  # 	                         repeatsTableToFilter[,"begin"]+1))
+  # 	    hitsFilter= GenomicRanges::findOverlaps(readGRangesM, 
+  #         repeatGRanges, type= "any", ignore.strand=TRUE)
+  # 	    # filthitsAllExInd= which(is.na(match(S4Vectors::subjectHits(hitsBegInt),
+  # 	    #                               S4Vectors::queryHits(hitsFilter))))
+  # 	    noVecFil<- unique(noVecM[queryHits(hitsFilter)])
+  # 	    filthitsAllExInd<- which(!subjectHits(hitsAllEx) %in% 
+  # 	                               subjectHits(hitsAllEx)[
+  # 	                                 which(noVec[subjectHits(hitsAllEx)]
+  # 	                                       %in% noVecFil)])
+  # 	    hitsAllEx=hitsAllEx[filthitsAllExInd,]
+  # 
+  # 	  }
   	  # Filter reads mapped completely to Either introns or exons
   	  
   	  refRes= rep(0,nrow(ref))
