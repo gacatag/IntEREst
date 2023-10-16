@@ -17,10 +17,10 @@ getRepeatTable<-function(
 dbConnect<- DBI::dbConnect
 dbGetQuery<- DBI::dbGetQuery
 dbDisconnect<- DBI::dbDisconnect
-MySQL<- RMySQL::MySQL
+MariaDB<- RMariaDB::MariaDB
 
 # Connecting to the online shared database and getting the data
-con <- dbConnect(MySQL(), user=dbUser, host=dbHost, db=ucscGenome)
+con <- dbConnect(MariaDB(), user=dbUser, host=dbHost, db=ucscGenome)
 tblRmsk <- dbGetQuery(con, paste("select * from ", ucscTable, ";", sep=""))
 tblRmskFilType=tblRmsk[!is.na(match(tblRmsk[,repFamilyCol],repFamilyFil)),]
 tblRmskFilTypeFilLen= tblRmskFilType[(tblRmskFilType[,repEndCol]-
