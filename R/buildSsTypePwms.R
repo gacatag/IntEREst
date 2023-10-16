@@ -252,19 +252,19 @@ buildSsTypePwms<-function(
 		dbSendQuery<- DBI::dbSendQuery
 		dbGetQuery<- DBI::dbGetQuery
 		dbDisconnect<- DBI::dbDisconnect
-		MySQL<- RMySQL::MySQL
+		MariaDB<- RMariaDB::MariaDB
 
 		# Downloading U12DB
 		utils::download.file(u12dbLink, paste(tmpDir,"u12db.sql.gz",sep="/"))
 		scriptsTmp=scan(gzfile(paste(tmpDir,"u12db.sql.gz",sep="/")), 
 			what="character", sep='\n')
 
-		dbc=dbConnect(MySQL(), ...)
+		dbc=dbConnect(MariaDB(), ...)
 		dbSendQuery(dbc, paste("CREATE DATABASE IF NOT EXISTS ", u12dbDbName, 
 			";", sep=""))
 		dbDisconnect(dbc)
 
-		dbc=dbConnect( MySQL(), dbname = u12dbDbName, ...)
+		dbc=dbConnect( MariaDB(), dbname = u12dbDbName, ...)
 
 		scriptsTmp=scriptsTmp[-grep("^-",scriptsTmp)]
 		scriptsTmp=scriptsTmp[-grep("\\/\\*",scriptsTmp)]
@@ -505,7 +505,7 @@ buildSsTypePwms<-function(
 
 
 		if(u12dbDropDb){
-			dbc=dbConnect(MySQL())
+			dbc=dbConnect(MariaDB())
 			dbSendQuery(dbc, paste("DROP DATABASE ", u12dbDbName, ";", sep=""))
 			dbDisconnect(dbc)
 		}
