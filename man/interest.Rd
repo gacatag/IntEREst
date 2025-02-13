@@ -102,7 +102,7 @@ parameter in \code{\link[Rsamtools]{ScanBamParam}}.}
 \item{excludeFusionReads}{Only valid if limitRanges is defined. It filters the
 defined by \code{limitRanges}. It also filters the read pairs if each read pair
 maps reads pairs where one of the reads either do not fall into one of the 
-regions to a different region defined in {limitRanges}. It is useful to ignore 
+regions to a different region defined in \code{limitRanges}. It is useful to ignore 
 analyzing the chimeric reads and fusion reads, i.e. reads that map to fusion 
 genes. To filter properly, \code{limitRanges} must include coordinates of all
 genes. }

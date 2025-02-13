@@ -24,7 +24,7 @@ importFrom(GenomicFeatures, exonsBy, transcriptsBy, intronsByTranscript)
 importFrom(txdbmaker, makeTxDbFromUCSC, makeTxDbFromBiomart, makeTxDbFromGFF)
 importFrom(GenomicRanges, seqnames, start, end, width, strand, ranges, GRanges, 
 	findOverlaps, reduce, gaps)
-importFrom(Rsamtools, BamFile, ScanBamParam, scanBamFlag, scanBamWhat, isOpen)
+importFrom(Rsamtools, BamFile, ScanBamParam, scanBamFlag, scanBamWhat, isOpen, bamFlagAsBitMatrix)
 importFrom(DBI, dbConnect, dbSendQuery, dbGetQuery, dbDisconnect)
 importFrom(RMariaDB, MariaDB)
 importFrom(BiocParallel, MulticoreParam, register)
