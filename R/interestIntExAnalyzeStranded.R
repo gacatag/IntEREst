@@ -1111,8 +1111,7 @@ interestIntExAnalyseSingleStranded <- function(
 	junctionReadsOnly,
 	limitRanges,
 	strandSpecific,
-	excludeFusionReads)
-{
+	excludeFusionReads){
   revStr<- c("-", "+", "*")
   names(revStr)<- c("+", "-", "*")
   qNam<- as.data.frame(readTmp)[1, "qname"]
