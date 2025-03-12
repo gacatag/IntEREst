@@ -505,7 +505,7 @@ buildSsTypePwms<-function(
 
 
 		if(u12dbDropDb){
-			dbc=dbConnect(MariaDB())
+			dbc=dbConnect(MariaDB(), ...)
 			dbSendQuery(dbc, paste("DROP DATABASE ", u12dbDbName, ";", sep=""))
 			dbDisconnect(dbc)
 		}
