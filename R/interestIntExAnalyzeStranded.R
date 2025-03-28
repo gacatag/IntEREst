@@ -26,17 +26,7 @@ interestIntExAnalysePairStranded <- function(
     
     readTmpFirst<- GenomicAlignments::first(readTmp)
     readTmpSecond<- GenomicAlignments::second(readTmp)
-    if(strandSpecific=="stranded"){
-      GenomicRanges::strand(readTmpFirst)<- 
-        as.character(GenomicRanges::strand(readTmpFirst))
-      GenomicRanges::strand(readTmpSecond)<- 
-        revStr[as.character(GenomicRanges::strand(readTmpSecond))]
-    } else if (strandSpecific=="reverse"){
-      GenomicRanges::strand(readTmpSecond)<- 
-        as.character(GenomicRanges::strand(readTmpSecond))
-      GenomicRanges::strand(readTmpFirst)<- 
-        revStr[as.character(GenomicRanges::strand(readTmpFirst))]
-    }
+
     
     r1Map<- GenomicRanges::findOverlaps(
       readTmpFirst, 
