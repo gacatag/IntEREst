@@ -2,6 +2,17 @@
 \title{IntEREst News}
 \encoding{UTF-8}
 
+\section{CHANGES IN VERSION 1.36.0}{
+\subsection{DEPRECATED AND DEFUNCT}{
+
+		\itemize{
+
+			\item \code{miRBaseBuild} parameter is removed from 
+			\code{referencePrepare} function as it was defunct in \code{txdbmaker} 
+			package.
+		}
+	}
+}
 
 \section{CHANGES IN VERSION 1.26.0}{
 \subsection{SIGNIFICANT USER-VISIBLE CHANGES}{

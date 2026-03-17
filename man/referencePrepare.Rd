@@ -15,7 +15,7 @@ referencePrepare( outFileTranscriptsAnnotation="",
 	biomartDataset="hsapiens_gene_ensembl",
 	biomartTranscriptIds=NULL, biomartExtraFilters=NULL, 
 	biomartIdPrefix="ensembl_",	biomartHost="www.ensembl.org",
-	biomartPort=80,	circSeqs="", miRBaseBuild=NA, taxonomyId=NA,
+	biomartPort=80,	circSeqs="", taxonomyId=NA,
 	filePath="", fileFormat=c("auto", "gff3", "gtf"), fileDatSrc=NA,
 	fileOrganism=NA, fileChrInf=NULL, 
 	fileDbXrefTag=c(), addCollapsedTranscripts=TRUE, 
@@ -86,12 +86,6 @@ The port to use in the HTTP communication with the host. Default is 80.}
 \item{circSeqs}{
 A character vector that includes chromosomes that should be marked as circular.
 See \code{circ_seqs} parameter of 
-\code{\link[txdbmaker]{makeTxDbFromBiomart}} and 
-\code{\link[txdbmaker]{makeTxDbFromUCSC}} functions of 
-\code{txdbmaker} library for more information.}
-\item{miRBaseBuild}{
-Set appropriate build Information from mirbase.db to use for microRNAs 
-(default=NA). See \code{miRBaseBuild} parameter of 
 \code{\link[txdbmaker]{makeTxDbFromBiomart}} and 
 \code{\link[txdbmaker]{makeTxDbFromUCSC}} functions of 
 \code{txdbmaker} library for more information.}

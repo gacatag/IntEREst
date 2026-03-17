@@ -10,7 +10,7 @@ function( outFileTranscriptsAnnotation="",
 	biomartDataset="hsapiens_gene_ensembl",
 	biomartTranscriptIds=NULL, biomartExtraFilters=NULL,
 	biomartIdPrefix="ensembl_", biomartHost="www.ensembl.org",
-	biomartPort=80, circSeqs="", miRBaseBuild=NA, taxonomyId=NA,
+	biomartPort=80, circSeqs="", taxonomyId=NA,
 	filePath="", fileFormat=c("auto", "gff3", "gtf"), fileDatSrc=NA,
 	fileOrganism=NA, fileChrInf=NULL, 
 	fileDbXrefTag=c(), addCollapsedTranscripts=TRUE, 
@@ -34,7 +34,6 @@ function( outFileTranscriptsAnnotation="",
 			id_prefix=biomartIdPrefix,
 			host=biomartHost,
 			port=biomartPort,
-			miRBaseBuild=miRBaseBuild,
 			taxonomyId=taxonomyId)
 	}else if (sourceBuild=="file"){
 		if(length(fileDbXrefTag)==0){
@@ -42,15 +41,14 @@ function( outFileTranscriptsAnnotation="",
 				format=fileFormat,
 				dataSource=fileDatSrc, organism=fileOrganism,
 				taxonomyId=taxonomyId,
-				circ_seqs=circSeqs, chrominfo=fileChrInf,
-				miRBaseBuild=miRBaseBuild)
+				circ_seqs=circSeqs, chrominfo=fileChrInf)
 		} else {
 			human.txdb <- txdbmaker::makeTxDbFromGFF(file=filePath,
 				format=fileFormat, 
 				dataSource=fileDatSrc, organism=fileOrganism, 
 				taxonomyId=taxonomyId, 
 				circ_seqs=circSeqs, chrominfo=fileChrInf, 
-				miRBaseBuild=miRBaseBuild, dbxrefTag=fileDbXrefTag)
+				dbxrefTag=fileDbXrefTag)
 		}
 	}
 
