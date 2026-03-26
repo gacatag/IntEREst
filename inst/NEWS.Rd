@@ -12,6 +12,16 @@
 			package.
 		}
 	}
+		\subsection{BUG FIXES}{
+
+      \itemize{
+
+              The \code{applyOverlap()} was corrected to work properly and not
+              give errors when \code{scaleFragment} and \code{scaleLength} are 
+              set as other values than their defaults.
+
+      }
+ }
 }
 
 \section{CHANGES IN VERSION 1.26.0}{
